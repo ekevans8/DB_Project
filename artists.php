@@ -37,6 +37,16 @@ function get_members($artistId, $member_info) {
     return $members;
 }
 
+function get_member_details($memberId, $member_info) {
+    foreach($member_info as $member) {
+        if($member['memberId'] == $memberId) {
+            return $member;
+        }
+    }
+    
+    return null;
+}
+
 
 
 
@@ -96,6 +106,18 @@ function is_moderator_or_die() {
         die("Must be a moderator to access this part of the website");
     }
     
+    return true;
+}
+
+function add_member($joinDate, $leaveDate, $name) {
+    return true;
+}
+
+function update_member($memberId, $joinDate, $leaveDate, $name) {
+    return true;
+}
+
+function remove_member($memberId) {
     return true;
 }
 
@@ -175,7 +197,7 @@ Formation Zipcode: <?=$details['formationZipcode']?><br>
 
 if(is_moderator()) {
 ?>
-| <a href="artists.php?action=editartist&id=<?=$details['artistId']?>">Edit artist</a> | <a href="artists.php?action=deleteartist&id=<?=$details['artistId']?>">Delete artist</a>
+| <a href="artists.php?action=editartist&id=<?=$details['artistId']?>">Edit artist</a> | <a href="artists.php?action=deleteartist&id=<?=$details['artistId']?>">Delete artist</a> | <a href="artists.php?action=addmember&id=<?=$details['artistId']?>">Add Member</a><br>
 <?php } ?>
 <br>
 <br>
@@ -187,6 +209,8 @@ foreach(get_members($details['artistId'], $member_info) as $member) {
     if(!empty($member['leaveDate'])) {
         echo 'Leave Date: ' . $member['leaveDate'] . '<br>';
     }
+    echo '<a href="artists.php?action=editmember&memberId=' . $member['memberId'] . '">Edit Member</a><br>';
+    echo '<a href="artists.php?action=deletemember&id=' . $member['memberId'] . '">Remove Member</a><br>';
     echo '<br>';
 }
 ?>
@@ -447,6 +471,115 @@ else if($_GET['action'] == "deleteperformance") {
 
     $performanceId = intval($_GET['id']);
     $ret = remove_performance($performanceId);
+
+    // Check error code on delete?
+    header('Location: artists.php?action=list', true);
+}
+else if($_GET['action'] == "addmember" || $_GET['action'] == "editmember") {
+    is_moderator_or_die();
+
+    if(!isset($_GET['id'])) {
+        die("Must specify id for this action");
+    }
+
+    $artistId = intval($_GET['id']);
+    $memberId = -1;
+
+    $joinDate = "";
+    $joinDate_error = "";
+
+    $leaveDate = "";
+    $leaveDate_error = "";
+
+    $name = "";
+    $name_error = "";
+
+    if($_GET['action'] == "editmember" && isset($_GET['memberId'])) {
+        $memberId = intval($_GET['memberId']);    
+        $details = get_member_details($memberId, $member_info);
+        
+        $joinDate = $details['joinDate'];
+        $leaveDate = $details['leaveDate'];
+        $name = $details['name'];
+    }
+
+    if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $joinDate = sanitize_input($_POST['joinDate']);
+        $leaveDate = sanitize_input($_POST['leaveDate']);
+        $name = sanitize_input($_POST['name']);
+        
+        $artistId = intval($_POST['artistId']);
+            
+        if(isset($_POST['memberId'])) {
+            $memberId = intval($_POST['memberId']);
+        }
+        
+        $has_error = false;
+        
+        if(!$has_error) {
+            // Successful
+            
+            if($memberId == -1) {
+                $ret = add_member($joinDate, $leaveDate, $name);
+            } else {
+                $ret = update_member($memberId, $joinDate, $leaveDate, $name);
+            }
+            
+            if(!$has_error) {
+                header('Location: artists.php?action=details&id=' . $artistId, true);
+                die();
+            }
+        }
+    }
+    ?>
+
+    <form action="" method="POST">
+    <table>
+        <tr>
+            <td>Name:</td>
+            <td><input type="text" name="name" style="width:100%" value="<?=$name?>"></input>
+            <?php if(!empty($name_error)) { ?>
+            <span class="error">* <?=$name_error?></span>
+            <?php } ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Join Date:</td>
+            <td><input type="date" name="joinDate" style="width:100%" value="<?=$joinDate?>"></input>
+            <?php if(!empty($joinDate_error)) { ?>
+            <span class="error">* <?=$joinDate_error?></span>
+            <?php } ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Leave Date:</td>
+            <td><input type="date" name="leaveDate" style="width:100%" value="<?=$leaveDate?>"></input>
+            <?php if(!empty($leaveDate_error)) { ?>
+            <span class="error">* <?=$leaveDate_error?></span>
+            <?php } ?>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center">
+                <input type="hidden" name="artistId" value="<?=$artistId?>">
+                <input type="hidden" name="memberId" value="<?=$memberId?>">
+                <input type="submit" value="Submit" style="width:100%"></input>
+             </td>
+        </tr>
+    </table>
+    </form>
+
+<?php
+}
+else if($_GET['action'] == "deletemember") {
+    is_moderator_or_die();
+
+    if(!isset($_GET['id'])) {
+        die("Must specify id for this action");
+    }
+
+    $memberId = intval($_GET['id']);
+    $ret = remove_member($memberId);
 
     // Check error code on delete?
     header('Location: artists.php?action=list', true);

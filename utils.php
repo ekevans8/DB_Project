@@ -19,4 +19,8 @@ function verify_password_hash($password, $hash) {
     return password_verify($password, $hash);
 }
 
+function is_logged_in() {
+    return true;
+}
+
 ?>
