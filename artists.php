@@ -231,7 +231,12 @@ Performances:<br>
 <a href="artists.php?action=addperformance&id=<?=$details['artistId']?>">Add performance</a><br>
 <?php } ?>
 <br>
+<br>
+Who Favorited This Artist?<br>
+<br>
+<br>
 Comments:<br>
+<a href="comment.php?action=addcomment&artistId=<?=$details['artistId']?>">Add comment</a><br>
 <?php
     }
 }

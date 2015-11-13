@@ -38,36 +38,12 @@ function get_performance_comments($performanceId, $performance_comments) {
     return $comments;
 }
 
-function get_comment_details($performanceId, $commentId, $performance_comments) {
-    foreach($performance_comments as $comment) {
-        if($comment['performanceId'] == $performanceId && $comment['commentId'] == $commentId) {
-            return $comment;
-        }
-    }
-    
-    return null;
+
+
+if(!isset($_GET['action'])) {
+    die("An action must be specified");
 }
-
-function add_comment($artistId, $performanceId, $comment) {
-    // Automatically get username from the current session
-    // Get the current date automatically
-    return true;
-}
-
-function update_comment($commentId, $comment) {
-    // Only modify the comment text body
-    return true;
-}
-
-function remove_comment($commentId) {
-    // Check that the user deleting the comment is the same as the user who posted the comment, or a moderator
-    return true;
-}
-
-
-
-
-if($_GET['action'] == "details") {
+else if($_GET['action'] == "details") {
     if(!isset($_GET['id'])) {
         die("Must specify id for this action");
     }
@@ -88,98 +64,12 @@ if($_GET['action'] == "details") {
         Username: <?=$comment['username']?><br>
         Date: <?=$comment['postDate']?><br>
         Comment: <?=$comment['comment']?><br>
-        (<a href="performance.php?action=editcomment&id=<?=$performanceId?>&commentId=<?=$comment['commentId']?>">Edit</a> | <a href="performance.php?action=deletecomment&performanceId=<?=$performanceId?>&id=<?=$comment['commentId']?>">Delete</a>)<br>
+        (<a href="comment.php?action=editcomment&id=<?=$performanceId?>&commentId=<?=$comment['commentId']?>">Edit</a> | <a href="comment.php?action=deletecomment&performanceId=<?=$performanceId?>&id=<?=$comment['commentId']?>">Delete</a>)<br>
         <br>
 <?php
     }
 ?>
-
+    <a href="comment.php?action=addcomment&performanceId=<?=$performanceId?>">Add comment</a><br>
 <?php
-}
-else if($_GET['action'] == "addcomment" || $_GET['action'] == "editcomment") {
-    if(!is_logged_in()) {
-        die("You must be logged in to perform this action");
-    }
-    
-    if(!isset($_GET['id'])) {
-        die("Must specify id for this action");
-    }
-
-    $performanceId = intval($_GET['id']);
-    $artistId = -1;
-    $commentId = -1;
-    
-    $comment = "";
-
-    if($_GET['action'] == "editcomment" && isset($_GET['commentId'])) {
-        $commentId = intval($_GET['commentId']);    
-        $details = get_comment_details($performanceId, $commentId, $performance_comments);
-        
-        $comment = $details['comment'];
-    }
-
-    if($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $comment = sanitize_input($_POST['comment']);
-        
-        $performanceId = intval($_POST['performanceId']);
-            
-        if(isset($_POST['commentId'])) {
-            $commentId = intval($_POST['commentId']);
-        }
-        
-        $has_error = false;
-        
-        if(!$has_error) {
-            // Successful
-            
-            if($commentId == -1) {
-                $ret = add_comment($artistId, $performanceId, $comment);
-            } else {
-                $ret = update_comment($commentId, $comment);
-            }
-            
-            if(!$has_error) {
-                header('Location: artists.php?action=list', true);
-                die();
-            }
-        }
-    }
-?>
-
-    <form action="" method="POST">
-    <table>
-        <tr>
-            <td>Comment:</td>
-            <td><input type="text" name="comment" style="width:100%" value="<?=$comment?>"></input></td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center">
-                <input type="hidden" name="artistId" value="<?=$artistId?>">
-                <input type="hidden" name="performanceId" value="<?=$performanceId?>">
-                <input type="hidden" name="commentId" value="<?=$commentId?>">
-                <input type="submit" value="Submit" style="width:100%"></input>
-             </td>
-        </tr>
-    </table>
-    </form>
-
-<?php
-}
-else if($_GET['action'] == "deletecomment") {
-    if(!isset($_GET['id'])) {
-        die("Must specify id for this action");
-    }
-
-    if(!isset($_GET['performanceId'])) {
-        die("Must specify performanceId for this action");
-    }
-
-    $commentId = intval($_GET['id']);
-    $performanceId = intval($_GET['performanceId']);
-    
-    $ret = remove_comment($commentId);
-
-    // Check error code on delete?
-    header('Location: performance.php?action=details&id=' . $performanceId, true);
 }
 ?>
