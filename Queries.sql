@@ -53,6 +53,30 @@ INSERT INTO favorite (username, artistId) VALUES ('M-Dawg', '4');
 
 #Insert Test Albums
 INSERT INTO album (albumId, title, recordLabel, releaseDate) VALUES ('1', '1989', 'Big Machine Records', '2014-10-27');
-
+INSERT INTO album (albumId, title, recordLabel, releaseDate) VALUES ('2', 'Blacc Hollywood', 'Rostrum/Atlantic', '2014-08-14');
 
 #Insert Test Songs
+INSERT INTO songsong (songId, title, duration, track_number) VALUES ('1', 'Welcome To New York', '3.32', '1');
+INSERT INTO song (songId, title, duration, track_number) VALUES ('2', 'Blank Space', '3.51', '2');
+INSERT INTO song (songId, title, duration, track_number) VALUES ('3', 'Style', '3.51', '3');
+INSERT INTO song (songId, title, duration, track_number) VALUES ('4', 'Out of the Woods', '3.55', '4');
+INSERT INTO song (songId, title, duration, track_number) VALUES ('5', 'All You Had To Do Was Stay', '3.13', '5');
+INSERT INTO song (songId, title, duration, track_number) VALUES ('6', 'Shake It Off', '3.39', '6');
+INSERT INTO song (songId, title, duration, track_number) VALUES ('7', 'I Wish You Would', '3.27', '7');
+INSERT INTO song (songId, title, duration, track_number) VALUES ('8', 'Bad Blood', '3.31', '8');
+INSERT INTO song (songId, title, duration, track_number) VALUES ('9', 'Wildest Dreams', '3.40', '9');
+INSERT INTO song (songId, title, duration, track_number) VALUES ('10', 'How You Get The Girl', '4.07', '10');
+INSERT INTO song (songId, title, duration, track_number) VALUES ('11', 'This Love', '4.10', '11');
+INSERT INTO song (songId, title, duration, track_number) VALUES ('12', 'I know Places', '3.15', '12');
+INSERT INTO song (songId, title, duration, track_number) VALUES ('13', 'Clean', '4.31', '13');
+INSERT INTO song (songId, title, duration, track_number) VALUES ('14', 'Wounderland', '4.06', '14');
+INSERT INTO song (songId, title, duration, track_number) VALUES ('15', 'You Are In Love', '4.27', '15');
+INSERT INTO song(songId, title, duration, track_number) VALUES ('16', 'Hope', '5.25', '1');
+INSERT INTO song(songId, title, duration, track_number) VALUES ('17', 'We Dem Boyz', '3.45', '2');
+INSERT INTO song(songId, title, duration, track_number) VALUES ('18', 'Promises', '3.30', '3');
+INSERT INTO song(songId, title, duration, track_number) VALUES ('19', 'KK', '4.09', '4');
+INSERT INTO song(songId, title, duration, track_number) VALUES ('20', 'House In The Hills', '4.52', '5');
+INSERT INTO song(songId, title, duration, track_number) VALUES ('21', 'Ass Dope', '2.47', '6');
+INSERT INTO song(songId, title, duration, track_number) VALUES ('22', 'Raw', '3.38', '7');
+INSERT INTO song(songId, title, duration, track_number) VALUES ('23', 'Staying Out All Night', '4.18', '8');
+
