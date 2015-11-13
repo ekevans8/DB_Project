@@ -14,6 +14,30 @@ function get_artist_details($artist_id, $artists) {
         return $artists[$artist_id];
 }
 
+function add_artist($name, $formDate, $breakupDate, $formationZipcode) { 
+    return true;
+}
+
+function update_artist($artistId, $name, $formDate, $breakupDate, $formationZipcode) {
+    return true;
+}
+
+function remove_artist($artistId) {
+    return true;
+}
+
+function remove_favorite($user_id, $artist_id) {
+    return true;
+}
+
+function add_favorite($user_id, $artist_id) {
+    return true;
+}
+
+function is_artist_favorite($user_id, $artist_id) {
+    return false;
+}
+
 
 
 function make_release($albumid, $title, $recordlabel, $releasedate) {
@@ -65,7 +89,7 @@ else if($_GET['action'] == "addfavorite") {
     
     $artist_id = intval($_GET['id']);
     
-    //add_favorite($artist_id);
+    add_favorite(0, $artist_id);
     
     echo "Artist added to favorites!";
 }
@@ -76,7 +100,7 @@ else if($_GET['action'] == "removefavorite") {
     
     $artist_id = intval($_GET['id']);
     
-    //remove_favorite($artist_id);
+    remove_favorite(0, $artist_id);
     
     echo "Artist removed from favorites!";
 }
@@ -103,11 +127,16 @@ Date disbanded: <?=$details['breakupDate']?><br>
 <?php } ?>
 Formation Zipcode: <?=$details['formationZipcode']?><br>
 <br>
-<a href="artists.php?action=addfavorite&id=<?=$details['artistId']?>">Add to favorites</a> | <a href="artists.php?action=removefavorite&id=<?=$details['artistId']?>">Remove from favorites</a>
+<?php if(is_artist_favorite(0, $details['artistId'])) { ?>
+<a href="artists.php?action=removefavorite&id=<?=$details['artistId']?>">Remove from favorites</a>
+<?php } else { ?>
+<a href="artists.php?action=addfavorite&id=<?=$details['artistId']?>">Add to favorites</a>
 <?php
+}
+
 if(is_moderator()) {
 ?>
-| <a href="artists.php?action=deleteartist&id=<?=$details['artistId']?>">Delete artist</a>
+| <a href="artists.php?action=editartist&id=<?=$details['artistId']?>">Edit artist</a> | <a href="artists.php?action=deleteartist&id=<?=$details['artistId']?>">Delete artist</a>
 <?php } ?>
 <br>
 <br>
@@ -186,9 +215,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Successful
         
         if($artistId == -1) {
-            //$ret = add_artist($name, $formDate, $breakupDate, $formationZipcode);
+            $ret = add_artist($name, $formDate, $breakupDate, $formationZipcode);
         } else {
-            //$ret = update_artist($artistId, $name, $formDate, $breakupDate, $formationZipcode);
+            $ret = update_artist($artistId, $name, $formDate, $breakupDate, $formationZipcode);
         }
         
         if(!$has_error) {
@@ -252,10 +281,9 @@ if(!isset($_GET['id'])) {
 }
 
 $artistId = intval($_GET['id']);
-//$ret = remove_artist($artistId);
+$ret = remove_artist($artistId);
 
 // Check error code on delete?
 header('Location: artists.php?action=list', true);
 }
 ?>
-
