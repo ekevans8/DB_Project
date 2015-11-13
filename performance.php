@@ -38,6 +38,14 @@ function get_performance_comments($performanceId, $performance_comments) {
     return $comments;
 }
 
+function add_attended_concert($performanceId) {
+    return true;
+}
+
+function remove_attended_concert($performanceId) {
+    return true;
+}
+
 
 
 if(!isset($_GET['action'])) {
@@ -57,6 +65,9 @@ else if($_GET['action'] == "details") {
     <b>Venue</b>: <?=$details['venueId']?><br>
     <b>Date</b>: <?=$details['date']?><br>
     <br>
+    Did you attend this performance? <a href="performance.php?action=addattended&id=<?=$performanceId?>">Yes</a> / <a href="performance.php?action=removeattended&id=<?=$performanceId?>">No</a>
+    <br>
+    <br>
     <b>Comments</b><br>
 <?php
     foreach($comments as $comment) {
@@ -71,5 +82,27 @@ else if($_GET['action'] == "details") {
 ?>
     <a href="comment.php?action=addcomment&performanceId=<?=$performanceId?>">Add comment</a><br>
 <?php
+}
+else if($_GET['action'] == "addattended") {
+    if(!isset($_GET['id'])) {
+        die("Must specify id for this action");
+    }
+
+    $performanceId = intval($_GET['id']);
+    
+    $ret = add_attended_concert($performanceId);
+    
+    header('Location: performance.php?action=details&id=' . $performanceId, true);
+}
+else if($_GET['action'] == "removeattended") {
+    if(!isset($_GET['id'])) {
+        die("Must specify id for this action");
+    }
+
+    $performanceId = intval($_GET['id']);
+    
+    $ret = remove_attended_concert($performanceId);
+    
+    header('Location: performance.php?action=details&id=' . $performanceId, true);
 }
 ?>
