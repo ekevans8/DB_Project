@@ -25,7 +25,7 @@ if(is_moderator()) {
 }
 ?>
 
-<a href="artists.php?action=list">View Artists</a> | <a href="concerts.php?action=list">View Concerts</a><br>
+<a href="artists.php?action=list">View Artists</a><br>
 <br>
 <b><?=$username?>'s Favorite artists</b><br>
 Band A...<br>
