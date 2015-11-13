@@ -97,18 +97,6 @@ function get_performance_details($performance_id) {
     return null;
 }
 
-function is_moderator() {
-    return true;
-}
-
-function is_moderator_or_die() {
-    if(!is_moderator()) {
-        die("Must be a moderator to access this part of the website");
-    }
-    
-    return true;
-}
-
 function add_member($joinDate, $leaveDate, $name) {
     return true;
 }

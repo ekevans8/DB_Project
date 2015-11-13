@@ -19,7 +19,7 @@ $lastname_error = "";
 $age = 0;
 $age_error = "";
 
-$zipcode = 0;
+$zipcode = 10000;
 $zipcode_error = "";
 
 if($_SERVER['REQUEST_METHOD'] === 'POST') {

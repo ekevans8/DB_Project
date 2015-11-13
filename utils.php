@@ -23,4 +23,17 @@ function is_logged_in() {
     return true;
 }
 
+function is_moderator() {
+    return true;
+}
+
+function is_moderator_or_die() {
+    if(!is_moderator()) {
+        die("Must be a moderator to access this part of the website");
+    }
+    
+    return true;
+}
+
+
 ?>

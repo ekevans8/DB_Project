@@ -46,6 +46,24 @@ function remove_attended_concert($performanceId) {
     return true;
 }
 
+$venue_info = null;
+function get_venue_details($venueId, $venue_info) {
+    return null;
+}
+
+
+function add_venue($name, $streetAddress, $city, $state, $zipcode) {
+    return true;
+}
+
+function update_venue($venueId, $name, $streetAddress, $city, $state, $zipcode) {
+    return true; 
+}
+
+function remove_venue($venueId) {
+    return true;
+}
+
 
 
 if(!isset($_GET['action'])) {
@@ -104,5 +122,151 @@ else if($_GET['action'] == "removeattended") {
     $ret = remove_attended_concert($performanceId);
     
     header('Location: performance.php?action=details&id=' . $performanceId, true);
+}
+else if($_GET['action'] == "addvenue" || $_GET['action'] == "editvenue") {
+    is_moderator_or_die();
+
+    $name = "";
+    $name_error = "";
+    
+    $streetAddress = "";
+    $streetAddress_error = "";
+    
+    $city = "";
+    $city_error = "";
+    
+    $state = "";
+    $state_error = "";
+    
+    $zipcode = 10000;
+    $zipcode_error = "";
+
+    if($_GET['action'] == "editmember" && isset($_GET['venueId'])) {
+        $venueId = intval($_GET['venueId']);    
+        $details = get_venue_details($venueId, $venueId_info);
+        
+        $name = $details['joinDate'];
+        $streetAddress = $details['leaveDate'];
+        $city = $details['name'];
+        $state = $details['name'];
+        $zipcode = $details['name'];
+    }
+
+    if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $name = sanitize_input($_POST['name']);
+        $streetAddress = sanitize_input($_POST['streetAddress']);
+        $city = sanitize_input($_POST['city']);
+        $state = sanitize_input($_POST['state']);
+        $zipcode = sanitize_input($_POST['zipcode']);
+        
+        $has_error = false;
+        if(empty($name)) {
+            $name_error = "Name cannot be empty";
+            $has_error = true;
+        }
+        
+        if(empty($streetAddress)) {
+            $streetAddress_error = "Street address cannot be empty";
+            $has_error = true;
+        }
+        
+        if(empty($city)) {
+            $city_error = "City cannot be empty";
+            $has_error = true;
+        }
+        
+        if(empty($state)) {
+            $state_error = "State cannot be empty";
+            $has_error = true;
+        }
+    
+        if($zipcode <= 9999) {
+            $zipcode_error = "Zipcode must be 5 digits";
+            $has_error = true;
+        }
+        
+        if(isset($_POST['venueId'])) {
+            $venueId = intval($_POST['venueId']);
+        }
+        
+        if(!$has_error) {
+            // Successful
+            
+            if($venueId == -1) {
+                $ret = add_venue($name, $streetAddress, $city, $state, $zipcode);
+            } else {
+                $ret = update_venue($venueId, $name, $streetAddress, $city, $state, $zipcode);
+            }
+            
+            if(!$has_error) {
+                header('Location: artists.php?action=details&id=' . $artistId, true);
+                die();
+            }
+        }
+    }
+    ?>
+
+    <form action="" method="POST">
+    <table>
+        <tr>
+            <td>Name:</td>
+            <td><input type="text" name="name" style="width:100%" value="<?=$name?>"></input>
+            <?php if(!empty($name_error)) { ?>
+            <span class="error">* <?=$name_error?></span>
+            <?php } ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Street Address:</td>
+            <td><input type="text" name="streetAddress" style="width:100%" value="<?=$streetAddress?>"></input>
+            <?php if(!empty($streetAddress_error)) { ?>
+            <span class="error">* <?=$streetAddress_error?></span>
+            <?php } ?>
+            </td>
+        </tr>
+        <tr>
+            <td>City:</td>
+            <td><input type="text" name="city" style="width:100%" value="<?=$city?>"></input>
+            <?php if(!empty($city_error)) { ?>
+            <span class="error">* <?=$city_error?></span>
+            <?php } ?>
+            </td>
+        </tr>
+        <tr>
+            <td>State:</td>
+            <td><input type="text" name="state" style="width:100%" value="<?=$state?>"></input>
+            <?php if(!empty($state_error)) { ?>
+            <span class="error">* <?=$state_error?></span>
+            <?php } ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Zipcode:</td>
+            <td><input type="number" name="zipcode" min="10000" max="99999" style="width:100%" value="<?=$zipcode?>"></input>
+            <?php if(!empty($zipcode_error)) { ?>
+            <span class="error">* <?=$zipcode_error?></span>
+            <?php } ?>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center"><input type="submit" value="Submit" style="width:100%"></input></td>
+        </tr>
+    </table>
+    </form>
+
+<?php
+}
+else if($_GET['action'] == "deletevenue") {
+    is_moderator_or_die();
+
+    if(!isset($_GET['id'])) {
+        die("Must specify id for this action");
+    }
+
+    $venueId = intval($_GET['id']);
+    $ret = remove_venue($venueId);
+
+    // Check error code on delete?
+    header('Location: artists.php?action=list', true);
 }
 ?>
