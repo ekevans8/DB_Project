@@ -7,6 +7,39 @@ function make_artist($artistid, $artistname, $dateformed, $datedisbanded, $zipco
 }
 $artists = array(make_artist(0, "Artist A", "2014-01-20", "2015-01-01", 20130), make_artist(1, "Artist B", "2014-02-20", "2015-02-01", 20131), make_artist(2, "Artist C", "2014-03-20", "", 20132));
 
+function make_release($albumid, $title, $recordlabel, $releasedate) {
+    return array("albumId" => $albumid, "title" => $title, "recordLabel" => $recordlabel, "releaseDate" => $releasedate);
+}
+
+$artists_releases = array(array(make_release(0, "Album A", "Test", "1208103129"), make_release(1, "Album B", "Test", "1208103129"), make_release(2, "Album C", "Test", "1208103129")),
+array(make_release(3, "Album A", "Test", "1208103129"), make_release(4, "Album B", "Test", "1208103129"), make_release(5, "Album C", "Test", "1208103129")),
+array(make_release(6, "Album A", "Test", "1208103129"), make_release(7, "Album B", "Test", "1208103129"), make_release(8, "Album C", "Test", "1208103129")));
+
+function make_member($memberId, $artistId, $joinDate, $leaveDate, $name) {
+    return array("memberId" => $memberId, "artistId" => $artistId, "joinDate" => $joinDate, "leaveDate" => $leaveDate, "name" => $name);
+}
+$member_info = array(make_member(0, 0, "2015-01-01", null, "Test Member 11"),
+make_member(0, 1, "2015-01-01", null, "Test Member 12"),
+make_member(0, 0, "2015-01-01", null, "Test Member 21"),
+make_member(0, 2, "2015-01-01", null, "Test Member 13"),
+make_member(0, 2, "2015-01-01", null, "Test Member 23"),
+make_member(0, 2, "2015-01-01", null, "Test Member 33"));
+
+function get_members($artistId, $member_info) {
+    $members = array();
+    
+    foreach($member_info as $member) {
+        if($member['artistId'] == $artistId) {
+            array_push($members, $member);
+        }
+    }
+    
+    return $members;
+}
+
+
+
+
 function get_artist_details($artist_id, $artists) {
     if(!array_key_exists($artist_id, $artists))
         return null;
@@ -53,16 +86,6 @@ function remove_performance($performanceId) {
 function get_performance_details($performance_id) {
     return null;
 }
-
-
-
-function make_release($albumid, $title, $recordlabel, $releasedate) {
-    return array("albumId" => $albumid, "title" => $title, "recordLabel" => $recordlabel, "releaseDate" => $releasedate);
-}
-
-$artists_releases = array(array(make_release(0, "Album A", "Test", "1208103129"), make_release(1, "Album B", "Test", "1208103129"), make_release(2, "Album C", "Test", "1208103129")),
-array(make_release(3, "Album A", "Test", "1208103129"), make_release(4, "Album B", "Test", "1208103129"), make_release(5, "Album C", "Test", "1208103129")),
-array(make_release(6, "Album A", "Test", "1208103129"), make_release(7, "Album B", "Test", "1208103129"), make_release(8, "Album C", "Test", "1208103129")));
 
 function is_moderator() {
     return true;
@@ -155,6 +178,18 @@ if(is_moderator()) {
 | <a href="artists.php?action=editartist&id=<?=$details['artistId']?>">Edit artist</a> | <a href="artists.php?action=deleteartist&id=<?=$details['artistId']?>">Delete artist</a>
 <?php } ?>
 <br>
+<br>
+Members:<br>
+<?php
+foreach(get_members($details['artistId'], $member_info) as $member) {
+    echo 'Name: ' . $member['name'] . '<br>';
+    echo 'Join Date: ' . $member['joinDate'] . '<br>';
+    if(!empty($member['leaveDate'])) {
+        echo 'Leave Date: ' . $member['leaveDate'] . '<br>';
+    }
+    echo '<br>';
+}
+?>
 <br>
 Releases:<br>
 <?php
@@ -328,7 +363,7 @@ else if($_GET['action'] == "addperformance" || $_GET['action'] == "editperforman
         $performanceId = intval($_GET['performanceId']);    
         $details = get_performance_details($performanceId);
         
-        $vanueId = $details['venueId'];
+        $venueId = $details['venueId'];
         $duration = $details['duration'];
         $date = $details['date'];
     }
