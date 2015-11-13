@@ -23,7 +23,10 @@ function is_logged_in() {
     return true;
 }
 
-function is_moderator() {
+function is_moderator($id=null) {
+    if($id!=null)
+        return true;
+    
     return true;
 }
 
