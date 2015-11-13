@@ -51,6 +51,102 @@ function remove_moderator($username){
 	return "Results: ";
 }
 
+function get_all_venues(){
+	
+	$SQL = "SELECT * FROM venue";
+	
+	return "Results: ";
+}
+
+function add_venue($venueName, $address, $city, $state, $zip){
+	
+	$SQL = "INSERT INTO venue ('name', 'streetAddress', 'city', 'state', 'zipcode') VALUES 
+	('".$venueName."', '".$address."', '".$city."', '".$state."', '".$zip."');";
+	
+	return "Results: ";
+}
+
+function update_venue($venueName, $address, $city, $state, $zip){
+	
+	$SQL = "UPDATE venue SET name = '".$venueName."', streetAddress = '".$address."', city = '".$city."', 
+	state = '".$state."', zipcode = '".$zip."' WHERE name = '".$venueName."';";
+	
+	return "Results: ";
+}
+
+function get_all_artist_info(){
+	
+	$SQL = "SELECT * FROM artist";
+	
+	return "Results: ";
+}
+
+function add_artist($name, $formDate, $breakupDate, $formationZipcode){
+	$SQL = "INSERT INTO artist ('name', 'formDate', 'breakupDate', 'formationZipcode') VALUES 
+	('".$name."', '".$formDate."', '".$breakupDate."', '".$formationZipcode."');";
+	
+	return "Results: ";
+}
+
+function update_artist($artistId ,$name, $formDate, $breakupDate, $formationZipcode){
+	$SQL = "UPDATE artist SET name = '".$name."', formDate = '".$formDate."', formationZipcode = '".$formationZipcode."' 
+	where artistId = '".$artistId."';";
+	
+	return "Results: ";
+}
+
+function remove_artist($artistId){
+	
+	$SQL = "delete from member where artistId = '".$artistId."';
+	delete from artist where artistId = '".$artistId."';";
+	
+	return "Results: ";
+}
+
+function add_member_to_artist($artistId, $joinDate, $leaveDate, $name){
+	
+	$SQL = "INSERT INTO member ('artistId', 'joinDate', 'leaveDate', 'name') 
+	VALUES ('".$artistId."', '".$joinDate."', '".$leaveDate."', '".$name."');";
+	
+	return "Results: ";
+}
+
+function get_members_for_artists(){
+	
+	$SQL = "select * from artistinfo;";
+	
+	return "Results: ";
+}
+
+function add_favorite($username, $artistId){
+	
+	$SQL = "INSERT INTO favorite ('username', 'artistId') VALUES ('".$username."', '".$artistId."');";
+	
+	return "Results: ";
+}
+
+function is_favorite($username, $artistId){
+	
+	$SQL = "SELECT * FROM favorite where username = '".$username."' AND artistId = '".$artistId."'";
+	
+	return "Results: ";
+}
+
+function remove_favorate($username, $artistId){
+	
+	$SQL = "delete from favorite where username = '".$username."' and artistId = '".$artistId."';";
+	
+	return "Results: ";
+}
+
+function get_all_usernames_and_favorites(){
+	
+	$SQL = "select * from favoriteartistinfo;";
+	
+	return "Results: ";
+}
 
 
+
+?>
 ?>
