@@ -203,4 +203,32 @@ function get_all_usernames_and_favorites(){
 
 
 
+function get_albums_per_artist($artiste){
+	
+	$SQL = "SELECT 
+	alb.title,
+    alb.albumId
+    FROM
+        album alb
+            JOIN
+        tracklist tl ON alb.albumId = tl.albumId
+            JOIN
+        song sg ON tl.songId = sg.songId
+            JOIN
+        artist art ON tl.artistId = art.artistId
+        where art.artistId = '".$artistId."'
+        group by alb.albumId;";
+	
+	return "Results: ";
+	
+}
+
+function get_album_summary_per_albumId($albumId){
+	
+	$SQL = "select * from albumsummaries WHERE albumId = '".$albumId."';";
+	
+	return "Results: ";
+	
+}
+
 ?>

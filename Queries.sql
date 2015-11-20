@@ -22,7 +22,7 @@ INSERT INTO artist (artistId, name, formDate, breakupDate, formationZipcode) VAL
 INSERT INTO artist (artistId, name, formDate, breakupDate, formationZipcode) VALUES ('4', 'Fall Out Boy', '2001-01-01', NULL, '60609');
 
 #Insert Test Members
-INSERT INTO member (memberId, artistId, joinDate, leaveDate, name) VALUES ('1', '2', '1989-01-01', NULL, 'Taylor Swift');
+INSERT INTO member (memberId, artistId, joinDate, leaveDate, name) VALUES ('1', '1', '1989-01-01', NULL, 'Taylor Swift');
 INSERT INTO member (memberId, artistId, joinDate, leaveDate, name) VALUES ('2', '2', '1994-01-01', NULL, 'Adam Levine');
 INSERT INTO member (memberId, artistId, joinDate, leaveDate, name) VALUES ('3', '2', '1994-01-01', NULL, 'Jesse Carmichael');
 INSERT INTO member (memberId, artistId, joinDate, leaveDate, name) VALUES ('4', '2', '1994-01-01', NULL, 'Mickey Madden');
@@ -104,3 +104,34 @@ INSERT INTO tracklist (albumId, songId, artistId) VALUES ('2', '20', '3');
 INSERT INTO tracklist (albumId, songId, artistId) VALUES ('2', '21', '3');
 INSERT INTO tracklist (albumId, songId, artistId) VALUES ('2', '22', '3');
 INSERT INTO tracklist (albumId, songId, artistId) VALUES ('2', '23', '3');
+
+#Insert Test Performances
+INSERT INTO performance (performanceId, duration, venueId, date) VALUES ('1', '2.5', '3', '2015-10-11');
+INSERT INTO performance (performanceId, duration, venueId, date) VALUES ('2', '1.5', '2', '2015-11-20');
+INSERT INTO performance (performanceId, duration, venueId, date) VALUES ('3', '0.5', '1', '2014-09-10');
+INSERT INTO performance (performanceId, duration, venueId, date) VALUES ('4', '4', '7', '2015-08-23');
+
+#Insert Test Performance Playlists
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('1', '1', '1');
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('1', '6', '1');
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('1', '8', '1');
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('1', '9', '1');
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('1', '11', '1');
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('1', '13', '1');
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('1', '14', '1');
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('2', '17', '3');
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('2', '21', '3');
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('2', '22', '3');
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('2', '20', '3');
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('2', '23', '3');
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('4', '8', '1');
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('4', '20', '3');
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('4', '9', '1');
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('4', '23', '3');
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('4', '6', '1');
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('4', '17', '3');
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('4', '12', '1');
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('4', '18', '3');
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('3', '22', '3');
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('3', '18', '3');
+INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('3', '16', '3');
