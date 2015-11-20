@@ -24,9 +24,7 @@ function login_user($username, $password){
 	$SQL = "SELECT * FROM user where username = '".$username."'";
     
     $result = mysql_query($SQL);    
-    while($row = mysql_fetch_object($result)) {
-        echo $row->password . "<br>";
-        
+    while($row = mysql_fetch_object($result)) {        
         if(verify_password_hash($password, $row->password))
             return true;
     }

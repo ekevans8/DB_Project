@@ -8,7 +8,7 @@ session_start();
 Welcome, <?=$_SESSION['firstname']?> <?=$_SESSION['lastname']?> (<?=$_SESSION['username']?>)!<br>
 <a href="register.php?action=update&id=<?=$_SESSION['username']?>">Edit Profile</a> | <a href="login.php?action=logout">Logout</a><br><br>
 
-<a href="artists.php?action=list">View Artists</a> | <a href="album.php?action=list">View Albums</a> | <a href="performance.php?action=list">View Performances</a><br>
+<a href="profile.php">View Profile</a> | <a href="artists.php?action=list">View Artists</a> | <a href="album.php?action=list">View Albums</a> | <a href="performance.php?action=list">View Performances</a><br>
 <br>
 <?php } else { ?>
 <a href="login.php?action=login">Login</a> | <a href="register.php">Register</a><br><br>
