@@ -356,9 +356,9 @@ function update_album($albumId, $albumTitle, $recordLabel, $releaseDate){
 	return mysql_query($SQL) or die(mysql_error());
 	
 }
-function add_song($songTitle, $duration, $trackNumber){
+function add_song($songTitle, $duration){
 	
-	$SQL = "INSERT INTO song (title, duration, track_number) VALUES ('".$songTitle."', '".$duration."', '".$trackNumber."');";
+	$SQL = "INSERT INTO song (title, duration) VALUES ('".$songTitle."', '".$duration."');";
 	mysql_query($SQL) or die(mysql_error());
     
 	return mysql_insert_id();
@@ -380,9 +380,9 @@ function remove_song($songId){
 	return mysql_query($SQL) or die(mysql_error());
 	
 }
-function link_song_to_album_and_artist($songId, $albumId, $artistId){
+function link_song_to_album_and_artist($songId, $albumId, $artistId, $trackNumber){
 	
-	$SQL = "INSERT INTO tracklist (albumId, songId, artistId) VALUES ('".$albumId."', '".$songId."', '".$artistId."');";
+	$SQL = "INSERT INTO tracklist (albumId, songId, artistId, track_number) VALUES ('".$albumId."', '".$songId."', '".$artistId."', '".$trackNumber."');";
 	
 	return mysql_query($SQL) or die(mysql_error());
 	
