@@ -150,8 +150,12 @@ foreach($favorites as $favorite) {
 <?php
     $comments = get_comments_by_artist($details['artistId']);
     foreach($comments as $comment) {
+        if($comment['username'] == null) {
+            echo 'Username: <i>Deleted user</i><br>';
+        } else {
 ?>
         Username: <a href="profile.php?id=<?=$comment['username']?>"><?=$comment['username']?></a><br>
+<?php } ?>
         Date: <?=$comment['postDate']?><br>
         Comment: <?=$comment['comment']?><br>
         

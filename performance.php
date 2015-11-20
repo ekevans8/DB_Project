@@ -178,11 +178,24 @@ foreach($summary as $songinfo) {
 }
 ?>
     <br>
+    <b>Users who attended this concert</b><br>
+<?php
+    $users = get_users_at_performance($performanceId);
+    
+    foreach($users as $user) {
+        echo '<a href="profile.php?id='.$user['username'].'">'.$user['username'].'</a><br>';
+    }
+?>
+    <br>
     <b>Comments</b><br>
 <?php
     foreach($comments as $comment) {
+        if($comment['username'] == null) {
+            echo 'Username: <i>Deleted user</i><br>';
+        } else {
 ?>
-        Username: Username: <a href="profile.php?id=<?=$comment['username']?>"><?=$comment['username']?></a><br>
+        Username: <a href="profile.php?id=<?=$comment['username']?>"><?=$comment['username']?></a><br>
+<?php } ?>
         Date: <?=$comment['postDate']?><br>
         Comment: <?=$comment['comment']?><br>
         

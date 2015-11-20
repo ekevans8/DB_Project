@@ -34,7 +34,7 @@ if(isset($_GET['action'])) {
         
         remove_moderator($_GET['id']);
     } else if($_GET['action'] == "delete") {
-        remove_user($_SESSION['username']);
+        delete_user($_SESSION['username']);
         session_destroy();  
         $_SESSION = array();
         die("Your account has been removed from the database.");

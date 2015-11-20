@@ -676,17 +676,42 @@ function get_most_seen_songs_per_user($username){
 			join performancesummary ps on ap.performanceId = ps.performanceId
 			where ap.username = '".$username."'
 			group by ps.SongTitle, ps.Artist, ap.username
-			order by NumberSeen DESC limit 5;"
+			order by NumberSeen DESC limit 5;";
 	
+    $result = mysql_query($SQL);
+    $results = array();
+    while($row = mysql_fetch_array($result)) {
+        $results[] = $row;
+    }
+	
+	return $results;
+}
+
+function get_users_at_performance($performanceId){
+	
+	$SQL = "select username from attended_performance where performanceId = '" . $performanceId . "'";
+    $result = mysql_query($SQL);
+    $results = array();
+    while($row = mysql_fetch_array($result)) {
+        $results[] = $row;
+    }
+	
+	return $results;
 }
 
 function delete_user($username){
 	
-	$SQL = "DELETE FROM favorite WHERE username = '';
-			DELETE FROM attended_performance WHERE username = '';
-			UPDATE comment SET username = 'Deleted-User' WHERE username = '';
-			DELETE FROM user where username = '';";
-	
+	$SQL = "DELETE FROM favorite WHERE username = '".$username."';";
+    mysql_query($SQL) or die(mysql_error());
+    
+    $SQL = "DELETE FROM attended_performance WHERE username = '".$username."';";
+    mysql_query($SQL) or die(mysql_error());
+    
+    $SQL = "UPDATE comment SET username = NULL WHERE username = '".$username."';";
+    mysql_query($SQL) or die(mysql_error());
+    
+    $SQL = "DELETE FROM user where username = '".$username."';";	
+	return mysql_query($SQL) or die(mysql_error());
 }
 
 ?>
