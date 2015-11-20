@@ -401,4 +401,14 @@ function remove_atteneded_performance($username, $performanceId){
 	
 }
 
+function get_Attended_performances_per_username($username){
+	
+	$SQL = "select ap.performanceId, ps.* from attended_performance ap
+			join performancesummary ps on ap.performanceId = ps.performanceId
+			where ap.username = '".$username."';";
+	
+	return "Results: ";
+	
+}
+
 ?>
