@@ -279,6 +279,24 @@ function add_performance($duration, $venueId, $date){
 	
 }
 
+function update_performance($performanceId, $duration, $venueId, $date){
+	
+	$SQL = "UPDATE performance SET duration = '".$duration."', venueId = '".$venueId."', date = '".$date."' where performanceId = '".$performanceId."';";
+	
+	return "Results: ";
+	
+}
+
+function remove_performance($performanceId){
+	
+	$SQL = "DELETE FROM attended_performance where performanceId = '".$performanceId."';
+	DELETE FROM performance_playlist where performanceId = '".$performanceId."';
+	DELETE FROM performance where performanceId = '".$performanceId."';";
+	
+	return "Results: ";
+	
+}
+
 function add_song_played_to_performance($performanceId, $songId, $artistId){
 	$SQL = "INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('".$performanceId."', '".$songId."', '".$artistId."');";
 	
@@ -358,5 +376,15 @@ function get_all_album_summaries(){
 	
 	return "Results: ";
 }
+
+function remove_song_played_to_performance($performanceId, $songId, $artistId){
+	
+	$SQL = "DELETE FROM performance_playlist where performanceId = '".$performanceId."' AND songId = '".$songId."' AND artistId = '".$artistId."';";
+	
+	return "Results: ";
+	
+}
+
+
 
 ?>
