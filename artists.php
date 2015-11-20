@@ -1,41 +1,11 @@
 <?php
 include("header.php");
+include("Queries.php");
 include("utils.php");
 
-function make_artist($artistid, $artistname, $dateformed, $datedisbanded, $zipcode) {
-    return array("artistId" => $artistid, "name" => $artistname, "formDate" => $dateformed, "breakupDate" => $datedisbanded, "formationZipcode" => $zipcode);
-}
-$artists = array(make_artist(0, "Artist A", "2014-01-20", "2015-01-01", 20130), make_artist(1, "Artist B", "2014-02-20", "2015-02-01", 20131), make_artist(2, "Artist C", "2014-03-20", "", 20132));
+$username = "b-dawg";
 
-function make_release($albumid, $title, $recordlabel, $releasedate) {
-    return array("albumId" => $albumid, "title" => $title, "recordLabel" => $recordlabel, "releaseDate" => $releasedate);
-}
-
-$artists_releases = array(array(make_release(0, "Album A", "Test", "1208103129"), make_release(1, "Album B", "Test", "1208103129"), make_release(2, "Album C", "Test", "1208103129")),
-array(make_release(3, "Album A", "Test", "1208103129"), make_release(4, "Album B", "Test", "1208103129"), make_release(5, "Album C", "Test", "1208103129")),
-array(make_release(6, "Album A", "Test", "1208103129"), make_release(7, "Album B", "Test", "1208103129"), make_release(8, "Album C", "Test", "1208103129")));
-
-function make_member($memberId, $artistId, $joinDate, $leaveDate, $name) {
-    return array("memberId" => $memberId, "artistId" => $artistId, "joinDate" => $joinDate, "leaveDate" => $leaveDate, "name" => $name);
-}
-$member_info = array(make_member(0, 0, "2015-01-01", null, "Test Member 11"),
-make_member(0, 1, "2015-01-01", null, "Test Member 12"),
-make_member(0, 0, "2015-01-01", null, "Test Member 21"),
-make_member(0, 2, "2015-01-01", null, "Test Member 13"),
-make_member(0, 2, "2015-01-01", null, "Test Member 23"),
-make_member(0, 2, "2015-01-01", null, "Test Member 33"));
-
-function get_members($artistId, $member_info) {
-    $members = array();
-    
-    foreach($member_info as $member) {
-        if($member['artistId'] == $artistId) {
-            array_push($members, $member);
-        }
-    }
-    
-    return $members;
-}
+$artists = get_all_artist_info();
 
 function get_member_details($memberId, $member_info) {
     foreach($member_info as $member) {
@@ -57,23 +27,7 @@ function get_artist_details($artist_id, $artists) {
         return $artists[$artist_id];
 }
 
-function add_artist($name, $formDate, $breakupDate, $formationZipcode) { 
-    return true;
-}
-
-function update_artist($artistId, $name, $formDate, $breakupDate, $formationZipcode) {
-    return true;
-}
-
-function remove_artist($artistId) {
-    return true;
-}
-
 function remove_favorite($user_id, $artist_id) {
-    return true;
-}
-
-function add_favorite($user_id, $artist_id) {
     return true;
 }
 
@@ -124,7 +78,7 @@ foreach($artists as $artist) {
 }
     echo '<br>';
 
-    if(is_moderator()) {
+    if(is_moderator($username)) {
 ?>
 <a href="artists.php?action=addartist">Add new artist</a>
 
@@ -174,7 +128,7 @@ if(!empty($details['breakupDate'])) {
 ?>
 Date disbanded: <?=$details['breakupDate']?><br>
 <?php } ?>
-Formation Zipcode: <?=$details['formationZipcode']?><br>
+Formation Zipcode: <?=$details['formationZipCode']?><br>
 <br>
 <?php if(is_artist_favorite(0, $details['artistId'])) { ?>
 <a href="artists.php?action=removefavorite&id=<?=$details['artistId']?>">Remove from favorites</a>
@@ -183,7 +137,7 @@ Formation Zipcode: <?=$details['formationZipcode']?><br>
 <?php
 }
 
-if(is_moderator()) {
+if(is_moderator($username)) {
 ?>
 | <a href="artists.php?action=editartist&id=<?=$details['artistId']?>">Edit artist</a> | <a href="artists.php?action=deleteartist&id=<?=$details['artistId']?>">Delete artist</a> | <a href="artists.php?action=addmember&id=<?=$details['artistId']?>">Add Member</a><br>
 <?php } ?>
@@ -191,7 +145,7 @@ if(is_moderator()) {
 <br>
 Members:<br>
 <?php
-foreach(get_members($details['artistId'], $member_info) as $member) {
+foreach(get_members($details['artistId']) as $member) {
     echo 'Name: ' . $member['name'] . '<br>';
     echo 'Join Date: ' . $member['joinDate'] . '<br>';
     if(!empty($member['leaveDate'])) {
@@ -215,7 +169,7 @@ foreach($artists_releases[$details['artistId']] as $release) {
 ?>
 <br>
 Performances:<br>
-<?php if(is_moderator()) { ?>
+<?php if(is_moderator($username)) { ?>
 <a href="artists.php?action=addperformance&id=<?=$details['artistId']?>">Add performance</a><br>
 <?php } ?>
 <br>
@@ -240,8 +194,8 @@ else if($_GET['action'] == "addartist" || $_GET['action'] == "editartist") {
     $breakupDate = "";
     $breakupDate_error = "";
 
-    $formationZipcode = 0;
-    $formationZipcode_error = "";
+    $formationZipCode = 0;
+    $formationZipCode_error = "";
 
     $artistId = -1;
 
@@ -258,14 +212,14 @@ else if($_GET['action'] == "addartist" || $_GET['action'] == "editartist") {
         $name = $details['name'];
         $formDate = $details['formDate'];
         $breakupDate = $details['breakupDate'];
-        $formationZipcode = $details['formationZipcode'];
+        $formationZipCode = $details['formationZipCode'];
     }
 
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
         $name = sanitize_input($_POST['name']);
         $formDate = sanitize_input($_POST['formDate']);
         $breakupDate = sanitize_input($_POST['breakupDate']);
-        $formationZipcode = sanitize_input($_POST['formationZipcode']);
+        $formationZipCode = sanitize_input($_POST['formationZipCode']);
         
         if(isset($_POST['artistId'])) {
             $artistId = intval($_POST['artistId']);
@@ -277,8 +231,8 @@ else if($_GET['action'] == "addartist" || $_GET['action'] == "editartist") {
             $has_error = true;
         }
         
-        if($formationZipcode <= 9999) {
-            $formationZipcode_error = "Formation zipcode must be 5 digits";
+        if($formationZipCode <= 9999) {
+            $formationZipCode_error = "Formation zipcode must be 5 digits";
             $has_error = true;
         }
         
@@ -286,9 +240,9 @@ else if($_GET['action'] == "addartist" || $_GET['action'] == "editartist") {
             // Successful
             
             if($artistId == -1) {
-                $ret = add_artist($name, $formDate, $breakupDate, $formationZipcode);
+                $ret = add_artist($name, $formDate, $breakupDate, $formationZipCode);
             } else {
-                $ret = update_artist($artistId, $name, $formDate, $breakupDate, $formationZipcode);
+                $ret = update_artist($artistId, $name, $formDate, $breakupDate, $formationZipCode);
             }
             
             if(!$has_error) {
@@ -328,9 +282,9 @@ else if($_GET['action'] == "addartist" || $_GET['action'] == "editartist") {
         </tr>
         <tr>
             <td>Formation Zipcode:</td>
-            <td><input type="number" name="formationZipcode" min="10000" max="99999" style="width:100%" value="<?=$formationZipcode?>"></input>
-            <?php if(!empty($formationZipcode_error)) { ?>
-            <span class="error">* <?=$formationZipcode_error?></span>
+            <td><input type="number" name="formationZipCode" min="10000" max="99999" style="width:100%" value="<?=$formationZipCode?>"></input>
+            <?php if(!empty($formationZipCode_error)) { ?>
+            <span class="error">* <?=$formationZipCode_error?></span>
             <?php } ?>
             </td>
         </tr>
