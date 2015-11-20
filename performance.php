@@ -14,6 +14,30 @@ if(!isset($_GET['action']) || $_GET['action'] == "list") {
         echo '<a href="performance.php?action=details&id='.$performance['performanceId'].'">'.$performance['title'].'</a> ('.$performance['date'].')<br>';
     }
 }
+
+else if($_GET['action'] == "showvenue") {
+    if(!isset($_GET['venueId'])) {
+        die("Must specify venueId for this action");
+    }
+        
+    $venueId = intval($_GET['venueId']);
+    
+    $venue = get_venue_by_id($venueId);
+?>
+<b>Venue</b>: <?=$venue['name']?><br>
+<b>Street Address</b>: <?=$venue['streetAddress']?><br>
+<b>City</b>: <?=$venue['city']?><br>
+<b>State</b>: <?=$venue['state']?><br>
+<b>Zipcode</b>: <?=$venue['zipcode']?><br>
+<br>
+<b>Performances</b>:<br>
+<?php
+    $performances = get_performances_by_venue($venueId);
+    
+    foreach($performances as $performance) {
+        echo '<a href="performance.php?action=details&id='.$performance['performanceId'].'">'.$performance['title'].'</a> ('.$performance['date'].')<br>';
+    }
+}
 else if($_GET['action'] == "removesong") {
     if(!isset($_GET['performanceId'])) {
         die("Must specify performanceId for this action");
@@ -120,7 +144,10 @@ else if($_GET['action'] == "details") {
 ?>
 
     <b>Title</b>: <?=$details['title']?><br>
-    <b>Venue</b>: <?=get_venue_by_id($details['venueId'])['name']?><br>
+<?php 
+$venue = get_venue_by_id($details['venueId']);
+?>
+    <b>Venue</b>: <a href="performance.php?action=showvenue&venueId=<?=$venue['venueId']?>"><?=$venue['name']?></a><br>
     <b>Date</b>: <?=$details['date']?><br>
     <b>Duration</b>: <?=$details['duration']?><br>
     <br>

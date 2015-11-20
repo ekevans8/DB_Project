@@ -304,6 +304,19 @@ function get_all_performances() {
 	return $results;
 }
 
+function get_performances_by_venue($venueId) {
+    
+	$SQL = "select * from performance WHERE venueId = '".$venueId."'";
+    
+    $result = mysql_query($SQL);
+    $results = array();
+    while($row = mysql_fetch_array($result)) {
+        $results[] = $row;
+    }
+	
+	return $results;
+}
+
 function get_all_performances_by_artist($artistId) {
     
 	$SQL = "select * from performance p JOIN performance_playlist pl ON p.performanceId = pl.performanceId WHERE pl.artistId = '".$artistId."' GROUP BY pl.artistId";
