@@ -108,7 +108,7 @@ foreach(get_members($details['artistId']) as $member) {
     
     if(is_moderator($_SESSION['username'])) {
         echo '<a href="artists.php?action=editmember&id=' . $details['artistId'] . '&memberId=' . $member['memberId'] . '">Edit Member</a><br>';
-        echo '<a href="artists.php?action=deletemember&id=' . $member['memberId'] . '">Remove Member</a><br>';
+        echo '<a href="artists.php?action=deletemember&id=' . $member['memberId'] . '">Remove Member</a><br><br>';
     }
 }
 ?>
@@ -124,7 +124,7 @@ foreach($artist_releases as $release) {
     echo '<br>';
 }
 ?>
-
+<br>
 <b>Performances</b><br>
 <?php
 $performances = get_all_performances_by_artist($details['artistId']);

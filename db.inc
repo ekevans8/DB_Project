@@ -3,10 +3,10 @@
 * db.inc
 * These are the DBMS credentials and the database name
 */
-$hostName = "localhost:/usr/cslocal/mysqldata/triton.sock";
-$databaseName = "mferna6db";
-$username = "mferna6";
-$password = "Cosc*ktyy";
+$hostName = "localhost:3306";
+$databaseName = "musictracker";
+$username = "root";
+$password = "";
 // Show an error and stop the script
 function showerror()
 {
