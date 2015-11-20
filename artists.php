@@ -29,14 +29,6 @@ function get_artist_details($artist_id, $artists) {
         return $artists[$artist_id];
 }
 
-function remove_favorite($user_id, $artist_id) {
-    return true;
-}
-
-function is_artist_favorite($user_id, $artist_id) {
-    return false;
-}
-
 function add_performance($venueId, $duration, $date) {
     return true;
 }
@@ -52,22 +44,6 @@ function remove_performance($performanceId) {
 function get_performance_details($performance_id) {
     return null;
 }
-
-function add_member($joinDate, $leaveDate, $name) {
-    return true;
-}
-
-function update_member($memberId, $joinDate, $leaveDate, $name) {
-    return true;
-}
-
-function remove_member($memberId) {
-    return true;
-}
-
-
-
-
 
 
 if(!isset($_GET['action']) || empty($_GET['action']) || $_GET['action'] == "list") {
@@ -94,7 +70,7 @@ else if($_GET['action'] == "addfavorite") {
     
     $artist_id = intval($_GET['id']);
     
-    add_favorite(0, $artist_id);
+    add_favorite($_SESSION['username'], $artist_id);
     
     echo "Artist added to favorites!";
 }
@@ -105,7 +81,7 @@ else if($_GET['action'] == "removefavorite") {
     
     $artist_id = intval($_GET['id']);
     
-    remove_favorite(0, $artist_id);
+    remove_favorite($_SESSION['username'], $artist_id);
     
     echo "Artist removed from favorites!";
 }
@@ -132,7 +108,7 @@ Date disbanded: <?=$details['breakupDate']?><br>
 <?php } ?>
 Formation Zipcode: <?=$details['formationZipCode']?><br>
 <br>
-<?php if(is_artist_favorite(0, $details['artistId'])) { ?>
+<?php if(is_favorite($_SESSION['username'], $details['artistId'])) { ?>
 <a href="artists.php?action=removefavorite&id=<?=$details['artistId']?>">Remove from favorites</a>
 <?php } else { ?>
 <a href="artists.php?action=addfavorite&id=<?=$details['artistId']?>">Add to favorites</a>
@@ -470,7 +446,7 @@ else if($_GET['action'] == "addmember" || $_GET['action'] == "editmember") {
             // Successful
             
             if($memberId == -1) {
-                $ret = add_member($joinDate, $leaveDate, $name);
+                $ret = add_member_to_artist($artistId, $joinDate, $leaveDate, $name);
             } else {
                 $ret = update_member($memberId, $joinDate, $leaveDate, $name);
             }
