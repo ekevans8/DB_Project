@@ -124,33 +124,36 @@ function get_all_artist_info(){
 }
 
 function add_artist($name, $formDate, $breakupDate, $formationZipcode){
-	$SQL = "INSERT INTO artist ('name', 'formDate', 'breakupDate', 'formationZipcode') VALUES 
+	$SQL = "INSERT INTO artist (`name`, `formDate`, `breakupDate`, `formationZipcode`) VALUES 
 	('".$name."', '".$formDate."', '".$breakupDate."', '".$formationZipcode."');";
-	
-	return "Results: ";
+    return mysql_query($SQL);
 }
 
 function update_artist($artistId ,$name, $formDate, $breakupDate, $formationZipcode){
 	$SQL = "UPDATE artist SET name = '".$name."', formDate = '".$formDate."', formationZipcode = '".$formationZipcode."' 
 	where artistId = '".$artistId."';";
-	
-	return "Results: ";
+    return mysql_query($SQL);
 }
 
 function remove_artist($artistId){
 	
-	$SQL = "delete from member where artistId = '".$artistId."';
-	delete from artist where artistId = '".$artistId."';";
+	$SQL = "delete from member where artistId = '".$artistId."';";
+    mysql_query($SQL) or die(mysql_error());
 	
-	return "Results: ";
+    $SQL = "delete from artist where artistId = '".$artistId."';";
+    return mysql_query($SQL) or die(mysql_error());
 }
 
 function add_member_to_artist($artistId, $joinDate, $leaveDate, $name){
-	
-	$SQL = "INSERT INTO member ('artistId', 'joinDate', 'leaveDate', 'name') 
-	VALUES ('".$artistId."', '".$joinDate."', '".$leaveDate."', '".$name."');";
-	
-	return "Results: ";
+	if($leaveDate == "") {
+        $SQL = "INSERT INTO member (`artistId`, `joinDate`, `name`) 
+        VALUES ('".$artistId."', '".$joinDate."', '".$name."');";
+    } else {
+        $SQL = "INSERT INTO member (`artistId`, `joinDate`, `leaveDate`, `name`) 
+        VALUES ('".$artistId."', '".$joinDate."', '".$leaveDate."', '".$name."');";
+    }
+    
+    return mysql_query($SQL) or die(mysql_error());
 }
 
 function get_members_for_artists(){
@@ -192,23 +195,27 @@ function get_members($artistId){
 
 function add_favorite($username, $artistId){
 	
-	$SQL = "INSERT INTO favorite ('username', 'artistId') VALUES ('".$username."', '".$artistId."');";
-	
-	return "Results: ";
+	$SQL = "INSERT INTO favorite (`username`, `artistId`) VALUES ('".$username."', '".$artistId."');";
+    $result = mysql_query($SQL);
 }
 
 function is_favorite($username, $artistId){
 	
 	$SQL = "SELECT * FROM favorite where username = '".$username."' AND artistId = '".$artistId."'";
 	
-	return "Results: ";
+    $result = mysql_query($SQL);
+    while($row = mysql_fetch_array($result)) {
+        if($row['artistId'] == $artistId)
+            return true;
+    }
+    
+    return false;
 }
 
-function remove_favorate($username, $artistId){
+function remove_favorite($username, $artistId){
 	
-	$SQL = "delete from favorite where username = '".$username."' and artistId = '".$artistId."';";
-	
-	return "Results: ";
+	$SQL = "delete from favorite where `username` = '".$username."' and `artistId` = '".$artistId."';";
+	return mysql_query($SQL) or die(mysql_error());
 }
 
 function get_all_usernames_and_favorites(){
