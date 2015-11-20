@@ -140,6 +140,9 @@ function remove_artist($artistId){
 	$SQL = "delete from member where artistId = '".$artistId."';";
     mysql_query($SQL) or die(mysql_error());
 	
+	$SQL = "delete from comment where artistId = '".$artistId."';";
+    mysql_query($SQL) or die(mysql_error());
+	
     $SQL = "delete from artist where artistId = '".$artistId."';";
     return mysql_query($SQL) or die(mysql_error());
 }
@@ -289,7 +292,8 @@ function update_performance($performanceId, $duration, $venueId, $date){
 
 function remove_performance($performanceId){
 	
-	$SQL = "DELETE FROM attended_performance where performanceId = '".$performanceId."';
+	$SQL = "DELETE FROM comment where performanceId = '".$performanceId."';
+	DELETE FROM attended_performance where performanceId = '".$performanceId."';
 	DELETE FROM performance_playlist where performanceId = '".$performanceId."';
 	DELETE FROM performance where performanceId = '".$performanceId."';";
 	
@@ -403,9 +407,33 @@ function remove_atteneded_performance($username, $performanceId){
 
 function get_Attended_performances_per_username($username){
 	
-	$SQL = "select ap.performanceId, ps.* from attended_performance ap
+	$SQL = "select ap.username, ps.* from attended_performance ap
 			join performancesummary ps on ap.performanceId = ps.performanceId
 			where ap.username = '".$username."';";
+	
+	return "Results: ";
+	
+}
+
+function add_comment_for_artist($username, $artistId, $comment, $postDate){
+	
+	$SQL = "INSERT INTO comment (username, artistId, comment, postDate) VALUES ('".$username."', '".$artistId."', '".$comment."', '".$postDate."');";
+	
+	return "Results: ";
+	
+}
+
+function add_comment_for_performance($username, $performanceId, $comment, $postDate){
+	
+	$SQL = "INSERT INTO comment (username, performanceId, comment, postDate) VALUES ('".$username."', '".$performanceId."', '".$comment."', '".$postDate."');";
+	
+	return "Results: ";
+		
+}
+
+function remove_comment($commentId){
+	
+	$SQL = "DELETE FROM comment WHERE commentId = '".$commentId."';";
 	
 	return "Results: ";
 	

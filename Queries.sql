@@ -150,3 +150,14 @@ INSERT INTO attended_performance (username, performanceId) VALUES ('M-Dawg', '3'
 INSERT INTO attended_performance (username, performanceId) VALUES ('M-Dawg', '4');
 INSERT INTO attended_performance (username, performanceId) VALUES ('L-Dawg', '3');
 INSERT INTO attended_performance (username, performanceId) VALUES ('L-Dawg', '4');
+
+#Insert Test Comments
+INSERT INTO comment (commentId, username, artistId, comment, postDate) VALUES ('1', 'M-Dawg', '3', 'The Dopest', '2015-11-20');
+INSERT INTO comment (commentId, username, artistId, comment, postDate) VALUES ('2', 'L-Dawg', '3', 'Roll One, Smoke one!', '2015-11-19');
+INSERT INTO comment (commentId, username, artistId, comment, postDate) VALUES ('3', 'B-Dawg', '1', 'Too Sexy ;)', '2015-11-20');
+INSERT INTO comment (commentId, username, performanceId, comment, postDate) VALUES ('4', 'B-Dawg', '1', 'The BEST EVER!!!! Love you Taylor! Call me maybe?', '2015-11-20');
+INSERT INTO comment (commentId, username, artistId, comment, postDate) VALUES ('5', 'E-Dawg', '1', 'I love her hair!', '2015-11-10');
+INSERT INTO comment (commentId, username, performanceId, comment, postDate) VALUES ('6', 'E-Dawg', '1', 'YESSS Taylor is the best idc what all you lames say :P', '2015-11-18');
+INSERT INTO comment (commentId, username, performanceId, comment, postDate) VALUES ('7', 'S-Dawg', '2', 'Was an enjoyable performance.', '2015-10-19');
+INSERT INTO comment (commentId, username, performanceId, comment, postDate) VALUES ('8', 'L-Dawg', '4', 'Not a huge fan of Taylor Swift with she was nice paired with Wiz. Well played.', '2015-11-17');
+INSERT INTO comment (commentId, username, artistId, comment, postDate) VALUES ('9', 'M-Dawg', '4', 'You will remember me for Centuries!!!!!', '2015-10-09');
