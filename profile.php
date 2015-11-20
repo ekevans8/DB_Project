@@ -53,7 +53,7 @@ if(is_moderator($_SESSION['username'])) {
 }
 ?>
 
-<b><?=$user_profile['username']?>'s Favorite artists</b><br>
+<b><?=$user_profile['username']?>'s favorite artists</b><br>
 <?php
 $favorites = get_all_usernames_and_favorites_per_favorite($username);
 foreach($favorites as $favorite) {

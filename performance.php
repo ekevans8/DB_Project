@@ -163,7 +163,7 @@ if(is_moderator($_SESSION['username'])) {
     Attended? <?php echo attended_concert_by_id($_SESSION['username'], $performanceId) ? "Yes" : "No"; ?>
     <br>
     <br>
-    <b>Tracklist</b>:<br>
+    <b>Setlist</b>:<br>
 <?php
 $i = 1;
 foreach($summary as $songinfo) {
