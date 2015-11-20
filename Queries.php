@@ -676,7 +676,16 @@ function get_most_seen_songs_per_user($username){
 			join performancesummary ps on ap.performanceId = ps.performanceId
 			where ap.username = '".$username."'
 			group by ps.SongTitle, ps.Artist, ap.username
-			order by NumberSeen DESC;"
+			order by NumberSeen DESC limit 5;"
+	
+}
+
+function delete_user($username){
+	
+	$SQL = "DELETE FROM favorite WHERE username = '';
+			DELETE FROM attended_performance WHERE username = '';
+			UPDATE comment SET username = 'Deleted-User' WHERE username = '';
+			DELETE FROM user where username = '';";
 	
 }
 
