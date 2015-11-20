@@ -9,28 +9,11 @@ $username = $_SESSION['username'];
 
 $artists = get_all_artist_info();
 
-function get_member_details($memberId, $member_info) {
-    foreach($member_info as $member) {
-        if($member['memberId'] == $memberId) {
-            return $member;
-        }
-    }
-    
-    return null;
-}
-
-
-
-
 function get_artist_details($artist_id, $artists) {
     if(!array_key_exists($artist_id, $artists))
         return null;
     else
         return $artists[$artist_id];
-}
-
-function add_performance($venueId, $duration, $date) {
-    return true;
 }
 
 function update_performance($performanceId, $venueId, $duration, $date) {
@@ -129,7 +112,7 @@ foreach(get_members($details['artistId']) as $member) {
     if(!empty($member['leaveDate'])) {
         echo 'Leave Date: ' . $member['leaveDate'] . '<br>';
     }
-    echo '<a href="artists.php?action=editmember&memberId=' . $member['memberId'] . '">Edit Member</a><br>';
+    echo '<a href="artists.php?action=editmember&id=' . $details['artistId'] . '&memberId=' . $member['memberId'] . '">Edit Member</a><br>';
     echo '<a href="artists.php?action=deletemember&id=' . $member['memberId'] . '">Remove Member</a><br>';
     echo '<br>';
 }
@@ -422,7 +405,7 @@ else if($_GET['action'] == "addmember" || $_GET['action'] == "editmember") {
 
     if($_GET['action'] == "editmember" && isset($_GET['memberId'])) {
         $memberId = intval($_GET['memberId']);    
-        $details = get_member_details($memberId, $member_info);
+        $details = get_member_details($memberId);
         
         $joinDate = $details['joinDate'];
         $leaveDate = $details['leaveDate'];
@@ -448,7 +431,7 @@ else if($_GET['action'] == "addmember" || $_GET['action'] == "editmember") {
             if($memberId == -1) {
                 $ret = add_member_to_artist($artistId, $joinDate, $leaveDate, $name);
             } else {
-                $ret = update_member($memberId, $joinDate, $leaveDate, $name);
+                $ret = update_member($memberId, $artistId, $joinDate, $leaveDate, $name);
             }
             
             if(!$has_error) {

@@ -165,19 +165,17 @@ function get_members_for_artists(){
 
 function remove_member($memberId){
 	
-	$SQL = "Delete from memeber where memberId = '".$memberId."';;";
-	
-	return "Results: ";
-	
+	$SQL = "Delete from member where memberId = '".$memberId."';";
+    return mysql_query($SQL) or die(mysql_error());
 }
 
 function update_member($memberId, $artistId, $joinDate, $leaveDate, $name){
+	if($leaveDate == "")
+        $SQL = "UPDATE member SET artistId = '".$artistId."', joinDate = '".$joinDate."', name = '".$name."' WHERE memberId = '".$memberId."';";
+    else
+        $SQL = "UPDATE member SET artistId = '".$artistId."', joinDate = '".$joinDate."', leaveDate = '".$leaveDate."', name = '".$name."' WHERE memberId = '".$memberId."';";
 	
-	$SQL = "UPDATE member SET artistId = '".$artistId."', joinDate = '".$joinDate."', leaveDate = '".$leaveDate."', name = '".$name."' 
-	WHERE memberId = '".$memberId."';";
-	
-	return "Results: ";
-	
+    return mysql_query($SQL) or die(mysql_error());
 }
 
 function get_members($artistId){
@@ -191,6 +189,19 @@ function get_members($artistId){
     }
 	
 	return $results;
+}
+
+function get_member_details($memberId){
+	
+	$SQL = "select * from member WHERE memberId = '" . $memberId . "';";
+    
+    $result = mysql_query($SQL);
+    $results = array();
+    while($row = mysql_fetch_array($result)) {
+        return $row;
+    }
+	
+	return null;
 }
 
 function add_favorite($username, $artistId){
@@ -269,11 +280,83 @@ function add_performance($duration, $venueId, $date){
 }
 
 function add_song_played_to_performance($performanceId, $songId, $artistId){
-	
-	$SQL = "INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('".$performanceId."', '".."', '".."');";
+	$SQL = "INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('".$performanceId."', '".$songId."', '".$artistId."');";
 	
 	return "Results: ";
 	
+}
+
+function get_all_usernames_and_favorites_per_favorite($username){
+	
+	$SQL = "select * from favoriteartistinfo WHERE username = '".$username."';";
+	
+	return "Results: ";
+}
+function add_album($albumTitle, $recordLabel, $releaseDate){
+	
+	$SQL = "INSERT INTO album (title, recordLabel, releaseDate) VALUES ('".$albumTitle."', '".$recordLabel."', '".$releaseDate."');";
+	
+	return "Results: ";
+	
+}
+function remove_album($albumId){
+	
+	$SQL = "DELETE FROM tracklist where albumId = '".$albumId."';
+	DELETE FROM album where albumId = '".$albumId."';";
+	
+	return "Results: ";
+	
+}
+function update_album($albumId, $albumTitle, $recordLabel, $releaseDate){
+	
+	$SQL = "UPDATE album SET title = '".$albumTitle."', recordLabel = '".$recordLabel."', releaseDate = '".$releaseDate."' 
+	where albumId = '".$albumId."';";
+	
+	return "Results: ";
+	
+}
+function add_song($songTitle, $duration, $trackNumber){
+	
+	$SQL = "INSERT INTO song (title, duration, track_number) VALUES ('".$songTitle."', '".$duration."', '".$trackNumber."');";
+	
+	return "Results: ";
+	
+}
+function update_song($songId, $songTitle, $duration, $trackNumber){
+	
+	$SQL = "UPDATE song SET title = '".$songTitle."', duration = '".$duration."', track_number = '".$trackNumber."' 
+	where songId = '".$songId."';";
+	
+	return "Results: ";
+	
+}
+function remove_song($songId){
+	
+	$SQL = "DELETE FROM tracklist where songId = '".$songId."';
+	DELETE FROM album where songId = '".$songId."';";
+	
+	return "Results: ";
+	
+}
+function link_song_to_album_and_artist($songId, $albumId, $artistId){
+	
+	$SQL = "INSERT INTO tracklist (albumId, songId, artistId) VALUES ('".$songId."', '".$albumId."', '".$artistId."');";
+	
+	return "Results: ";
+	
+}
+function unlink_song_to_album_and_artist($songId, $albumId, $artistId){
+	
+	$SQL = "DELETE FROM tracklist WHERE songId = ".$songId."' AND albumId = '".$albumId."' AND artistId = '".$artistId."');";
+	
+	return "Results: ";
+	
+}
+function get_all_album_summaries(){
+	
+	$SQL = "select * from albumsummaries;";
+	
+	return "Results: ";
 }
 
 ?>
