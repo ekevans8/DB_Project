@@ -80,3 +80,27 @@ INSERT INTO song(songId, title, duration, track_number) VALUES ('21', 'Ass Dope'
 INSERT INTO song(songId, title, duration, track_number) VALUES ('22', 'Raw', '3.38', '7');
 INSERT INTO song(songId, title, duration, track_number) VALUES ('23', 'Staying Out All Night', '4.18', '8');
 
+#Insert Test Tracklists
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('1', '1', '1');
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('1', '2', '1');
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('1', '3', '1');
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('1', '4', '1');
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('1', '5', '1');
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('1', '6', '1');
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('1', '7', '1');
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('1', '8', '1');
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('1', '9', '1');
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('1', '10', '1');
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('1', '11', '1');
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('1', '12', '1');
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('1', '13', '1');
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('1', '14', '1');
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('1', '15', '1');
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('2', '16', '3');
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('2', '17', '3');
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('2', '18', '3');
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('2', '19', '3');
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('2', '20', '3');
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('2', '21', '3');
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('2', '22', '3');
+INSERT INTO tracklist (albumId, songId, artistId) VALUES ('2', '23', '3');
