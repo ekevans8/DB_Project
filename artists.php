@@ -3,7 +3,9 @@ include("header.php");
 include("Queries.php");
 include("utils.php");
 
-session_start();
+if(!isset($_SESSION['username'])) {
+    die();
+}
 
 $username = $_SESSION['username'];
 

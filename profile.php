@@ -3,7 +3,9 @@ include("header.php");
 include("Queries.php");
 include("utils.php");
 
-session_start();
+if(!isset($_SESSION['username'])) {
+    die();
+}
 
 $username = $_SESSION['username'];
 
@@ -35,22 +37,23 @@ if(isset($_GET['action'])) {
 }
 ?>
 
-Welcome, <?=$user_profile->firstName?> <?=$user_profile->lastName?> (<?=$user_profile->username?>)!<br>
-<a href="">Logout</a><br><br>
+<?php
+if(isset($_GET['id'])) { ?>
+<b>Viewing <?=$user_profile['firstName']?> <?=$user_profile['lastName']?> (<?=$user_profile['username']?>)'s profile</b><br>
+<br>
+<?php } ?>
 
 <?php
 if(is_moderator($_SESSION['username'])) {
-    if(!is_moderator($user_profile->username)) {
-        echo '<a href="profile.php?action=addmoderator&id=' . $user_profile->username . '">Promote to Moderator</a><br><br>';
+    if(!is_moderator($user_profile['username'])) {
+        echo '<a href="profile.php?action=addmoderator&id=' . $user_profile['username'] . '">Promote to Moderator</a><br><br>';
     } else {
-        echo '<a href="profile.php?action=removemoderator&id=' . $user_profile->username . '">Demote to User</a><br><br>';
+        echo '<a href="profile.php?action=removemoderator&id=' . $user_profile['username'] . '">Demote to User</a><br><br>';
     }
 }
 ?>
 
-<a href="artists.php?action=list">View Artists</a><br>
-<br>
-<b><?=$user_profile->username?>'s Favorite artists</b><br>
+<b><?=$user_profile['username']?>'s Favorite artists</b><br>
 <?php
 $favorites = get_all_usernames_and_favorites_per_favorite($username);
 foreach($favorites as $favorite) {
@@ -58,7 +61,7 @@ foreach($favorites as $favorite) {
 }
 ?>
 <br>
-<b>Concerts <?=$user_profile->username?> has attended</b><br>
+<b>Concerts <?=$user_profile['username']?> has attended</b><br>
 <?php
 $performances = get_Attended_performances_per_username($username);
 
@@ -67,7 +70,7 @@ foreach($performances as $performance) {
 }
 ?>
 <br>
-<b><?=$user_profile->username?>'s Comments</b><br>
+<b><?=$user_profile['username']?>'s Comments</b><br>
 <?php
 $comments = get_comments_by_username($username);
 

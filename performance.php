@@ -3,14 +3,109 @@ include("header.php");
 include("Queries.php");
 include("utils.php");
 
-session_start();
+if(!isset($_SESSION['username'])) {
+    die();
+}
 
-if(!isset($_GET['action'])) {
+if(!isset($_GET['action']) || $_GET['action'] == "list") {
     $performances = get_all_performances();
     
     foreach($performances as $performance) {
-        echo '<a href="performance.php?action=details&id='.$performance['performanceId'].'">'.$performance['title'].'</a><br>';
+        echo '<a href="performance.php?action=details&id='.$performance['performanceId'].'">'.$performance['title'].'</a> ('.$performance['date'].')<br>';
     }
+}
+else if($_GET['action'] == "removesong") {
+    if(!isset($_GET['performanceId'])) {
+        die("Must specify performanceId for this action");
+    }
+    
+    if(!isset($_GET['songId'])) {
+        die("Must specify songId for this action");
+    }
+    
+    if(!isset($_GET['artistId'])) {
+        die("Must specify artistId for this action");
+    }
+    
+    $performanceId = intval($_GET['performanceId']);
+    $songId = intval($_GET['songId']);
+    $artistId = intval($_GET['artistId']);
+    
+    remove_song_played_to_performance($performanceId, $songId, $artistId);
+    
+    header('Location: performance.php?action=details&id=' . $performanceId, true);
+    die();
+}
+else if($_GET['action'] == "addsong") {
+    if(!isset($_GET['performanceId'])) {
+        die("Must specify performanceId for this action");
+    }
+    
+    $performanceId = intval($_GET['performanceId']);
+    
+    if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if(!isset($_POST['songId'])) {
+            die("Must specify songId for this action");
+        }
+        
+        if(!isset($_POST['artistId'])) {
+            die("Must specify artistId for this action");
+        }
+        
+        if(!isset($_POST['performanceId'])) {
+            die("Must specify performanceId for this action");
+        }
+        
+        $songId = intval($_POST['songId']);
+        $artistId = intval($_POST['artistId']);
+        $performanceId = intval($_POST['performanceId']);
+        
+        add_song_played_to_performance($performanceId, $songId, $artistId);
+        
+        header('Location: performance.php?action=details&id=' . $performanceId, true);
+        die();
+    }
+?>
+    <form action="" method="POST">
+    <table>
+        <tr>
+            <td>Artist:</td>
+            <td>
+                <select name="artistId" style="width:100%">
+<?php
+$artists = get_all_artist_info();
+
+foreach($artists as $artist) {
+    echo '<option value="'.$artist['artistId'].'">'.$artist['name'].'</option>';
+}
+?>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Song:</td>
+            <td>
+                <select name="songId" style="width:100%">
+
+<?php
+$songs = get_all_songs();
+
+foreach($songs as $song) {
+    echo '<option value="'.$song['songId'].'">'.$song['title'].'</option>';
+}
+?>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center">
+                <input type="hidden" name="performanceId" value="<?=$performanceId?>">
+                <input type="submit" value="Submit" style="width:100%"></input>
+            </td>
+        </tr>
+    </table>
+    </form>
+<?php
 }
 else if($_GET['action'] == "details") {
     if(!isset($_GET['id'])) {
@@ -29,6 +124,14 @@ else if($_GET['action'] == "details") {
     <b>Date</b>: <?=$details['date']?><br>
     <b>Duration</b>: <?=$details['duration']?><br>
     <br>
+<?php
+if(is_moderator($_SESSION['username'])) {
+?>
+<a href="performance.php?action=addsong&performanceId=<?=$performanceId?>">Add song</a><br>
+<br>
+<?php
+}
+?>
     Did you attend this performance? <a href="performance.php?action=addattended&id=<?=$performanceId?>">Yes</a> / <a href="performance.php?action=removeattended&id=<?=$performanceId?>">No</a><br>
     Attended? <?php echo attended_concert_by_id($_SESSION['username'], $performanceId) ? "Yes" : "No"; ?>
     <br>
@@ -37,7 +140,13 @@ else if($_GET['action'] == "details") {
 <?php
 $i = 1;
 foreach($summary as $songinfo) {
-    echo $i . ') <a href="artists.php?action=details&id='.$songinfo['artistId'].'">' . $songinfo['Artist'] . '</a> - ' . $songinfo['SongTitle'] . '<br>';
+    echo $i . ') <a href="artists.php?action=details&id='.$songinfo['artistId'].'">' . $songinfo['Artist'] . '</a> - ' . $songinfo['SongTitle'];
+    
+    if(is_moderator($_SESSION['username'])) {
+        echo ' (<a href="performance.php?action=removesong&performanceId='.$songinfo['performanceId'].'&songId='.$songinfo['songId'].'&artistId='.$songinfo['artistId'].'">Remove</a>)';
+    }
+    
+    echo '<br>';
     $i++;
 }
 ?>
@@ -71,6 +180,7 @@ else if($_GET['action'] == "addattended") {
         $ret = add_attended_performance($_SESSION['username'], $performanceId);
     
     header('Location: performance.php?action=details&id=' . $performanceId, true);
+    die();
 }
 else if($_GET['action'] == "removeattended") {
     if(!isset($_GET['id'])) {
@@ -82,6 +192,7 @@ else if($_GET['action'] == "removeattended") {
     $ret = remove_atteneded_performance($_SESSION['username'], $performanceId);
     
     header('Location: performance.php?action=details&id=' . $performanceId, true);
+    die();
 }
 else if($_GET['action'] == "addvenue" || $_GET['action'] == "editvenue") {
     is_moderator_or_die();
@@ -228,5 +339,6 @@ else if($_GET['action'] == "deletevenue") {
 
     // Check error code on delete?
     header('Location: artists.php?action=list', true);
+    die();
 }
 ?>

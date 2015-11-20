@@ -68,7 +68,7 @@ function get_profile($username){
 	$SQL = "SELECT * FROM user WHERE username = '".$username."'";
     
     $result = mysql_query($SQL);
-    while($row = mysql_fetch_object($result)) {
+    while($row = mysql_fetch_array($result)) {
         return $row;
     }
     
@@ -367,8 +367,8 @@ function remove_performance($performanceId){
 function add_song_played_to_performance($performanceId, $songId, $artistId){
 	$SQL = "INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('".$performanceId."', '".$songId."', '".$artistId."');";
 	
-	return "Results: ";
 	
+	return mysql_query($SQL) or die(mysql_error());
 }
 
 function get_all_usernames_and_favorites_per_favorite($username){
@@ -441,6 +441,7 @@ function add_song($songTitle, $duration){
 	return mysql_insert_id();
 	
 }
+
 function get_song($songId){
 	
 	$SQL = "SELECT * FROM song WHERE songId = '" . $songId . "'";
@@ -451,6 +452,21 @@ function get_song($songId){
     }
     
 	return null;
+	
+}
+
+function get_all_songs(){
+	
+	$SQL = "SELECT * FROM song";
+    
+	
+    $result = mysql_query($SQL);
+    $results = array();
+    while($row = mysql_fetch_array($result)) {
+        $results[] = $row;
+    }
+	
+	return $results;
 	
 }
 

@@ -3,16 +3,19 @@ include("header.php");
 include("Queries.php");
 include("utils.php");
 
-session_start();
+if(!isset($_SESSION['username'])) {
+    die();
+}
 
-if(!isset($_GET['action'])) {
+if(!isset($_GET['action']) || $_GET['action'] == "list") {
     $albums = get_albums();
     
     foreach($albums as $album) {
         echo '<a href="album.php?action=details&id=' . $album['albumId'] .'">' . $album['title'] . '</a> (' . $album['releaseDate'] . ') from ' . $album['recordLabel'] . '<br>';
     }
     
-    echo '<br><a href="album.php?action=addalbum">Add album</a><br>';
+    if(is_moderator($_SESSION['username']))
+        echo '<br><a href="album.php?action=addalbum">Add album</a><br>';
 }
 else if($_GET['action'] == "details") {
     // Get detailed album information including tracklist
