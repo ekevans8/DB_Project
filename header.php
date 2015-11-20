@@ -6,7 +6,7 @@ session_start();
 
 <?php if(isset($_SESSION['username'])) { ?>
 Welcome, <?=$_SESSION['firstname']?> <?=$_SESSION['lastname']?> (<a href="profile.php"><?=$_SESSION['username']?></a>)!<br>
-<a href="register.php?action=update&id=<?=$_SESSION['username']?>">Edit Profile</a> | <a href="login.php?action=logout">Logout</a><br><br>
+<a href="register.php?action=update?>">Edit Profile</a> | <a href="profile.php?action=delete">Delete Account</a> | <a href="login.php?action=logout">Logout</a><br><br>
 
 <a href="profile.php">Home</a> | <a href="artists.php?action=list">View Artists</a> | <a href="album.php?action=list">View Albums</a> | <a href="performance.php?action=list">View Performances</a><br>
 <br>

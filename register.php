@@ -3,6 +3,11 @@ include("header.php");
 include("utils.php");
 include("Queries.php");
 
+if(isset($_SESSION['username']) && ((isset($_GET['action']) && $_GET['action'] != "update") || !isset($_GET['action']))) {
+    header("Location: profile.php", true);
+    die();
+}
+
 $username = "";
 $username_error = "";
 
@@ -25,7 +30,7 @@ $zipcode = 10000;
 $zipcode_error = "";
 
 if(isset($_GET['action']) && $_GET['action'] == "update") {
-    $username = $_GET['id'];
+    $username = $_SESSION['username'];
     $profile = get_profile($username);
     
     $email = $profile['email'];

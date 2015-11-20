@@ -33,6 +33,11 @@ if(isset($_GET['action'])) {
         }
         
         remove_moderator($_GET['id']);
+    } else if($_GET['action'] == "delete") {
+        remove_user($_SESSION['username']);
+        session_destroy();  
+        $_SESSION = array();
+        die("Your account has been removed from the database.");
     }
 }
 ?>
@@ -81,6 +86,20 @@ foreach($comments as $comment) {
         echo '<a href="artists.php?action=details&id='.$comment['artistId'].'">'.$comment['comment'].'</a> on ' . $comment['postDate'] . '<br>';
     else
         echo $comment['comment'].' on ' . $comment['postDate'] . '<br>';
+}
+?>
+<br>
+<b>Top songs seen live</b><br>
+<?php
+$song_ranking = get_most_seen_songs_per_user($username);
+
+$i = 1;
+foreach($song_ranking as $song) {
+    if($song['NumberSeen'] == 1)
+        echo $i . ') <a href="artists.php?action=details&id=' . $song['artistId'] . '">' . $song['Artist'] . '</a> - ' . $song['SongTitle'] . ' (Seen ' . $song['NumberSeen'] . ' time)<br>';
+    else
+        echo $i . ') <a href="artists.php?action=details&id=' . $song['artistId'] . '">' . $song['Artist'] . '</a> - ' . $song['SongTitle'] . ' (Seen ' . $song['NumberSeen'] . ' times)<br>';
+    $i++;
 }
 ?>
 <br>
