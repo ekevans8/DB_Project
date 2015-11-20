@@ -105,7 +105,8 @@ function update_artist($artistId ,$name, $formDate, $breakupDate, $formationZipc
 
 function remove_artist($artistId){
 	
-	$SQL = "delete from member where artistId = '".$artistId."';
+	$SQL = "delete from tracklist where artistId = '".$artistId."';
+	delete from member where artistId = '".$artistId."';
 	delete from artist where artistId = '".$artistId."';";
 	
 	return "Results: ";
@@ -154,7 +155,74 @@ function get_all_usernames_and_favorites(){
 	return "Results: ";
 }
 
+function add_album($albumTitle, $recordLabel, $releaseDate){
+	
+	$SQL = "INSERT INTO album (title, recordLabel, releaseDate) VALUES ('".$albumTitle."', '".$recordLabel."', '".$releaseDate."');";
+	
+	return "Results: ";
+	
+}
+
+function remove_album($albumId){
+	
+	$SQL = "DELETE FROM tracklist where albumId = '".$albumId."';
+	DELETE FROM album where albumId = '".$albumId."';";
+	
+	return "Results: ";
+	
+}
+
+function update_album($albumId, $albumTitle, $recordLabel, $releaseDate){
+	
+	$SQL = "UPDATE album SET title = '".$albumTitle."', recordLabel = '".$recordLabel."', releaseDate = '".$releaseDate."' 
+	where albumId = '".$albumId."';";
+	
+	return "Results: ";
+	
+}
+
+function add_song($songTitle, $duration, $trackNumber){
+	
+	$SQL = "INSERT INTO song (title, duration, track_number) VALUES ('".$songTitle."', '".$duration."', '".$trackNumber."');";
+	
+	return "Results: ";
+	
+}
+
+function update_song($songId, $songTitle, $duration, $trackNumber){
+	
+	$SQL = "UPDATE song SET title = '".$songTitle."', duration = '".$duration."', track_number = '".$trackNumber."' 
+	where songId = '".$songId."';";
+	
+	return "Results: ";
+	
+}
+
+function remove_song($songId){
+	
+	$SQL = "DELETE FROM tracklist where songId = '".$songId."';
+	DELETE FROM album where songId = '".$songId."';";
+	
+	return "Results: ";
+	
+}
+
+function link_song_to_album_and_artist($songId, $albumId, $artistId){
+	
+	$SQL = "INSERT INTO tracklist (albumId, songId, artistId) VALUES ('".$songId."', '".$albumId."', '".$artistId."');";
+	
+	return "Results: ";
+	
+}
+
+function unlink_song_to_album_and_artist($songId, $albumId, $artistId){
+	
+	$SQL = "DELETE FROM tracklist WHERE songId = ".$songId."' AND albumId = '".$albumId."' AND artistId = '".$artistId."');";
+	
+	return "Results: ";
+	
+}
 
 
-?>
+
 ?>
