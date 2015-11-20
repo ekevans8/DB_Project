@@ -1,4 +1,12 @@
 <?php
+include 'db.inc';
+// Connect to MySQL DBMS
+if (!($connection = @ mysql_connect($hostName, $username,
+  $password)))
+  showerror();
+// Use the cars database
+if (!mysql_select_db($databaseName, $connection))
+  showerror();
 
 function login_user($username, $password){
 	
