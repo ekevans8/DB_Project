@@ -90,8 +90,14 @@ function remove_moderator($username){
 function get_all_venues(){
 	
 	$SQL = "SELECT * FROM venue";
+    
+    $result = mysql_query($SQL);
+    $results = array();
+    while($row = mysql_fetch_array($result)) {
+        $results[] = $row;
+    }
 	
-	return "Results: ";
+	return $results;
 }
 
 function add_venue($venueName, $address, $city, $state, $zip){
@@ -287,6 +293,58 @@ function add_performance($duration, $venueId, $date, $title){
 	
 }
 
+function get_all_performances() {
+    
+	$SQL = "select * from performance";
+    
+    $result = mysql_query($SQL);
+    $results = array();
+    while($row = mysql_fetch_array($result)) {
+        $results[] = $row;
+    }
+	
+	return $results;
+}
+
+function get_all_performances_by_artist($artistId) {
+    
+	$SQL = "select * from performance p JOIN performance_playlist pl ON p.performanceId = pl.performanceId WHERE pl.artistId = '".$artistId."' GROUP BY pl.artistId";
+    
+    $result = mysql_query($SQL);
+    $results = array();
+    while($row = mysql_fetch_array($result)) {
+        $results[] = $row;
+    }
+	
+	return $results;
+}
+
+function get_performance_details($performanceId) {
+    
+	$SQL = "select * from performance WHERE performanceId = '".$performanceId . "'";
+    
+    $result = mysql_query($SQL);
+    $results = array();
+    while($row = mysql_fetch_array($result)) {
+        return $row;
+    }
+	
+	return null;
+}
+
+function get_performance_summary($performanceId) {
+    
+	$SQL = "select * from performancesummary WHERE performanceId = '".$performanceId . "'";
+    
+    $result = mysql_query($SQL);
+    $results = array();
+    while($row = mysql_fetch_array($result)) {
+        $results[] = $row;
+    }
+	
+	return $results;
+}
+
 function update_performance($performanceId, $duration, $venueId, $date){
 	
 	$SQL = "UPDATE performance SET duration = '".$duration."', venueId = '".$venueId."', date = '".$date."' where performanceId = '".$performanceId."';";
@@ -316,6 +374,19 @@ function add_song_played_to_performance($performanceId, $songId, $artistId){
 function get_all_usernames_and_favorites_per_favorite($username){
 	
 	$SQL = "select * from favoriteartistinfo WHERE username = '".$username."';";
+    
+    $result = mysql_query($SQL);
+    $results = array();
+    while($row = mysql_fetch_array($result)) {
+        $results[] = $row;
+    }
+	
+	return $results;
+}
+
+function get_all_favorites_per_artist($artistId){
+	
+	$SQL = "select * from favoriteartistinfo WHERE artistId = '".$artistId."';";
     
     $result = mysql_query($SQL);
     $results = array();
@@ -422,14 +493,14 @@ function remove_song_played_to_performance($performanceId, $songId, $artistId){
 	
 	$SQL = "DELETE FROM performance_playlist where performanceId = '".$performanceId."' AND songId = '".$songId."' AND artistId = '".$artistId."';";
 	
-	return "Results: ";	
+	return mysql_query($SQL) or die(mysql_error());	
 }
 
 function add_attended_performance($username, $performanceId){
 	
 	$SQL = "INSERT INTO attended_performance (username, performanceId) VALUES ('".$username."', '".$performanceId."');";
 	
-	return "Results: ";
+	return mysql_query($SQL) or die(mysql_error());
 	
 }
 
@@ -437,33 +508,51 @@ function remove_atteneded_performance($username, $performanceId){
 	
 	$SQL = "DELETE FROM attended_performance where performanceId = '".$performanceId."' AND username = '".$username."';";
 	
-	return "Results: ";
+	return mysql_query($SQL) or die(mysql_error());
+	
+}
+
+function attended_concert_by_id($username, $performanceId){
+	
+	$SQL = "SELECT * FROM attended_performance WHERE username = '" . $username . "' and performanceId = '" . $performanceId . "'";
+    
+    $result = mysql_query($SQL);
+    while($row = mysql_fetch_array($result)) {
+        return true;
+    }
+    
+	return false;
 	
 }
 
 function get_Attended_performances_per_username($username){
 	
 	$SQL = "select ap.username, ps.* from attended_performance ap
-			join performancesummary ps on ap.performanceId = ps.performanceId
+			join performance ps on ap.performanceId = ps.performanceId
 			where ap.username = '".$username."';";
 	
-	return "Results: ";
+    $result = mysql_query($SQL);
+    $results = array();
+    while($row = mysql_fetch_array($result)) {
+        $results[] = $row;
+    }
 	
+	return $results;
 }
 
 function add_comment_for_artist($username, $artistId, $comment, $postDate){
 	
 	$SQL = "INSERT INTO comment (username, artistId, comment, postDate) VALUES ('".$username."', '".$artistId."', '".$comment."', '".$postDate."');";
 	
-	return "Results: ";
+	return mysql_query($SQL) or die(mysql_error());	
 	
 }
 
 function add_comment_for_performance($username, $performanceId, $comment, $postDate){
 	
 	$SQL = "INSERT INTO comment (username, performanceId, comment, postDate) VALUES ('".$username."', '".$performanceId."', '".$comment."', '".$postDate."');";
-	
-	return "Results: ";
+    
+	return mysql_query($SQL) or die(mysql_error());	
 		
 }
 
@@ -471,8 +560,87 @@ function remove_comment($commentId){
 	
 	$SQL = "DELETE FROM comment WHERE commentId = '".$commentId."';";
 	
-	return "Results: ";
+	return mysql_query($SQL) or die(mysql_error());	
 	
+}
+
+function update_comment($commentId, $artistId, $performanceId, $comment){
+	$artistIdStr = "artistId = '".$artistId."', ";
+	$performanceIdStr = "performanceId = '".$performanceId."', ";
+    
+    if($artistId == -1)
+        $artistIdStr = "";
+    
+    if($performanceId == -1)
+        $performanceIdStr = "";
+    
+	$SQL = "UPDATE comment SET " . $artistIdStr . $performanceIdStr . " comment = '".$comment."' where commentId = '".$commentId."';";
+	
+	return mysql_query($SQL) or die(mysql_error());	
+	
+}
+
+function get_comment_by_id($commentId) {
+    
+	$SQL = "SELECT * FROM comment WHERE commentId = '" . $commentId . "'";
+    
+    $result = mysql_query($SQL);
+    while($row = mysql_fetch_array($result)) {
+        return $row;
+    }
+    
+	return null;
+}
+
+function get_comments_by_username($username) {
+    
+	$SQL = "SELECT * FROM comment WHERE username = '" . $username . "'";
+    
+    $result = mysql_query($SQL);
+    $results = array();
+    while($row = mysql_fetch_array($result)) {
+        $results[] = $row;
+    }
+	
+	return $results;
+}
+
+function get_comments_by_artist($artistId) {
+    
+	$SQL = "SELECT * FROM comment WHERE artistId = '" . $artistId . "'";
+    
+    $result = mysql_query($SQL);
+    $results = array();
+    while($row = mysql_fetch_array($result)) {
+        $results[] = $row;
+    }
+	
+	return $results;
+}
+
+function get_comments_by_performance($performanceId) {
+    
+	$SQL = "SELECT * FROM comment WHERE performanceId = '" . $performanceId . "'";
+    
+    $result = mysql_query($SQL);
+    $results = array();
+    while($row = mysql_fetch_array($result)) {
+        $results[] = $row;
+    }
+	
+	return $results;
+}
+
+function get_venue_by_id($venueId) {
+    
+	$SQL = "SELECT * FROM venue WHERE venueId = '" . $venueId . "'";
+    
+    $result = mysql_query($SQL);
+    while($row = mysql_fetch_array($result)) {
+        return $row;
+    }
+    
+	return null;
 }
 
 ?>

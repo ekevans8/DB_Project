@@ -16,14 +16,10 @@ function get_artist_details($artist_id, $artists) {
         return $artists[$artist_id];
 }
 
-function get_performance_details($performance_id) {
-    return null;
-}
-
 
 if(!isset($_GET['action']) || empty($_GET['action']) || $_GET['action'] == "list") {
-?>
 
+?>
 Artist list:<br>
 <?php
 foreach($artists as $artist) {
@@ -48,6 +44,8 @@ else if($_GET['action'] == "addfavorite") {
     add_favorite($_SESSION['username'], $artist_id);
     
     echo "Artist added to favorites!";
+    
+    header('Location: artists.php?action=details&id=' . $artist_id, true);
 }
 else if($_GET['action'] == "removefavorite") {
     if(!isset($_GET['id'])) {
@@ -59,6 +57,8 @@ else if($_GET['action'] == "removefavorite") {
     remove_favorite($_SESSION['username'], $artist_id);
     
     echo "Artist removed from favorites!";
+    
+    header('Location: artists.php?action=details&id=' . $artist_id, true);
 }
 else if($_GET['action'] == "details") {
     if(!isset($_GET['id'])) {
@@ -92,11 +92,10 @@ Formation Zipcode: <?=$details['formationZipCode']?><br>
 
 if(is_moderator($username)) {
 ?>
-| <a href="artists.php?action=editartist&id=<?=$details['artistId']?>">Edit artist</a> | <a href="artists.php?action=deleteartist&id=<?=$details['artistId']?>">Delete artist</a> | <a href="artists.php?action=addmember&id=<?=$details['artistId']?>">Add Member</a><br>
+<br><a href="artists.php?action=editartist&id=<?=$details['artistId']?>">Edit artist</a> | <a href="artists.php?action=deleteartist&id=<?=$details['artistId']?>">Delete artist</a> | <a href="artists.php?action=addmember&id=<?=$details['artistId']?>">Add Member</a> | <a href="album.php?action=addalbum">Add album</a><br>
 <?php } ?>
 <br>
-<br>
-Members:<br>
+<b>Members</b><br>
 <?php
 foreach(get_members($details['artistId']) as $member) {
     echo 'Name: ' . $member['name'] . '<br>';
@@ -104,13 +103,15 @@ foreach(get_members($details['artistId']) as $member) {
     if(!empty($member['leaveDate'])) {
         echo 'Leave Date: ' . $member['leaveDate'] . '<br>';
     }
-    echo '<a href="artists.php?action=editmember&id=' . $details['artistId'] . '&memberId=' . $member['memberId'] . '">Edit Member</a><br>';
-    echo '<a href="artists.php?action=deletemember&id=' . $member['memberId'] . '">Remove Member</a><br>';
-    echo '<br>';
+    
+    if(is_moderator($_SESSION['username'])) {
+        echo '<a href="artists.php?action=editmember&id=' . $details['artistId'] . '&memberId=' . $member['memberId'] . '">Edit Member</a><br>';
+        echo '<a href="artists.php?action=deletemember&id=' . $member['memberId'] . '">Remove Member</a><br>';
+    }
 }
 ?>
 <br>
-Albums:<br>
+<b>Albums</b><br>
 <?php
 $artist_releases = get_albums_per_artist($details['artistId']);
 foreach($artist_releases as $release) {
@@ -121,18 +122,44 @@ foreach($artist_releases as $release) {
     echo '<br>';
 }
 ?>
-<a href="album.php?action=addalbum">Add album</a><br>
-<br>
-Performances:<br>
-<?php if(is_moderator($username)) { ?>
+
+<b>Performances</b><br>
+<?php
+$performances = get_all_performances_by_artist($details['artistId']);
+
+foreach($performances as $performance) {
+    echo '<a href="performance.php?action=details&id='.$performance['performanceId'].'">'.$performance['title'].'</a><br>';
+}
+
+if(is_moderator($username)) { ?>
 <a href="artists.php?action=addperformance&id=<?=$details['artistId']?>">Add performance</a><br>
 <?php } ?>
 <br>
+<b>Who Favorited This Artist?</b><br>
+<?php
+$favorites = get_all_favorites_per_artist($details['artistId']);
+
+foreach($favorites as $favorite) {
+    echo '<a href="profile.php?id='.$favorite['username'].'">'.$favorite['username'].'</a><br>';
+}
+?>
 <br>
-Who Favorited This Artist?<br>
-<br>
-<br>
-Comments:<br>
+<b>Comments</b><br>
+<?php
+    $comments = get_comments_by_artist($details['artistId']);
+    foreach($comments as $comment) {
+?>
+        Username: <a href="profile.php?id=<?=$comment['username']?>"><?=$comment['username']?></a><br>
+        Date: <?=$comment['postDate']?><br>
+        Comment: <?=$comment['comment']?><br>
+        
+        <?php if($comment['username'] == $_SESSION['username'] || is_moderator($_SESSION['username'])) { ?>
+        (<a href="comment.php?action=editcomment&id=<?=$details['artistId']?>&commentId=<?=$comment['commentId']?>">Edit</a> | <a href="comment.php?action=deletecomment&artistId=<?=$details['artistId']?>&id=<?=$comment['commentId']?>">Delete</a>)<br>
+        <?php } ?>
+        <br>
+<?php
+    }
+?>
 <a href="comment.php?action=addcomment&artistId=<?=$details['artistId']?>">Add comment</a><br>
 <?php
     }
@@ -276,6 +303,9 @@ else if($_GET['action'] == "addperformance" || $_GET['action'] == "editperforman
     $artistId = intval($_GET['id']);
     $performanceId = -1;
 
+    $title = "";
+    $title_error = "";
+
     $venueId = 0;
     $venueId_error = "";
 
@@ -289,12 +319,14 @@ else if($_GET['action'] == "addperformance" || $_GET['action'] == "editperforman
         $performanceId = intval($_GET['performanceId']);    
         $details = get_performance_details($performanceId);
         
+        $title = $details['title'];
         $venueId = $details['venueId'];
         $duration = $details['duration'];
         $date = $details['date'];
     }
 
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $title = sanitize_input($_POST['title']);
         $venueId = intval($_POST['venueId']);
         $duration = doubleval($_POST['duration']);
         $date = sanitize_input($_POST['date']);
@@ -311,9 +343,9 @@ else if($_GET['action'] == "addperformance" || $_GET['action'] == "editperforman
             // Successful
             
             if($performanceId == -1) {
-                $ret = add_performance($venueId, $duration, $date);
+                $ret = add_performance($title, $venueId, $duration, $date);
             } else {
-                $ret = update_performance($performanceId, $venueId, $duration, $date);
+                $ret = update_performance($performanceId, $title, $venueId, $duration, $date);
             }
             
             if(!$has_error) {
@@ -327,12 +359,22 @@ else if($_GET['action'] == "addperformance" || $_GET['action'] == "editperforman
     <form action="" method="POST">
     <table>
         <tr>
+            <td>Title:</td>
+            <td><input type="text" name="title" style="width:100%" value="<?=$title?>"></input>
+            <?php if(!empty($title_error)) { ?>
+            <span class="error">* <?=$title_error?></span>
+            <?php } ?>
+            </td>
+        </tr>
+        <tr>
             <td>Venue:</td>
             <td>
                 <select name="venueId" style="width:100%">
-                    <option value="0">Venue 1</option>
-                    <option value="1">Venue 2</option>
-                    <option value="2">Venue 3</option>
+<?php
+$venues = get_all_venues();
+foreach($venues as $venue)
+    echo '<option value="'.$venue['venueId'].'">'.$venue['name'].'</a>';
+?>
                 </select>
             </td>
         </tr>

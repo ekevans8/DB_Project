@@ -39,10 +39,12 @@ Welcome, <?=$user_profile->firstName?> <?=$user_profile->lastName?> (<?=$user_pr
 <a href="">Logout</a><br><br>
 
 <?php
-if(!is_moderator($user_profile->username)) {
-    echo '<a href="profile.php?action=addmoderator&id=' . $user_profile->username . '">Promote to Moderator</a><br><br>';
-} else {
-    echo '<a href="profile.php?action=removemoderator&id=' . $user_profile->username . '">Demote to User</a><br><br>';
+if(is_moderator($_SESSION['username'])) {
+    if(!is_moderator($user_profile->username)) {
+        echo '<a href="profile.php?action=addmoderator&id=' . $user_profile->username . '">Promote to Moderator</a><br><br>';
+    } else {
+        echo '<a href="profile.php?action=removemoderator&id=' . $user_profile->username . '">Demote to User</a><br><br>';
+    }
 }
 ?>
 
@@ -57,14 +59,25 @@ foreach($favorites as $favorite) {
 ?>
 <br>
 <b>Concerts <?=$user_profile->username?> has attended</b><br>
-Concert A...<br>
-Concert B...<br>
-Concert C...<br>
-Concert D...<br>
+<?php
+$performances = get_Attended_performances_per_username($username);
+
+foreach($performances as $performance) {
+    echo '<a href="performance.php?action=details&id='.$performance['performanceId'].'">'.$performance['title'].'</a><br>';
+}
+?>
 <br>
 <b><?=$user_profile->username?>'s Comments</b><br>
-Comment A...<br>
-Comment B...<br>
-Comment C...<br>
-Comment D...<br>
+<?php
+$comments = get_comments_by_username($username);
+
+foreach($comments as $comment) {
+    if($comment['performanceId'] != null)
+        echo '<a href="performance.php?action=details&id='.$comment['performanceId'].'">'.$comment['comment'].'</a> on ' . $comment['postDate'] . '<br>';
+    else if($comment['artistId'] != null)
+        echo '<a href="artists.php?action=details&id='.$comment['artistId'].'">'.$comment['comment'].'</a> on ' . $comment['postDate'] . '<br>';
+    else
+        echo $comment['comment'].' on ' . $comment['postDate'] . '<br>';
+}
+?>
 <br>

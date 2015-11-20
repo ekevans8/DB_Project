@@ -1,73 +1,33 @@
 <?php
 include("header.php");
+include("Queries.php");
 include("utils.php");
 
-function make_comment($commentId, $username, $artistId, $performanceId, $comment, $postDate) {
-    return array("commentId" => $commentId, "username" => $username, "artistId" => $artistId, "performanceId" => $performanceId, "comment" => $comment, "postDate" => $postDate);
-}
-$performance_comments = array(make_comment(0, "test", null, 1, "This is a test comment 1", "2015-01-01"),
-make_comment(1, "test", null, 2, "This is a test comment 2", "2015-01-01"),
-make_comment(2, "testi123", null, 1, "This is a test comment 3", "2015-01-01"),
-make_comment(3, "test", null, 4, "This is a test comment 4", "2015-01-01"),
-make_comment(4, "test", null, 1, "This is a test comment 5", "2015-01-01"),
-make_comment(5, "test13", null, 0, "This is a test comment 6", "2015-01-01"),
-make_comment(6, "test123", null, 1, "This is a test comment 7", "2015-01-01"),
-make_comment(7, "test2qwasfd", null, 1, "This is a test comment 8", "2015-01-01"));
-
-function get_comment_details($performanceId, $commentId, $performance_comments) {
-    foreach($performance_comments as $comment) {
-        if($comment['performanceId'] == $performanceId && $comment['commentId'] == $commentId) {
-            return $comment;
-        }
-    }
-    
-    return null;
-}
-
-function add_comment($artistId, $performanceId, $comment) {
-    // Automatically get username from the current session
-    // Get the current date automatically
-    return true;
-}
-
-function update_comment($commentId, $comment) {
-    // Only modify the comment text body
-    return true;
-}
-
-function remove_comment($commentId) {
-    // Check that the user deleting the comment is the same as the user who posted the comment, or a moderator
-    return true;
-}
+session_start();
 
 if($_GET['action'] == "addcomment" || $_GET['action'] == "editcomment") {
     if(!is_logged_in()) {
         die("You must be logged in to perform this action");
     }
-    
-    if(!isset($_GET['performanceId']) && !isset($_GET['artistId'])) {
-        die("Must specify a performanceId or an artistId for this action");
-    }
 
     $performanceId = -1;
     $artistId = -1;
     $commentId = -1;
-    
-    if(isset($_GET['performanceId'])) {
-        $performanceId = intval($_GET['performanceId']);
-    }
-    
-    if(isset($_GET['artistId'])) {
-        $artistId = intval($_GET['artistId']);
-    }
-    
     $comment = "";
+    
+    if(isset($_GET['performanceId']))
+        $performanceId = intval($_GET['performanceId']);
+    
+    if(isset($_GET['artistId']))
+        $artistId = intval($_GET['artistId']);
 
     if($_GET['action'] == "editcomment" && isset($_GET['commentId'])) {
         $commentId = intval($_GET['commentId']);    
-        $details = get_comment_details($performanceId, $commentId, $performance_comments);
+        $details = get_comment_by_id($commentId);
         
         $comment = $details['comment'];
+        $performanceId = $details['performanceId'];
+        $artistId = $details['artistId'];
     }
 
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -85,14 +45,28 @@ if($_GET['action'] == "addcomment" || $_GET['action'] == "editcomment") {
         if(!$has_error) {
             // Successful
             
-            if($commentId == -1) {
-                $ret = add_comment($artistId, $performanceId, $comment);
+            $postDate = date("Y-m-d");
+            
+            if($artistId != -1) {
+                $redirect_page = "artists.php?action=details&id=" . $artistId;
+            } else if($performanceId != -1) {
+                $redirect_page = "performance.php?action=details&id=" . $performanceId;
             } else {
-                $ret = update_comment($commentId, $comment);
+                $redirect_page = 'artists.php?action=list';
+            }
+            
+            if($commentId == -1) {
+                if($artistId != -1) {
+                    $ret = add_comment_for_artist($_SESSION['username'], $artistId, $comment, $postDate);
+                } else if($performanceId != -1) {
+                    $ret = add_comment_for_performance($_SESSION['username'], $performanceId, $comment, $postDate);
+                }
+            } else {
+                $ret = update_comment($commentId, $artistId, $performanceId, $comment);
             }
             
             if(!$has_error) {
-                header('Location: artists.php?action=list', true);
+                header('Location: ' . $redirect_page, true);
                 die();
             }
         }
@@ -103,7 +77,7 @@ if($_GET['action'] == "addcomment" || $_GET['action'] == "editcomment") {
     <table>
         <tr>
             <td>Comment:</td>
-            <td><textarea></textarea></td>
+            <td><textarea name="comment"><?=$comment?></textarea></td>
         </tr>
         <tr>
             <td colspan="2" align="center">
@@ -123,16 +97,21 @@ else if($_GET['action'] == "deletecomment") {
         die("Must specify id for this action");
     }
 
-    if(!isset($_GET['performanceId'])) {
-        die("Must specify performanceId for this action");
-    }
-
     $commentId = intval($_GET['id']);
-    $performanceId = intval($_GET['performanceId']);
+    
+    if(isset($_GET['artistId'])) {
+        $artistId = intval($_GET['artistId']);
+        $redirect_page = "artists.php?action=details&id=" . $artistId;
+    } else if(isset($_GET['performanceId'])) {
+        $performanceId = intval($_GET['performanceId']);
+        $redirect_page = "performance.php?action=details&id=" . $performanceId;
+    } else {
+        $redirect_page = 'artists.php?action=list';
+    }
     
     $ret = remove_comment($commentId);
 
     // Check error code on delete?
-    header('Location: performance.php?action=details&id=' . $performanceId, true);
+    header('Location: ' . $redirect_page, true);
 }
 ?>
