@@ -16,14 +16,6 @@ function get_artist_details($artist_id, $artists) {
         return $artists[$artist_id];
 }
 
-function update_performance($performanceId, $venueId, $duration, $date) {
-    return true;
-}
-
-function remove_performance($performanceId) {
-    return true;
-}
-
 function get_performance_details($performance_id) {
     return null;
 }
