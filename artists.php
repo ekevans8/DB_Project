@@ -22,7 +22,6 @@ function get_artist_details($artist_id, $artists) {
 if(!isset($_GET['action']) || empty($_GET['action']) || $_GET['action'] == "list") {
 
 ?>
-Artist list:<br>
 <?php
 foreach($artists as $artist) {
     echo '<a href="artists.php?action=details&id=' . $artist["artistId"] . '">' . $artist["name"] . '</a><br>';
