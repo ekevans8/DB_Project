@@ -160,6 +160,23 @@ function get_members_for_artists(){
 	return "Results: ";
 }
 
+function remove_member($memberId){
+	
+	$SQL = "Delete from memeber where memberId = '".$memberId."';;";
+	
+	return "Results: ";
+	
+}
+
+function update_member($memberId, $artistId, $joinDate, $leaveDate, $name){
+	
+	$SQL = "UPDATE member SET artistId = '".$artistId."', joinDate = '".$joinDate."', leaveDate = '".$leaveDate."', name = '".$name."' 
+	WHERE memberId = '".$memberId."';";
+	
+	return "Results: ";
+	
+}
+
 function get_members($artistId){
 	
 	$SQL = "select * from member WHERE artistId = '" . $artistId . "';";
@@ -244,6 +261,12 @@ function add_performance($duration, $venueId, $date){
 	
 }
 
-
+function add_song_played_to_performance($performanceId, $songId, $artistId){
+	
+	$SQL = "INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('".$performanceId."', '".."', '".."');";
+	
+	return "Results: ";
+	
+}
 
 ?>
