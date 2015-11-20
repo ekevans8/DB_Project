@@ -223,6 +223,11 @@ function unlink_song_to_album_and_artist($songId, $albumId, $artistId){
 	
 }
 
-
+function get_all_album_summaries(){
+	
+	$SQL = "select * from albumsummaries;";
+	
+	return "Results: ";
+}
 
 ?>
