@@ -385,6 +385,20 @@ function remove_song_played_to_performance($performanceId, $songId, $artistId){
 	
 }
 
+function add_attended_performance($username, $performanceId){
+	
+	$SQL = "INSERT INTO attended_performance (username, performanceId) VALUES ('".$username."', '".$performanceId."');";
+	
+	return "Results: ";
+	
+}
 
+function remove_atteneded_performance($username, $performanceId){
+	
+	$SQL = "DELETE FROM attended_performance where performanceId = '".$performanceId."' AND username = '".$username."';";
+	
+	return "Results: ";
+	
+}
 
 ?>

@@ -135,3 +135,18 @@ INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('4', 
 INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('3', '22', '3');
 INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('3', '18', '3');
 INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('3', '16', '3');
+
+#Insert Test Attended Performances
+INSERT INTO attended_performance (username, performanceId) VALUES ('B-Dawg', '1');
+INSERT INTO attended_performance (username, performanceId) VALUES ('E-Dawg', '1');
+INSERT INTO attended_performance (username, performanceId) VALUES ('L-Dawg', '1');
+INSERT INTO attended_performance (username, performanceId) VALUES ('M-Dawg', '1');
+INSERT INTO attended_performance (username, performanceId) VALUES ('S-Dawg', '1');
+INSERT INTO attended_performance (username, performanceId) VALUES ('E-Dawg', '2');
+INSERT INTO attended_performance (username, performanceId) VALUES ('L-Dawg', '2');
+INSERT INTO attended_performance (username, performanceId) VALUES ('S-Dawg', '2');
+INSERT INTO attended_performance (username, performanceId) VALUES ('M-Dawg', '2');
+INSERT INTO attended_performance (username, performanceId) VALUES ('M-Dawg', '3');
+INSERT INTO attended_performance (username, performanceId) VALUES ('M-Dawg', '4');
+INSERT INTO attended_performance (username, performanceId) VALUES ('L-Dawg', '3');
+INSERT INTO attended_performance (username, performanceId) VALUES ('L-Dawg', '4');
