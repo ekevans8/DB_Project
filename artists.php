@@ -3,7 +3,9 @@ include("header.php");
 include("Queries.php");
 include("utils.php");
 
-$username = "b-dawg";
+session_start();
+
+$username = $_SESSION['username'];
 
 $artists = get_all_artist_info();
 
@@ -159,7 +161,8 @@ foreach(get_members($details['artistId']) as $member) {
 <br>
 Releases:<br>
 <?php
-foreach($artists_releases[$details['artistId']] as $release) {
+$artist_releases = get_albums_per_artist($details['artistId']);
+foreach($artist_releases as $release) {
     echo 'Title: ' . $release['title'] . '<br>';
     echo 'Record Label: ' . $release['recordLabel'] . '<br>';
     echo 'Release Date: ' . $release['releaseDate'] . '<br>';

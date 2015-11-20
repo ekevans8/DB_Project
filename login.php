@@ -10,6 +10,9 @@ $password = "";
 $password_error = "";
 
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    session_destroy();
+    session_start();
+    
     $username = sanitize_input($_POST['username']);
     $password = sanitize_input($_POST['password']);
     
@@ -27,6 +30,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ret = login_user($username, $password);
     if(!$has_error && $ret) {
         // Successful login
+        $_SESSION['username'] = $username;
+        
         header('Location: profile.php', true);
         die();
     } else {

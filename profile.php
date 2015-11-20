@@ -3,8 +3,9 @@ include("header.php");
 include("Queries.php");
 include("utils.php");
 
-// TODO: Add username to session information?
-$username = "b-dawg";
+session_start();
+
+$username = $_SESSION['username'];
 
 if(isset($_GET['id'])) {
     $username = $_GET['id'];

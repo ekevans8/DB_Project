@@ -13,7 +13,7 @@ function is_logged_in() {
 }
 
 function is_moderator_or_die() {
-    if(!is_moderator()) {
+    if(!is_moderator($_SESSION['username'])) {
         die("Must be a moderator to access this part of the website");
     }
     

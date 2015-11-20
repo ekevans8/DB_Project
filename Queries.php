@@ -201,13 +201,13 @@ function get_all_usernames_and_favorites(){
 	return "Results: ";
 }
 
-
-
-function get_albums_per_artist($artiste){
+function get_albums_per_artist($artistId){
 	
 	$SQL = "SELECT 
 	alb.title,
-    alb.albumId
+    alb.albumId,
+    alb.recordLabel,
+    alb.releaseDate
     FROM
         album alb
             JOIN
@@ -218,9 +218,14 @@ function get_albums_per_artist($artiste){
         artist art ON tl.artistId = art.artistId
         where art.artistId = '".$artistId."'
         group by alb.albumId;";
+        
+    $result = mysql_query($SQL);
+    $results = array();
+    while($row = mysql_fetch_array($result)) {
+        $results[] = $row;
+    }
 	
-	return "Results: ";
-	
+	return $results;
 }
 
 function get_album_summary_per_albumId($albumId){
