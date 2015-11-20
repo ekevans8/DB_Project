@@ -89,13 +89,15 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         if(isset($_GET['action']) && $_GET['action'] == "update") {
             update_user($username, $email, $password, $firstname, $lastname, $age, $zipcode);
         } else {
-            $ret = register_user($username, $email, $password, $firstname, $lastname, $age, $zipcode);
-        }
         
-        if($ret == -1) {
-            // Username already in use
-            $username_error = "Username already in use";
-            $has_error = true;
+            $profile = get_profile($username);
+            if($profile != null) {
+                // Username already in use
+                $username_error = "Username already in use";
+                $has_error = true;
+            } else {
+                $ret = register_user($username, $email, $password, $firstname, $lastname, $age, $zipcode);
+            }
         }
         
         if(!$has_error) {

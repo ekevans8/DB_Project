@@ -34,13 +34,6 @@ function login_user($username, $password){
 
 function register_user($username, $email, $password, $firstName, $lastName, $age, $zipcode) {
     
-	$SQL = "SELECT * FROM user where username = '".$username."'";
-    
-    $result = mysql_query($SQL);    
-    while($row = mysql_fetch_object($result)) {
-        return -1;
-    }
-    
 	$SQL = "INSERT INTO user (`username`, `firstName`, `lastName`, `age`, `email`, `password`, `zipcode`, `isModerator`) VALUES 
 	('".$username."', '".$firstName."', '".$lastName."', '".$age."', '".$email."', '".$password."', '".$zipcode."', '0');";
 	
