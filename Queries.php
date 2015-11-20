@@ -183,6 +183,13 @@ function get_all_usernames_and_favorites(){
 	return "Results: ";
 }
 
+function get_all_usernames_and_favorites_per_favorate($username){
+	
+	$SQL = "select * from favoriteartistinfo WHERE username = '".$username."';";
+	
+	return "Results: ";
+}
+
 function add_album($albumTitle, $recordLabel, $releaseDate){
 	
 	$SQL = "INSERT INTO album (title, recordLabel, releaseDate) VALUES ('".$albumTitle."', '".$recordLabel."', '".$releaseDate."');";
