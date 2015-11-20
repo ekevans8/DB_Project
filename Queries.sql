@@ -106,10 +106,10 @@ INSERT INTO tracklist (albumId, songId, artistId, track_number) VALUES ('2', '22
 INSERT INTO tracklist (albumId, songId, artistId, track_number) VALUES ('2', '23', '3', '8');
 
 #Insert Test Performances
-INSERT INTO performance (performanceId, duration, venueId, date) VALUES ('1', '2.5', '3', '2015-10-11');
-INSERT INTO performance (performanceId, duration, venueId, date) VALUES ('2', '1.5', '2', '2015-11-20');
-INSERT INTO performance (performanceId, duration, venueId, date) VALUES ('3', '0.5', '1', '2014-09-10');
-INSERT INTO performance (performanceId, duration, venueId, date) VALUES ('4', '4', '7', '2015-08-23');
+INSERT INTO performance (performanceId, duration, venueId, date, title) VALUES ('1', '2.5', '3', '2015-10-11', 'Taylors Amazing tour');
+INSERT INTO performance (performanceId, duration, venueId, date, title) VALUES ('2', '1.5', '2', '2015-11-20', 'Wiz Pops In');
+INSERT INTO performance (performanceId, duration, venueId, date, title) VALUES ('3', '0.5', '1', '2014-09-10', 'Taylors Suprise');
+INSERT INTO performance (performanceId, duration, venueId, date, title) VALUES ('4', '4', '7', '2015-08-23', 'Taylor and Wiz');
 
 #Insert Test Performance Playlists
 INSERT INTO performance_playlist (performanceId, songId, artistId) VALUES ('1', '1', '1');

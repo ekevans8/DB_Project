@@ -279,9 +279,9 @@ function get_album_summary_per_albumId($albumId){
 	return $results;
 }
 
-function add_performance($duration, $venueId, $date){
+function add_performance($duration, $venueId, $date, $title){
 	
-	$SQL = "INSERT INTO performance (duration, venueId, date) VALUES ('".$duration."', '".$venueId."', '".$date."');";
+	$SQL = "INSERT INTO performance (duration, venueId, date, title) VALUES ('".$duration."', '".$venueId."', '".$date."', '".$title."');";
 	
 	return "Results: ";
 	
