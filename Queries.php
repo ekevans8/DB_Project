@@ -1,18 +1,37 @@
 <?php
 include 'db.inc';
+
 // Connect to MySQL DBMS
-if (!($connection = @ mysql_connect($hostName, $username,
-  $password)))
+if (!($connection = @ mysql_connect($hostName, $username, $password)))
   showerror();
+
 // Use the cars database
 if (!mysql_select_db($databaseName, $connection))
   showerror();
 
+function get_password_hash($password) {
+    // Generate a bcrypt encrypted password hash.
+    // This hash will always be 60 characters long.
+    return password_hash($password, PASSWORD_BCRYPT);
+}
+
+function verify_password_hash($password, $hash) {
+    // Verify a bcrypt hashed password.
+    return password_verify($password, $hash);
+}
+
 function login_user($username, $password){
+	$SQL = "SELECT * FROM user where username = '".$username."'";
+    
+    $result = mysql_query($SQL);    
+    while($row = mysql_fetch_object($result)) {
+        echo $row->password . "<br>";
+        
+        if(verify_password_hash($password, $row->password))
+            return true;
+    }
 	
-	$SQL = "SELECT * FROM user where username = '".$username."' AND password = '".$password."'";
-	
-	return "Results: ";
+	return false;
 }
 
 function register_user($username, $email, $password, $firstName, $lastName, $age, $zipcode) {
@@ -33,30 +52,39 @@ function update_user($username, $email, $password, $firstName, $lastName, $age, 
 
 function is_moderator($username){
 	
-	$SQL = "SELECT isModerator FROM use WHERE username = '".$username."'";
-	
-	return "Results: ";
+	$SQL = "SELECT isModerator FROM user WHERE username = '".$username."'";
+    
+    $result = mysql_query($SQL);    
+    while($row = mysql_fetch_object($result)) {        
+        if($row->isModerator == 1)
+            return true;
+    }
+    
+    return false;
 }
 
 function get_profile($username){
 	
 	$SQL = "SELECT * FROM user WHERE username = '".$username."'";
-	
-	return "Results: ";
+    
+    $result = mysql_query($SQL);
+    while($row = mysql_fetch_object($result)) {        
+        return $row;
+    }
+    
+	return null;
 }
 
 function make_moderator($username){
-	
 	$SQL = "UPDATE user SET isModerator = 1 where username = '".$username."'";
-	
-	return "Results: ";
+    $result = mysql_query($SQL);
+    return $result;
 }
 
 function remove_moderator($username){
-	
 	$SQL = "UPDATE user SET isModerator = 0 where username = '".$username."'";
-	
-	return "Results: ";
+    $result = mysql_query($SQL);
+    return $result;
 }
 
 function get_all_venues(){
