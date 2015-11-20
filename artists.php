@@ -118,17 +118,18 @@ foreach(get_members($details['artistId']) as $member) {
 }
 ?>
 <br>
-Releases:<br>
+Albums:<br>
 <?php
 $artist_releases = get_albums_per_artist($details['artistId']);
 foreach($artist_releases as $release) {
     echo 'Title: ' . $release['title'] . '<br>';
     echo 'Record Label: ' . $release['recordLabel'] . '<br>';
     echo 'Release Date: ' . $release['releaseDate'] . '<br>';
-    echo '<a href="tracklist.php?id=' . $release['albumId'] . '">View tracklist</a><br>';
+    echo '<a href="album.php?action=details&id=' . $release['albumId'] . '">View tracklist</a><br>';
     echo '<br>';
 }
 ?>
+<a href="album.php?action=addalbum">Add album</a><br>
 <br>
 Performances:<br>
 <?php if(is_moderator($username)) { ?>

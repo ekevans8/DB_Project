@@ -139,8 +139,8 @@ function remove_artist($artistId){
 	
 	$SQL = "delete from member where artistId = '".$artistId."';";
     mysql_query($SQL) or die(mysql_error());
-	
-	$SQL = "delete from comment where artistId = '".$artistId."';";
+    
+    $SQL = "delete from comment where artistId = '".$artistId."';";
     mysql_query($SQL) or die(mysql_error());
 	
     $SQL = "delete from artist where artistId = '".$artistId."';";
@@ -270,8 +270,13 @@ function get_album_summary_per_albumId($albumId){
 	
 	$SQL = "select * from albumsummaries WHERE albumId = '".$albumId."';";
 	
-	return "Results: ";
+    $result = mysql_query($SQL);
+    $results = array();
+    while($row = mysql_fetch_array($result)) {
+        $results[] = $row;
+    }
 	
+	return $results;
 }
 
 function add_performance($duration, $venueId, $date){
@@ -314,11 +319,25 @@ function get_all_usernames_and_favorites_per_favorite($username){
 	
 	return "Results: ";
 }
+
+function get_albums(){
+	
+	$SQL = "select * from album;";
+    
+    $result = mysql_query($SQL);
+    $results = array();
+    while($row = mysql_fetch_array($result)) {
+        $results[] = $row;
+    }
+	
+	return $results;
+}
+
 function add_album($albumTitle, $recordLabel, $releaseDate){
 	
-	$SQL = "INSERT INTO album (title, recordLabel, releaseDate) VALUES ('".$albumTitle."', '".$recordLabel."', '".$releaseDate."');";
+	$SQL = "INSERT INTO album (`title`, `recordLabel`, `releaseDate`) VALUES ('".$albumTitle."', '".$recordLabel."', '".$releaseDate."');";
 	
-	return "Results: ";
+	return mysql_query($SQL) or die(mysql_error());
 	
 }
 function remove_album($albumId){
@@ -326,7 +345,7 @@ function remove_album($albumId){
 	$SQL = "DELETE FROM tracklist where albumId = '".$albumId."';
 	DELETE FROM album where albumId = '".$albumId."';";
 	
-	return "Results: ";
+	return mysql_query($SQL) or die(mysql_error());
 	
 }
 function update_album($albumId, $albumTitle, $recordLabel, $releaseDate){
@@ -334,14 +353,15 @@ function update_album($albumId, $albumTitle, $recordLabel, $releaseDate){
 	$SQL = "UPDATE album SET title = '".$albumTitle."', recordLabel = '".$recordLabel."', releaseDate = '".$releaseDate."' 
 	where albumId = '".$albumId."';";
 	
-	return "Results: ";
+	return mysql_query($SQL) or die(mysql_error());
 	
 }
 function add_song($songTitle, $duration, $trackNumber){
 	
 	$SQL = "INSERT INTO song (title, duration, track_number) VALUES ('".$songTitle."', '".$duration."', '".$trackNumber."');";
-	
-	return "Results: ";
+	mysql_query($SQL) or die(mysql_error());
+    
+	return mysql_insert_id();
 	
 }
 function update_song($songId, $songTitle, $duration, $trackNumber){
@@ -349,7 +369,7 @@ function update_song($songId, $songTitle, $duration, $trackNumber){
 	$SQL = "UPDATE song SET title = '".$songTitle."', duration = '".$duration."', track_number = '".$trackNumber."' 
 	where songId = '".$songId."';";
 	
-	return "Results: ";
+	return mysql_query($SQL) or die(mysql_error());
 	
 }
 function remove_song($songId){
@@ -357,21 +377,21 @@ function remove_song($songId){
 	$SQL = "DELETE FROM tracklist where songId = '".$songId."';
 	DELETE FROM album where songId = '".$songId."';";
 	
-	return "Results: ";
+	return mysql_query($SQL) or die(mysql_error());
 	
 }
 function link_song_to_album_and_artist($songId, $albumId, $artistId){
 	
-	$SQL = "INSERT INTO tracklist (albumId, songId, artistId) VALUES ('".$songId."', '".$albumId."', '".$artistId."');";
+	$SQL = "INSERT INTO tracklist (albumId, songId, artistId) VALUES ('".$albumId."', '".$songId."', '".$artistId."');";
 	
-	return "Results: ";
+	return mysql_query($SQL) or die(mysql_error());
 	
 }
 function unlink_song_to_album_and_artist($songId, $albumId, $artistId){
 	
 	$SQL = "DELETE FROM tracklist WHERE songId = ".$songId."' AND albumId = '".$albumId."' AND artistId = '".$artistId."');";
 	
-	return "Results: ";
+	return mysql_query($SQL) or die(mysql_error());
 	
 }
 function get_all_album_summaries(){
@@ -385,8 +405,7 @@ function remove_song_played_to_performance($performanceId, $songId, $artistId){
 	
 	$SQL = "DELETE FROM performance_playlist where performanceId = '".$performanceId."' AND songId = '".$songId."' AND artistId = '".$artistId."';";
 	
-	return "Results: ";
-	
+	return "Results: ";	
 }
 
 function add_attended_performance($username, $performanceId){

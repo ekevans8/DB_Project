@@ -1,41 +1,58 @@
 <?php
 include("header.php");
+include("Queries.php");
 include("utils.php");
 
-// Add, edit, remove album
-// Add, edit, remove song
-function add_album($title, $recordLabel, $releaseDate) {
-    return true;
-}
-
-function update_album($albumId, $title, $recordLabel, $releaseDate) {
-    return true;
-}
-
-function remove_album($albumId) {
-    return true;
-}
-
-function add_song($title, $duration, $track_number) {
-    return true;
-}
-    
-function update_song($songId, $title, $duration, $track_number) {
-    return true;
-}
-
-function remove_song($songId) {
-    return true;
-}
-
+session_start();
 
 if(!isset($_GET['action'])) {
-    die("An action must be specified");
+    $albums = get_albums();
+    
+    foreach($albums as $album) {
+        echo '<a href="album.php?action=details&id=' . $album['albumId'] .'">' . $album['title'] . '</a> (' . $album['releaseDate'] . ') from ' . $album['recordLabel'] . '<br>';
+    }
 }
-
-
 else if($_GET['action'] == "details") {
     // Get detailed album information including tracklist
+    $albumId = intval($_GET['id']);
+    $songs = get_album_summary_per_albumId($albumId);
+    
+    if($songs != null) {        
+        $total_duration = 0;
+        $artist_name = $songs[0]['Artist_Name'];
+        $same_artist = true;
+        
+        
+        foreach($songs as $song) {
+            if($song['Artist_Name'] != $artist_name) {
+                $same_artist = false;
+                break;
+            }
+        }
+        
+        echo '<b>' . $songs[0]['Album_Title'] . '</b><br>';
+        
+        if($same_artist) {
+            echo $artist_name . "<br>";
+        }
+        
+        echo "<br>";
+        
+        foreach($songs as $song) {
+            if(!$same_artist)
+                echo $song['track_number'] . ") " . $song['Artist_Name'] . ' - ' . $song['Song_Title'] . " (" . $song['duration'] . ")";
+            else
+                echo $song['track_number'] . ") " . $song['Song_Title'] . " (" . $song['duration'] . ")";
+            
+            echo ' <a href="album.php?action=editsong&id='.$song[''].'">Edit song</a>';
+            $total_duration += $song['duration'];
+        }
+        
+        echo "<br><b>Total length</b>: " . $total_duration . "<br>";
+    }
+    
+    echo "<br>";
+    echo '<a href="album.php?action=addsong&id=' . $albumId . '">Add song</a><br>';
 }
 else if($_GET['action'] == "addalbum" || $_GET['action'] == "editalbum") {
     is_moderator_or_die();
@@ -88,7 +105,7 @@ else if($_GET['action'] == "addalbum" || $_GET['action'] == "editalbum") {
         if(!$has_error) {
             // Successful
             
-            if($memberId == -1) {
+            if($albumId == -1) {
                 $ret = add_album($title, $recordLabel, $releaseDate);
             } else {
                 $ret = update_album($albumId, $title, $recordLabel, $releaseDate);
@@ -96,7 +113,10 @@ else if($_GET['action'] == "addalbum" || $_GET['action'] == "editalbum") {
             
             if(!$has_error) {
                 // Get album id from return value(s)
-                header('Location: album.php?action=details&id=' . $albumId, true);
+                if($albumId != -1)
+                    header('Location: album.php?action=details&id=' . $albumId, true);
+                else
+                    header('Location: artists.php', true);
                 die();
             }
         }
@@ -163,6 +183,9 @@ else if($_GET['action'] == "addsong" || $_GET['action'] == "editsong") {
     $albumId = intval($_GET['id']);
     $songId = -1;
 
+    $artistId = -1;
+    $artist_error = "";
+    
     $title = "";
     $title_error = "";
 
@@ -182,9 +205,10 @@ else if($_GET['action'] == "addsong" || $_GET['action'] == "editsong") {
     }
 
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $artistId = intval($_POST['artistid']);
         $title = sanitize_input($_POST['title']);
-        $duration = sanitize_input($_POST['duration']);
-        $track_number = sanitize_input($_POST['track_number']);
+        $duration = doubleval($_POST['duration']);
+        $track_number = intval($_POST['track_number']);
         
         $albumId = intval($_POST['albumId']);
             
@@ -207,7 +231,8 @@ else if($_GET['action'] == "addsong" || $_GET['action'] == "editsong") {
             // Successful
             
             if($songId == -1) {
-                $ret = add_song($title, $duration, $track_number);
+                $songId = add_song($title, $duration, $track_number);
+                $ret = link_song_to_album_and_artist($songId, $albumId, $artistId);
             } else {
                 $ret = update_song($songId, $title, $duration, $track_number);
             }
@@ -223,6 +248,23 @@ else if($_GET['action'] == "addsong" || $_GET['action'] == "editsong") {
     <form action="" method="POST">
     <table>
         <tr>
+            <td>Artist:</td>
+            <td>
+                <select name="artistid">
+                <?php
+                    $artists = get_all_artist_info();
+                    foreach($artists as $artist) {
+                        echo '<option value="'.$artist['artistId'].'">'.$artist['name'].'</option>';
+                    }
+                ?>
+                </select>
+            </td>
+            <?php if(!empty($track_number_error)) { ?>
+            <span class="error">* <?=$artist_error?></span>
+            <?php } ?>
+            </td>
+        </tr>
+        <tr>
             <td>Title:</td>
             <td><input type="text" name="title" style="width:100%" value="<?=$title?>"></input>
             <?php if(!empty($title_error)) { ?>
@@ -232,7 +274,7 @@ else if($_GET['action'] == "addsong" || $_GET['action'] == "editsong") {
         </tr>
         <tr>
             <td>Duration:</td>
-            <td><input type="text" name="duration" style="width:100%" value="<?=$duration?>"></input>
+            <td><input type="number" step="any" name="duration" style="width:100%" value="<?=$duration?>"></input>
             <?php if(!empty($duration_error)) { ?>
             <span class="error">* <?=$duration_error?></span>
             <?php } ?>
@@ -258,7 +300,7 @@ else if($_GET['action'] == "addsong" || $_GET['action'] == "editsong") {
 
 <?php
 }
-else if($_GET['action'] == "deletemember") {
+else if($_GET['action'] == "removesong") {
     is_moderator_or_die();
 
     if(!isset($_GET['id'])) {
