@@ -11,6 +11,8 @@ if(!isset($_GET['action'])) {
     foreach($albums as $album) {
         echo '<a href="album.php?action=details&id=' . $album['albumId'] .'">' . $album['title'] . '</a> (' . $album['releaseDate'] . ') from ' . $album['recordLabel'] . '<br>';
     }
+    
+    echo '<br><a href="album.php?action=addalbum">Add album</a><br>';
 }
 else if($_GET['action'] == "details") {
     // Get detailed album information including tracklist
@@ -44,7 +46,11 @@ else if($_GET['action'] == "details") {
             else
                 echo $song['track_number'] . ") " . $song['Song_Title'] . " (" . $song['duration'] . ")";
             
-            echo ' <a href="album.php?action=editsong&id='.$song[''].'">Edit song</a>';
+            if(is_moderator($_SESSION['username']))
+                echo ' <a href="album.php?action=editsong&id='.$song['albumId'].'&songId='.$song['songId'].'">Edit song</a> | <a href="album.php?action=removesong&id='.$song['songId'].'">Remove song</a>';
+            
+            echo "<br>";
+            
             $total_duration += $song['duration'];
         }
         
@@ -52,7 +58,9 @@ else if($_GET['action'] == "details") {
     }
     
     echo "<br>";
-    echo '<a href="album.php?action=addsong&id=' . $albumId . '">Add song</a><br>';
+    
+    if(is_moderator($_SESSION['username']))
+        echo '<a href="album.php?action=addsong&id=' . $albumId . '">Add song</a><br>';
 }
 else if($_GET['action'] == "addalbum" || $_GET['action'] == "editalbum") {
     is_moderator_or_die();
@@ -197,7 +205,7 @@ else if($_GET['action'] == "addsong" || $_GET['action'] == "editsong") {
 
     if($_GET['action'] == "editsong" && isset($_GET['songId'])) {
         $songId = intval($_GET['songId']);    
-        $details = get_song_details($songId, $song_info);
+        $details = get_song($songId);
         
         $title = $details['title'];
         $duration = $details['duration'];
