@@ -670,4 +670,14 @@ function get_venue_by_id($venueId) {
 	return null;
 }
 
+function get_most_seen_songs_per_user($username){
+	
+	$SQL = "select ap.username, ps.SongTitle, ps.Artist, ps.artistId, count(ps.SongTitle) as NumberSeen from attended_performance ap
+			join performancesummary ps on ap.performanceId = ps.performanceId
+			where ap.username = '".$username."'
+			group by ps.SongTitle, ps.Artist, ap.username
+			order by NumberSeen DESC;"
+	
+}
+
 ?>
