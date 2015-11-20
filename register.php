@@ -1,5 +1,7 @@
 <?php
 include("header.php");
+include("utils.php");
+include("Queries.php");
 
 $username = "";
 $username_error = "";
@@ -22,8 +24,23 @@ $age_error = "";
 $zipcode = 10000;
 $zipcode_error = "";
 
+if(isset($_GET['action']) && $_GET['action'] == "update") {
+    $username = $_GET['id'];
+    $profile = get_profile($username);
+    
+    $email = $profile['email'];
+    $firstname = $profile['firstName'];
+    $lastname = $profile['lastName'];
+    $age = $profile['age'];
+    $zipcode = $profile['zipcode'];
+}
+
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = sanitize_input($_POST['username']);
+    if(isset($_GET['action']) && $_GET['action'] == "update" && isset($_GET['id']))
+        $username = $_SESSION['username'];
+    else
+        $username = sanitize_input($_POST['username']);
+        
     $email = sanitize_input($_POST['email']);
     $password = sanitize_input($_POST['password']);
     $firstname = sanitize_input($_POST['firstname']);
@@ -69,16 +86,25 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if(!$has_error) {
         // Successful registration
+        if(isset($_GET['action']) && $_GET['action'] == "update") {
+            update_user($username, $email, $password, $firstname, $lastname, $age, $zipcode);
+        } else {
+            $ret = register_user($username, $email, $password, $firstname, $lastname, $age, $zipcode);
+        }
         
-        $ret = register_user($username, $email, $password, $firstname, $lastname, $age, $zipcode);
-        
-        if($ret == 1) {
+        if($ret == -1) {
             // Username already in use
             $username_error = "Username already in use";
             $has_error = true;
         }
         
         if(!$has_error) {
+            $profile = get_profile($username);
+            
+            $_SESSION['username'] = $profile['username'];
+            $_SESSION['firstname'] = $profile['firstName'];
+            $_SESSION['lastname'] = $profile['lastName'];
+            
             header('Location: profile.php', true);
             die();
         }
@@ -88,6 +114,16 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <form action="" method="POST">
 <table>
+<?php
+if(isset($_GET['action']) && $_GET['action'] == "update" && isset($_GET['id'])) {
+?>
+    <tr>
+        <td>Username:</td>
+        <td><?=$username?></td>
+    </tr>
+    
+<?php } else {
+?>
     <tr>
         <td>Username:</td>
         <td><input type="text" name="username" style="width:100%" value="<?=$username?>"></input>
@@ -96,6 +132,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php } ?>
         </td>
     </tr>
+<?php } ?>
     <tr>
         <td>Email:</td>
         <td><input type="email" name="email" style="width:100%" value="<?=$email?>"></input>

@@ -86,9 +86,9 @@ Date disbanded: <?=$details['breakupDate']?><br>
 Formation Zipcode: <?=$details['formationZipCode']?><br>
 <br>
 <?php if(is_favorite($_SESSION['username'], $details['artistId'])) { ?>
-<a href="artists.php?action=removefavorite&id=<?=$details['artistId']?>">Remove from favorites</a>
+<a href="artists.php?action=removefavorite&id=<?=$details['artistId']?>">Remove from favorites</a><br>
 <?php } else { ?>
-<a href="artists.php?action=addfavorite&id=<?=$details['artistId']?>">Add to favorites</a>
+<a href="artists.php?action=addfavorite&id=<?=$details['artistId']?>">Add to favorites</a><br>
 <?php
 }
 

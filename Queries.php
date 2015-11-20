@@ -36,10 +36,17 @@ function login_user($username, $password){
 
 function register_user($username, $email, $password, $firstName, $lastName, $age, $zipcode) {
     
-	$SQL = "INSERT INTO user ('username', 'firstName', 'lastName', 'age', 'email', 'password', 'zipcode', 'isModerator') VALUES 
+	$SQL = "SELECT * FROM user where username = '".$username."'";
+    
+    $result = mysql_query($SQL);    
+    while($row = mysql_fetch_object($result)) {
+        return -1;
+    }
+    
+	$SQL = "INSERT INTO user (`username`, `firstName`, `lastName`, `age`, `email`, `password`, `zipcode`, `isModerator`) VALUES 
 	('".$username."', '".$firstName."', '".$lastName."', '".$age."', '".$email."', '".$password."', '".$zipcode."', '0');";
 	
-    return "Results: ";
+    return mysql_query($SQL) or die(mysql_error());
 }
 
 function update_user($username, $email, $password, $firstName, $lastName, $age, $zipcode) {
@@ -47,7 +54,7 @@ function update_user($username, $email, $password, $firstName, $lastName, $age, 
 	$SQL = "UPDATE user SET username = '".$username."', firstName = '".$firstName."', lastName = '".$lastName."', age = '".$age."'
 	, email = '".$email."', password = '".$password."', zipcode = '".$zipcode."' where username = '".$username."';";
  
-    return "Results: ";
+    return mysql_query($SQL) or die(mysql_error());
 }
 
 function is_moderator($username){
