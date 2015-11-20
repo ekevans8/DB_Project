@@ -1,4 +1,6 @@
 <?php
+include("utils.php");
+include("Queries.php");
 include("header.php");
 
 $username = "";
@@ -22,15 +24,11 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         $has_error = true;
     }
   
-    $password_hash = "";
-    if(!$has_error && verify_password_hash($password, $password_hash)) {
+    $ret = login_user($username, $password);
+    if(!$has_error && $ret) {
         // Successful login
-        $ret = login_user($username, $password);
-        
-        if(!$has_error && $ret == 1) {
-            header('Location: profile.php', true);
-            die();
-        }
+        header('Location: profile.php', true);
+        die();
     } else {
         $password_error = "Username and password combination did not work";
         $has_error = true;
