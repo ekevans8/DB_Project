@@ -268,7 +268,7 @@ function get_albums_per_artist($artistId){
 
 function get_album_summary_per_albumId($albumId){
 	
-	$SQL = "select * from albumsummaries WHERE albumId = '".$albumId."';";
+	$SQL = "select * from albumsummaries WHERE albumId = '".$albumId."' ORDER BY track_number;";
 	
     $result = mysql_query($SQL);
     $results = array();
@@ -316,8 +316,14 @@ function add_song_played_to_performance($performanceId, $songId, $artistId){
 function get_all_usernames_and_favorites_per_favorite($username){
 	
 	$SQL = "select * from favoriteartistinfo WHERE username = '".$username."';";
+    
+    $result = mysql_query($SQL);
+    $results = array();
+    while($row = mysql_fetch_array($result)) {
+        $results[] = $row;
+    }
 	
-	return "Results: ";
+	return $results;
 }
 
 function get_albums(){
@@ -357,13 +363,26 @@ function update_album($albumId, $albumTitle, $recordLabel, $releaseDate){
 	
 }
 function add_song($songTitle, $duration){
-	
+    
 	$SQL = "INSERT INTO song (title, duration) VALUES ('".$songTitle."', '".$duration."');";
 	mysql_query($SQL) or die(mysql_error());
     
 	return mysql_insert_id();
 	
 }
+function get_song($songId){
+	
+	$SQL = "SELECT * FROM song WHERE songId = '" . $songId . "'";
+    
+    $result = mysql_query($SQL);
+    while($row = mysql_fetch_array($result)) {
+        return $row;
+    }
+    
+	return null;
+	
+}
+
 function update_song($songId, $songTitle, $duration, $trackNumber){
 	
 	$SQL = "UPDATE song SET title = '".$songTitle."', duration = '".$duration."', track_number = '".$trackNumber."' 
@@ -374,9 +393,7 @@ function update_song($songId, $songTitle, $duration, $trackNumber){
 }
 function remove_song($songId){
 	
-	$SQL = "DELETE FROM tracklist where songId = '".$songId."';
-	DELETE FROM album where songId = '".$songId."';";
-	
+	$SQL = "DELETE FROM tracklist where songId = '".$songId."';";
 	return mysql_query($SQL) or die(mysql_error());
 	
 }
