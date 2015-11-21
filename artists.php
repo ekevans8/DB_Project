@@ -384,7 +384,7 @@ foreach($venues as $venue)
             </td>
         </tr>
         <tr>
-            <td>Duration:</td>
+            <td>Duration (minutes):</td>
             <td><input type="number" name="duration" min="0" step="0.01" style="width:100%" value="<?=$duration?>"></input>
             <?php if(!empty($duration_error)) { ?>
             <span class="error">* <?=$duration_error?></span>

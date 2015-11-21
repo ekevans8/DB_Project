@@ -149,7 +149,7 @@ $venue = get_venue_by_id($details['venueId']);
 ?>
     <b>Venue</b>: <a href="performance.php?action=showvenue&venueId=<?=$venue['venueId']?>"><?=$venue['name']?></a><br>
     <b>Date</b>: <?=$details['date']?><br>
-    <b>Duration</b>: <?=$details['duration']?><br>
+    <b>Duration (minutes)</b>: <?=$details['duration']?><br>
     <br>
 <?php
 if(is_moderator($_SESSION['username'])) {

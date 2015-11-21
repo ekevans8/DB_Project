@@ -45,9 +45,9 @@ else if($_GET['action'] == "details") {
         
         foreach($songs as $song) {
             if(!$same_artist)
-                echo $song['track_number'] . ") " . $song['Artist_Name'] . ' - ' . $song['Song_Title'] . " (" . $song['duration'] . ")";
+                echo $song['track_number'] . ") " . $song['Artist_Name'] . ' - ' . $song['Song_Title'] . " (" . $song['duration'] . " min)";
             else
-                echo $song['track_number'] . ") " . $song['Song_Title'] . " (" . $song['duration'] . ")";
+                echo $song['track_number'] . ") " . $song['Song_Title'] . " (" . $song['duration'] . " min)";
             
             if(is_moderator($_SESSION['username']))
                 echo ' <a href="album.php?action=editsong&id='.$song['albumId'].'&songId='.$song['songId'].'">Edit song</a> | <a href="album.php?action=removesong&id='.$song['songId'].'">Remove song</a>';
@@ -286,7 +286,7 @@ else if($_GET['action'] == "addsong" || $_GET['action'] == "editsong") {
             </td>
         </tr>
         <tr>
-            <td>Duration:</td>
+            <td>Duration (minutes):</td>
             <td><input type="number" step="any" name="duration" style="width:100%" value="<?=$duration?>"></input>
             <?php if(!empty($duration_error)) { ?>
             <span class="error">* <?=$duration_error?></span>
