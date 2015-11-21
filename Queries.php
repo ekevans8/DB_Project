@@ -103,15 +103,15 @@ function add_venue($venueName, $address, $city, $state, $zip){
 	$SQL = "INSERT INTO venue ('name', 'streetAddress', 'city', 'state', 'zipcode') VALUES 
 	('".$venueName."', '".$address."', '".$city."', '".$state."', '".$zip."');";
 	
-	return "Results: ";
+    return mysql_query($SQL) or die(mysql_error());
 }
 
-function update_venue($venueName, $address, $city, $state, $zip){
+function update_venue($venueId, $name, $address, $city, $state, $zip){
 	
-	$SQL = "UPDATE venue SET name = '".$venueName."', streetAddress = '".$address."', city = '".$city."', 
-	state = '".$state."', zipcode = '".$zip."' WHERE name = '".$venueName."';";
+	$SQL = "UPDATE venue SET name = '".$name."', streetAddress = '".$address."', city = '".$city."', 
+	state = '".$state."', zipcode = '".$zip."' WHERE venueId = '".$venueId."';";
 	
-	return "Results: ";
+    return mysql_query($SQL) or die(mysql_error());
 }
 
 function get_all_artist_info(){
@@ -356,23 +356,27 @@ function get_performance_summary($performanceId) {
 	return $results;
 }
 
-function update_performance($performanceId, $duration, $venueId, $date){
+function update_performance($performanceId, $title, $duration, $venueId, $date){
 	
-	$SQL = "UPDATE performance SET duration = '".$duration."', venueId = '".$venueId."', date = '".$date."' where performanceId = '".$performanceId."';";
+	$SQL = "UPDATE performance SET title = '".$title."', duration = '".$duration."', venueId = '".$venueId."', date = '".$date."' where performanceId = '".$performanceId."';";
 	
-	return "Results: ";
+	return mysql_query($SQL) or die(mysql_error());
 	
 }
 
 function remove_performance($performanceId){
 	
-	$SQL = "DELETE FROM comment where performanceId = '".$performanceId."';
-	DELETE FROM attended_performance where performanceId = '".$performanceId."';
-	DELETE FROM performance_playlist where performanceId = '".$performanceId."';
-	DELETE FROM performance where performanceId = '".$performanceId."';";
+	$SQL = "DELETE FROM comment where performanceId = '".$performanceId."';";
+	mysql_query($SQL) or die(mysql_error());
 	
-	return "Results: ";
+	$SQL = "DELETE FROM attended_performance where performanceId = '".$performanceId."';";
+	mysql_query($SQL) or die(mysql_error());
 	
+	$SQL = "DELETE FROM performance_playlist where performanceId = '".$performanceId."';";
+	mysql_query($SQL) or die(mysql_error());
+	
+	$SQL = "DELETE FROM performance where performanceId = '".$performanceId."';";	
+	return mysql_query($SQL) or die(mysql_error());	
 }
 
 function add_song_played_to_performance($performanceId, $songId, $artistId){

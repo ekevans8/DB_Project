@@ -29,6 +29,9 @@ else if($_GET['action'] == "showvenue") {
 <b>City</b>: <?=$venue['city']?><br>
 <b>State</b>: <?=$venue['state']?><br>
 <b>Zipcode</b>: <?=$venue['zipcode']?><br>
+<?php if(is_moderator($_SESSION['username'])) { ?>
+<a href="performance.php?action=editvenue&venueId=<?=$venue['venueId']?>">Edit venue</a><br>
+<?php } ?>
 <br>
 <b>Performances</b>:<br>
 <?php
@@ -154,7 +157,7 @@ $venue = get_venue_by_id($details['venueId']);
 <?php
 if(is_moderator($_SESSION['username'])) {
 ?>
-<a href="performance.php?action=addsong&performanceId=<?=$performanceId?>">Add song</a><br>
+<a href="artists.php?action=editperformance&id=-1&performanceId=<?=$details['performanceId']?>">Edit performance</a> | <a href="performance.php?action=addsong&performanceId=<?=$performanceId?>">Add song</a><br>
 <br>
 <?php
 }
@@ -252,15 +255,15 @@ else if($_GET['action'] == "addvenue" || $_GET['action'] == "editvenue") {
     $zipcode = 10000;
     $zipcode_error = "";
 
-    if($_GET['action'] == "editmember" && isset($_GET['venueId'])) {
+    if($_GET['action'] == "editvenue" && isset($_GET['venueId'])) {
         $venueId = intval($_GET['venueId']);    
-        $details = get_venue_details($venueId, $venueId_info);
+        $details = get_venue_by_id($venueId);
         
-        $name = $details['joinDate'];
-        $streetAddress = $details['leaveDate'];
-        $city = $details['name'];
-        $state = $details['name'];
-        $zipcode = $details['name'];
+        $name = $details['name'];
+        $streetAddress = $details['streetAddress'];
+        $city = $details['city'];
+        $state = $details['state'];
+        $zipcode = $details['zipcode'];
     }
 
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -310,7 +313,7 @@ else if($_GET['action'] == "addvenue" || $_GET['action'] == "editvenue") {
             }
             
             if(!$has_error) {
-                header('Location: artists.php?action=details&id=' . $artistId, true);
+                header('Location: performance.php?action=showvenue&venueId=' . $venueId, true);
                 die();
             }
         }

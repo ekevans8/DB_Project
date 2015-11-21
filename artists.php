@@ -93,7 +93,7 @@ Formation Zipcode: <?=$details['formationZipCode']?><br>
 
 if(is_moderator($username)) {
 ?>
-<br><a href="artists.php?action=editartist&artistId=<?=$details['artistId']?>">Edit artist</a> | <a href="artists.php?action=deleteartist&id=<?=$details['artistId']?>">Delete artist</a> | <a href="artists.php?action=addmember&id=<?=$details['artistId']?>">Add Member</a> | <a href="album.php?action=addalbum">Add album</a><br>
+<br><a href="artists.php?action=editartist&artistId=<?=$details['artistId']?>">Edit artist</a> | <a href="artists.php?action=deleteartist&id=<?=$details['artistId']?>">Delete artist</a> | <a href="artists.php?action=addmember&id=<?=$details['artistId']?>">Add Member</a> | <a href="album.php?action=addalbum">Add album</a> | <a href="artists.php?action=addperformance&id=<?=$details['artistId']?>">Add performance</a><br>
 <?php } ?>
 <br>
 <b>Members</b><br>
@@ -131,10 +131,7 @@ $performances = get_all_performances_by_artist($details['artistId']);
 foreach($performances as $performance) {
     echo '<a href="performance.php?action=details&id='.$performance['performanceId'].'">'.$performance['title'].'</a><br>';
 }
-
-if(is_moderator($username)) { ?>
-<a href="artists.php?action=addperformance&id=<?=$details['artistId']?>">Add performance</a><br>
-<?php } ?>
+?>
 <br>
 <b>Who Favorited This Artist?</b><br>
 <?php
@@ -350,11 +347,11 @@ else if($_GET['action'] == "addperformance" || $_GET['action'] == "editperforman
             if($performanceId == -1) {
                 $ret = add_performance($title, $venueId, $duration, $date);
             } else {
-                $ret = update_performance($performanceId, $title, $venueId, $duration, $date);
+                $ret = update_performance($performanceId, $title, $duration, $venueId, $date);
             }
             
             if(!$has_error) {
-                header('Location: artists.php?action=list', true);
+                header('Location: performance.php?action=details&id=' . $performanceId, true);
                 die();
             }
         }
