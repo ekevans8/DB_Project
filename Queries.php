@@ -455,7 +455,7 @@ function add_song($songTitle, $duration){
 
 function get_song($songId, $albumId){
 	
-	$SQL = "SELECT so.*, tr.track_number FROM song so, tracklist tr WHERE so.songId = '" . $songId . "' and tr.songId = '" . $songId . "' and tr.albumId = '" . $albumId . "' ";
+	$SQL = "SELECT so.*, tr.track_number, tr.artistId FROM song so, tracklist tr WHERE so.songId = '" . $songId . "' and tr.songId = '" . $songId . "' and tr.albumId = '" . $albumId . "' ";
     
     $result = mysql_query($SQL);
     while($row = mysql_fetch_array($result)) {

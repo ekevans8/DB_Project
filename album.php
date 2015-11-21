@@ -213,7 +213,10 @@ else if($_GET['action'] == "addsong" || $_GET['action'] == "editsong") {
         $title = $details['title'];
         $duration = $details['duration'];
         $track_number = $details['track_number'];
+        $artistId = $details['artistId'];
     }
+    
+    $origArtistId = $artistId;
 
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
         $artistId = intval($_POST['artistid']);
@@ -246,7 +249,7 @@ else if($_GET['action'] == "addsong" || $_GET['action'] == "editsong") {
                 $ret = link_song_to_album_and_artist($songId, $albumId, $artistId);
             } else {
                 update_song($songId, $title, $duration, $track_number);
-                unlink_song_to_album_and_artist($songId, $albumId, $artistId);
+                unlink_song_to_album_and_artist($songId, $albumId, $origArtistId);
                 $ret = link_song_to_album_and_artist($songId, $albumId, $artistId, $track_number);
             }
             
