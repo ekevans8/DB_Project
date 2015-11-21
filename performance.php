@@ -15,6 +15,14 @@ if(!isset($_GET['action']) || $_GET['action'] == "list") {
     }
 }
 
+else if($_GET['action'] == "listvenues") {
+    $venues = get_all_venues();
+    
+    foreach($venues as $venue) {
+        echo '<a href="performance.php?action=showvenue&venueId='.$venue['venueId'].'">'.$venue['name'].'</a><br>';
+    }
+}
+
 else if($_GET['action'] == "showvenue") {
     if(!isset($_GET['venueId'])) {
         die("Must specify venueId for this action");
