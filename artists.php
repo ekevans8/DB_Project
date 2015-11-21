@@ -93,7 +93,7 @@ Formation Zipcode: <?=$details['formationZipCode']?><br>
 
 if(is_moderator($username)) {
 ?>
-<br><a href="artists.php?action=editartist&id=<?=$details['artistId']?>">Edit artist</a> | <a href="artists.php?action=deleteartist&id=<?=$details['artistId']?>">Delete artist</a> | <a href="artists.php?action=addmember&id=<?=$details['artistId']?>">Add Member</a> | <a href="album.php?action=addalbum">Add album</a><br>
+<br><a href="artists.php?action=editartist&artistId=<?=$details['artistId']?>">Edit artist</a> | <a href="artists.php?action=deleteartist&id=<?=$details['artistId']?>">Delete artist</a> | <a href="artists.php?action=addmember&id=<?=$details['artistId']?>">Add Member</a> | <a href="album.php?action=addalbum">Add album</a><br>
 <?php } ?>
 <br>
 <b>Members</b><br>

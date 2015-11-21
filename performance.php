@@ -200,7 +200,7 @@ foreach($summary as $songinfo) {
         Comment: <?=$comment['comment']?><br>
         
         <?php if($comment['username'] == $_SESSION['username'] || is_moderator($_SESSION['username'])) { ?>
-        (<a href="comment.php?action=editcomment&id=<?=$performanceId?>&commentId=<?=$comment['commentId']?>">Edit</a> | <a href="comment.php?action=deletecomment&performanceId=<?=$performanceId?>&id=<?=$comment['commentId']?>">Delete</a>)<br>
+        (<a href="comment.php?action=editcomment&performanceId=<?=$performanceId?>&commentId=<?=$comment['commentId']?>">Edit</a> | <a href="comment.php?action=deletecomment&performanceId=<?=$performanceId?>&id=<?=$comment['commentId']?>">Delete</a>)<br>
         <?php } ?>
         <br>
 <?php

@@ -453,9 +453,9 @@ function add_song($songTitle, $duration){
 	
 }
 
-function get_song($songId){
+function get_song($songId, $albumId){
 	
-	$SQL = "SELECT * FROM song WHERE songId = '" . $songId . "'";
+	$SQL = "SELECT so.*, tr.track_number FROM song so, tracklist tr WHERE so.songId = '" . $songId . "' and tr.songId = '" . $songId . "' and tr.albumId = '" . $albumId . "' ";
     
     $result = mysql_query($SQL);
     while($row = mysql_fetch_array($result)) {
@@ -483,8 +483,7 @@ function get_all_songs(){
 
 function update_song($songId, $songTitle, $duration, $trackNumber){
 	
-	$SQL = "UPDATE song SET title = '".$songTitle."', duration = '".$duration."', track_number = '".$trackNumber."' 
-	where songId = '".$songId."';";
+	$SQL = "UPDATE song SET title = '".$songTitle."', duration = '".$duration."' where songId = '".$songId."';";
 	
 	return mysql_query($SQL) or die(mysql_error());
 	
@@ -497,14 +496,14 @@ function remove_song($songId){
 }
 function link_song_to_album_and_artist($songId, $albumId, $artistId, $trackNumber){
 	
-	$SQL = "INSERT INTO tracklist (albumId, songId, artistId, track_number) VALUES ('".$albumId."', '".$songId."', '".$artistId."', '".$trackNumber."');";
+	$SQL = "INSERT INTO tracklist (`albumId`, `songId`, `artistId`, `track_number`) VALUES ('".$albumId."', '".$songId."', '".$artistId."', '".$trackNumber."');";
 	
 	return mysql_query($SQL) or die(mysql_error());
 	
 }
 function unlink_song_to_album_and_artist($songId, $albumId, $artistId){
 	
-	$SQL = "DELETE FROM tracklist WHERE songId = ".$songId."' AND albumId = '".$albumId."' AND artistId = '".$artistId."');";
+	$SQL = "DELETE FROM tracklist WHERE songId = '".$songId."' AND albumId = '".$albumId."' AND artistId = '".$artistId."';";
 	
 	return mysql_query($SQL) or die(mysql_error());
 	
@@ -593,16 +592,15 @@ function remove_comment($commentId){
 
 function update_comment($commentId, $artistId, $performanceId, $comment){
 	$artistIdStr = "artistId = '".$artistId."', ";
-	$performanceIdStr = "performanceId = '".$performanceId."', ";
-    
     if($artistId == -1)
-        $artistIdStr = "";
+        $artistIdStr = "artistId = null, ";
     
+	$performanceIdStr = "performanceId = '".$performanceId."', ";
     if($performanceId == -1)
-        $performanceIdStr = "";
+        $performanceIdStr = "performanceId = null, ";
     
 	$SQL = "UPDATE comment SET " . $artistIdStr . $performanceIdStr . " comment = '".$comment."' where commentId = '".$commentId."';";
-	
+    	
 	return mysql_query($SQL) or die(mysql_error());	
 	
 }

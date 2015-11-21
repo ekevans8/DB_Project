@@ -208,7 +208,7 @@ else if($_GET['action'] == "addsong" || $_GET['action'] == "editsong") {
 
     if($_GET['action'] == "editsong" && isset($_GET['songId'])) {
         $songId = intval($_GET['songId']);    
-        $details = get_song($songId);
+        $details = get_song($songId, $albumId);
         
         $title = $details['title'];
         $duration = $details['duration'];
@@ -245,7 +245,9 @@ else if($_GET['action'] == "addsong" || $_GET['action'] == "editsong") {
                 $songId = add_song($title, $duration, $track_number);
                 $ret = link_song_to_album_and_artist($songId, $albumId, $artistId);
             } else {
-                $ret = update_song($songId, $title, $duration, $track_number);
+                update_song($songId, $title, $duration, $track_number);
+                unlink_song_to_album_and_artist($songId, $albumId, $artistId);
+                $ret = link_song_to_album_and_artist($songId, $albumId, $artistId, $track_number);
             }
             
             if(!$has_error) {

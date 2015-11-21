@@ -28,8 +28,9 @@ if($_GET['action'] == "addcomment" || $_GET['action'] == "editcomment") {
         $details = get_comment_by_id($commentId);
         
         $comment = $details['comment'];
-        $performanceId = $details['performanceId'];
-        $artistId = $details['artistId'];
+        
+        $performanceId = $details['performanceId'] == null ? -1 : $details['performanceId'];
+        $artistId = $details['artistId'] == null ? -1 : $details['artistId'];
     }
 
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
