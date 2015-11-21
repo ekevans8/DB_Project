@@ -272,7 +272,7 @@ function get_albums_per_artist($artistId){
 
 function get_album_summary_per_albumId($albumId){
 	
-	$SQL = "select * from albumsummaries WHERE albumId = '".$albumId."' ORDER BY track_number;";
+	$SQL = "select * from AlbumSummaries WHERE albumId = '".$albumId."' ORDER BY track_number;";
 	
     $result = mysql_query($SQL);
     $results = array();
@@ -345,7 +345,7 @@ function get_performance_details($performanceId) {
 
 function get_performance_summary($performanceId) {
     
-	$SQL = "select * from performancesummary WHERE performanceId = '".$performanceId . "'";
+	$SQL = "select * from PerformanceSummary WHERE performanceId = '".$performanceId . "'";
     
     $result = mysql_query($SQL);
     $results = array();
@@ -510,7 +510,7 @@ function unlink_song_to_album_and_artist($songId, $albumId, $artistId){
 }
 function get_all_album_summaries(){
 	
-	$SQL = "select * from albumsummaries;";
+	$SQL = "select * from AlbumSummaries;";
 	
 	return "Results: ";
 }
@@ -671,7 +671,7 @@ function get_venue_by_id($venueId) {
 function get_most_seen_songs_per_user($username){
 	
 	$SQL = "select ap.username, ps.SongTitle, ps.Artist, ps.artistId, count(ps.SongTitle) as NumberSeen from attended_performance ap
-			join performancesummary ps on ap.performanceId = ps.performanceId
+			join PerformanceSummary ps on ap.performanceId = ps.performanceId
 			where ap.username = '".$username."'
 			group by ps.SongTitle, ps.Artist, ap.username
 			order by NumberSeen DESC limit 5;";
