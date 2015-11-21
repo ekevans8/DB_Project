@@ -419,7 +419,7 @@ else if($_GET['action'] == "deleteperformance") {
     $ret = remove_performance($performanceId);
 
     // Check error code on delete?
-    header('Location: artists.php?action=list', true);
+    header('Location: performance.php?action=list', true);
 }
 else if($_GET['action'] == "addmember" || $_GET['action'] == "editmember") {
     is_moderator_or_die();

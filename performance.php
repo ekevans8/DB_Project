@@ -165,7 +165,7 @@ $venue = get_venue_by_id($details['venueId']);
 <?php
 if(is_moderator($_SESSION['username'])) {
 ?>
-<a href="artists.php?action=editperformance&id=-1&performanceId=<?=$details['performanceId']?>">Edit performance</a> | <a href="performance.php?action=addsong&performanceId=<?=$performanceId?>">Add song</a><br>
+<a href="artists.php?action=editperformance&id=-1&performanceId=<?=$details['performanceId']?>">Edit performance</a> | <a href="artists.php?action=deleteperformance&id=<?=$details['performanceId']?>">Remove performance</a> | <a href="performance.php?action=addsong&performanceId=<?=$performanceId?>">Add song</a><br>
 <br>
 <?php
 }
