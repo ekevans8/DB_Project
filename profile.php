@@ -37,7 +37,8 @@ if(isset($_GET['action'])) {
         delete_user($_SESSION['username']);
         session_destroy();  
         $_SESSION = array();
-        die("Your account has been removed from the database.");
+        //die("Your account has been removed from the database.");
+        header("Location: login.php", true);
     }
 }
 ?>
