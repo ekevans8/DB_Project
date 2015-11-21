@@ -161,3 +161,4 @@ INSERT INTO comment (commentId, username, performanceId, comment, postDate) VALU
 INSERT INTO comment (commentId, username, performanceId, comment, postDate) VALUES ('7', 'S-Dawg', '2', 'Was an enjoyable performance.', '2015-10-19');
 INSERT INTO comment (commentId, username, performanceId, comment, postDate) VALUES ('8', 'L-Dawg', '4', 'Not a huge fan of Taylor Swift with she was nice paired with Wiz. Well played.', '2015-11-17');
 INSERT INTO comment (commentId, username, artistId, comment, postDate) VALUES ('9', 'M-Dawg', '4', 'You will remember me for Centuries!!!!!', '2015-10-09');
+INSERT INTO comment (commentId, username, artistId, comment, postDate) VALUES ('10', NULL, '4', 'My babby daddy!!!', '2015-10-09');
