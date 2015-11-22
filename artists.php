@@ -19,15 +19,21 @@ function get_artist_details($artist_id, $artists) {
 }
 
 
-if(!isset($_GET['action']) || empty($_GET['action']) || $_GET['action'] == "list") {
+if(!isset($_GET['action']) || empty($_GET['action']) || $_GET['action'] == "list") {?>
+<div class="panel panel-default">
+  <div class="panel-heading">All artists</div>
+  <div class="panel-body">
+	<ul class="list-group">
 
-?>
 <?php
 foreach($artists as $artist) {
-    echo '<a href="artists.php?action=details&id=' . $artist["artistId"] . '">' . $artist["name"] . '</a><br>';
+    echo '<a class="list-group-item" href="artists.php?action=details&id=' . $artist["artistId"] . '">' . $artist["name"] . '</a>';
 }
-    echo '<br>';
-
+?>
+	</ul>
+	</div>
+</div>
+<?php
     if(is_moderator($username)) {
 ?>
 <a href="artists.php?action=addartist">Add new artist</a>
@@ -75,31 +81,47 @@ else if($_GET['action'] == "details") {
     } else {
 // Display artist details
 ?>
-<h1><?=$details['name']?></h1>
-Date formated: <?=$details['formDate']?><br>
-<?php
-if(!empty($details['breakupDate'])) {
-?>
-Date disbanded: <?=$details['breakupDate']?><br>
-<?php } ?>
-Formation Zipcode: <?=$details['formationZipCode']?><br>
-<br>
-<?php if(is_favorite($_SESSION['username'], $details['artistId'])) { ?>
-<a href="artists.php?action=removefavorite&id=<?=$details['artistId']?>">Remove from favorites</a><br>
-<?php } else { ?>
-<a href="artists.php?action=addfavorite&id=<?=$details['artistId']?>">Add to favorites</a><br>
-<?php
-}
-
+<div class="panel panel-default">
+  <div class="panel-heading"><h3><?=$details['name']?></h3><?php
 if(is_moderator($username)) {
 ?>
-<br><a href="artists.php?action=editartist&artistId=<?=$details['artistId']?>">Edit artist</a> | <a href="artists.php?action=deleteartist&id=<?=$details['artistId']?>">Delete artist</a> | <a href="artists.php?action=addmember&id=<?=$details['artistId']?>">Add Member</a> | <a href="album.php?action=addalbum">Add album</a> | <a href="artists.php?action=addperformance&id=<?=$details['artistId']?>">Add performance</a><br>
-<?php } ?>
+<div class="btn-group">
+  <button type="button" class="btn btn-info dropdown-toggle navbar-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Edit: <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li><a href="artists.php?action=editartist&artistId=<?=$details['artistId']?>">Edit artist</a></li>
+    <li><a href="artists.php?action=deleteartist&id=<?=$details['artistId']?>">Delete artist</a></li>
+    <li><a href="artists.php?action=addmember&id=<?=$details['artistId']?>">Add Member</a></li>
+    <li><a href="artists.php?action=addperformance&id=<?=$details['artistId']?>">Add performance</a></li>
+    <li><a href="album.php?action=addalbum">Add album</a></li>
+  </ul>
+</div>
+<?php } ?></div>
+  <div class="panel-body">
+    Date formated: <?=$details['formDate']?><br>
+	<?php
+	if(!empty($details['breakupDate'])) {
+	?>
+	Date disbanded: <?=$details['breakupDate']?><br>
+	<?php } ?>
+	Formation Zipcode: <?=$details['formationZipCode']?><br>
+  </div>
+</div>
+
 <br>
-<b>Members</b><br>
+<?php if(is_favorite($_SESSION['username'], $details['artistId'])) { ?>
+<a class="btn btn-warning btn-block" href="artists.php?action=removefavorite&id=<?=$details['artistId']?>">Remove from favorites</a><br>
+<?php } else { ?>
+<a class="btn btn-success btn-block" href="artists.php?action=addfavorite&id=<?=$details['artistId']?>">Add to favorites</a><br>
+<?php } ?>
+<div class="panel panel-default">
+  <div class="panel-heading"><h4>Members</h4></div>
+  <div class="panel-body">
+	<ul class="list-group">
 <?php
 foreach(get_members($details['artistId']) as $member) {
-    echo 'Name: ' . $member['name'] . '<br>';
+    echo '<li class="list-group-item"> Name: ' . $member['name'] . '<br>';
     echo 'Join Date: ' . $member['joinDate'] . '<br>';
     if(!empty($member['leaveDate'])) {
         echo 'Leave Date: ' . $member['leaveDate'] . '<br>';
@@ -107,50 +129,79 @@ foreach(get_members($details['artistId']) as $member) {
     
     if(is_moderator($_SESSION['username'])) {
         echo '<a href="artists.php?action=editmember&id=' . $details['artistId'] . '&memberId=' . $member['memberId'] . '">Edit Member</a><br>';
-        echo '<a href="artists.php?action=deletemember&id=' . $member['memberId'] . '">Remove Member</a><br><br>';
+        echo '<a href="artists.php?action=deletemember&id=' . $member['memberId'] . '">Remove Member</a>';
     }
+	echo '</li>';
 }
 ?>
+	</ul>
+  </div>
+</div>
 <br>
-<b>Albums</b><br>
+<div class="panel panel-default">
+  <div class="panel-heading"><h4>Albums</h4></div>
+  <div class="panel-body">
+	<ul class="list-group">
 <?php
 $artist_releases = get_albums_per_artist($details['artistId']);
 foreach($artist_releases as $release) {
-    echo 'Title: ' . $release['title'] . '<br>';
+    echo '<li class="list-group-item"> Title: ' . $release['title'] . '<br>';
     echo 'Record Label: ' . $release['recordLabel'] . '<br>';
     echo 'Release Date: ' . $release['releaseDate'] . '<br>';
     echo '<a href="album.php?action=details&id=' . $release['albumId'] . '">View tracklist</a><br>';
-    echo '<br>';
+    echo '</li>';
 }
 ?>
+	</ul>
+  </div>
+</div>
 <br>
-<b>Performances</b><br>
+<div class="panel panel-default">
+  <div class="panel-heading"><h4>Performances</h4></div>
+  <div class="panel-body">
+	<ul class="list-group">
 <?php
 $performances = get_all_performances_by_artist($details['artistId']);
 
 foreach($performances as $performance) {
-    echo '<a href="performance.php?action=details&id='.$performance['performanceId'].'">'.$performance['title'].'</a><br>';
+    echo '<a class="list-group-item" href="performance.php?action=details&id='.$performance['performanceId'].'">'.$performance['title'].'</a>';
 }
 ?>
+	</ul>
+  </div>
+</div>
 <br>
-<b>Who Favorited This Artist?</b><br>
+<div class="panel panel-default">
+  <div class="panel-heading"><h4>Who Favorited This Artist?</h4></div>
+  <div class="panel-body">
+	<ul class="list-group">
 <?php
 $favorites = get_all_favorites_per_artist($details['artistId']);
 
 foreach($favorites as $favorite) {
-    echo '<a href="profile.php?id='.$favorite['username'].'">'.$favorite['username'].'</a><br>';
+    echo '<a class="list-group-item" href="profile.php?id='.$favorite['username'].'">'.$favorite['username'].'</a>';
 }
 ?>
+	</ul>
+  </div>
+</div>
 <br>
-<b>Comments</b><br>
+<div class="panel panel-default">
+  <div class="panel-heading"><h4>Comments</h4></div>
+  <div class="panel-body">
+	<ul class="list-group">
 <?php
     $comments = get_comments_by_artist($details['artistId']);
+	echo '<li class="list-group-item">
+	<a href="comment.php?action=addcomment&artistId='.$details['artistId'].'">Add comment</a>
+	<li>';
     foreach($comments as $comment) {
+		echo '<li class="list-group-item">';
         if($comment['username'] == null) {
             echo 'Username: <i>Deleted user</i><br>';
         } else {
 ?>
-        Username: <a href="profile.php?id=<?=$comment['username']?>"><?=$comment['username']?></a><br>
+        Username: <a href="profile.php?id=<?=$comment['username']?>"><?=$comment['username']?></a>&nbsp;&nbsp;&nbsp;&nbsp;
 <?php } ?>
         Date: <?=$comment['postDate']?><br>
         Comment: <?=$comment['comment']?><br>
@@ -158,11 +209,13 @@ foreach($favorites as $favorite) {
         <?php if($comment['username'] == $_SESSION['username'] || is_moderator($_SESSION['username'])) { ?>
         (<a href="comment.php?action=editcomment&id=<?=$details['artistId']?>&commentId=<?=$comment['commentId']?>">Edit</a> | <a href="comment.php?action=deletecomment&artistId=<?=$details['artistId']?>&id=<?=$comment['commentId']?>">Delete</a>)<br>
         <?php } ?>
-        <br>
+        </li>
 <?php
     }
 ?>
-<a href="comment.php?action=addcomment&artistId=<?=$details['artistId']?>">Add comment</a><br>
+	</ul>
+  </div>
+</div>
 <?php
     }
 }
