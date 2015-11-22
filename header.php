@@ -32,13 +32,13 @@ session_start();
   <h1>Welcome, <?=$_SESSION['firstname']?> <?=$_SESSION['lastname']?> (<a href="profile.php"><?=$_SESSION['username']?></a>)!</h1>
   <ul class="nav nav-pills nav-justified">
   <li>
-    <a href="register.php?action=update?>">Edit Profile</a> 
-  </li>
-  <li class="active">
-    <a href="profile.php?action=delete">Delete Account</a>
+    <a href="/register.php?action=update">Edit Profile</a> 
   </li>
   <li>
-	<a href="login.php?action=logout">Logout</a>
+    <a href="/profile.php?action=delete">Delete Account</a>
+  </li>
+  <li>
+	<a href="/login.php?action=logout">Logout</a>
   </li>
 </ul>
 </div>
@@ -66,7 +66,7 @@ session_start();
   </li>
   <li><a href="register.php">Register</a></li>
 </ul>
-<?php } elseif("$_SERVER[REQUEST_URI]" == "/login.php?action=login"){ ?> 
+<?php } elseif("$_SERVER[REQUEST_URI]" == "/login.php?action=login" or "$_SERVER[REQUEST_URI]" == "/login.php"){ ?> 
 <div class="page-header">
   <h1>Login To The Site</h1>
 </div>

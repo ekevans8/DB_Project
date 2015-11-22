@@ -52,55 +52,80 @@ if(isset($_GET['id'])) { ?>
 <?php
 if(is_moderator($_SESSION['username'])) {
     if(!is_moderator($user_profile['username'])) {
-        echo '<a href="profile.php?action=addmoderator&id=' . $user_profile['username'] . '">Promote to Moderator</a><br><br>';
+        echo '<a class="btn btn-success btn-block" href="profile.php?action=addmoderator&id=' . $user_profile['username'] . '">Promote to Moderator</a><br><br>';
     } else {
-        echo '<a href="profile.php?action=removemoderator&id=' . $user_profile['username'] . '">Demote to User</a><br><br>';
+        echo '<a class="btn btn-warning btn-block" href="profile.php?action=removemoderator&id=' . $user_profile['username'] . '">Demote to User</a><br><br>';
     }
 }
 ?>
-
-<b><?=$user_profile['username']?>'s favorite artists</b><br>
-<?php
-$favorites = get_all_usernames_and_favorites_per_favorite($username);
-foreach($favorites as $favorite) {
-    echo '<a href="artists.php?action=details&id=' . $favorite['artistId'] . '">' . $favorite['artistName'] . '</a><br>';
-}
-?>
+<div class="panel panel-default">
+  <div class="panel-heading"><?=$user_profile['username']?>'s favorite artists</div>
+  <div class="panel-body">
+		<ul class="list-group">
+		<?php
+		$favorites = get_all_usernames_and_favorites_per_favorite($username);
+		foreach($favorites as $favorite) {
+			echo '<a class="list-group-item" href="artists.php?action=details&id=' . $favorite['artistId'] . '">' . $favorite['artistName'] . '</a>';
+		}
+		?>
+		</ul>
+	</div>
+</div>
 <br>
-<b>Concerts <?=$user_profile['username']?> has attended</b><br>
-<?php
-$performances = get_Attended_performances_per_username($username);
+<div class="panel panel-default">
+  <div class="panel-heading">Concerts <?=$user_profile['username']?> has attended</div>
+  <div class="panel-body">
+	<ul class="list-group">
+		<?php
+		$performances = get_Attended_performances_per_username($username);
 
-foreach($performances as $performance) {
-    echo '<a href="performance.php?action=details&id='.$performance['performanceId'].'">'.$performance['title'].'</a><br>';
-}
-?>
+		foreach($performances as $performance) {
+			echo '<a class="list-group-item" href="performance.php?action=details&id='.$performance['performanceId'].'">'.$performance['title'].'</a>';
+		}
+		?>
+	</ul>
+	</div>
+</div>
 <br>
-<b><?=$user_profile['username']?>'s Comments</b><br>
-<?php
-$comments = get_comments_by_username($username);
+<div class="panel panel-default">
+  <div class="panel-heading"><?=$user_profile['username']?>'s Comments</div>
+  <div class="panel-body">
+	<ul class="list-group">
+		<?php
+		$comments = get_comments_by_username($username);
 
-foreach($comments as $comment) {
-    if($comment['performanceId'] != null)
-        echo '<a href="performance.php?action=details&id='.$comment['performanceId'].'">'.$comment['comment'].'</a> on ' . $comment['postDate'] . '<br>';
-    else if($comment['artistId'] != null)
-        echo '<a href="artists.php?action=details&id='.$comment['artistId'].'">'.$comment['comment'].'</a> on ' . $comment['postDate'] . '<br>';
-    else
-        echo $comment['comment'].' on ' . $comment['postDate'] . '<br>';
-}
-?>
+		foreach($comments as $comment) {
+			if($comment['performanceId'] != null)
+				echo '<a class="list-group-item" href="performance.php?action=details&id='.$comment['performanceId'].'">'.$comment['comment'].' on ' . $comment['postDate'].'</a>';
+			else if($comment['artistId'] != null)
+				echo '<a class="list-group-item" href="artists.php?action=details&id='.$comment['artistId'].'">'.$comment['comment'].' on ' . $comment['postDate'].'</a>';
+			else
+				echo $comment['comment'].' on ' . $comment['postDate'] . '<br>';
+		}
+		?>
+	</ul>
+	</div>
+</div>
 <br>
-<b>Top songs seen live</b><br>
+<div class="panel panel-default">
+  <div class="panel-heading">Top songs <?=$user_profile['username']?> saw live</div>
+  <div class="panel-body">
+	<ul class="list-group">
 <?php
 $song_ranking = get_most_seen_songs_per_user($username);
 
 $i = 1;
 foreach($song_ranking as $song) {
     if($song['NumberSeen'] == 1)
-        echo $i . ') <a href="artists.php?action=details&id=' . $song['artistId'] . '">' . $song['Artist'] . '</a> - ' . $song['SongTitle'] . ' (Seen ' . $song['NumberSeen'] . ' time)<br>';
+        echo '<li class="list-group-item">
+		<span class="badge">'.$song['NumberSeen'].'</span>'.$i.') <a href="artists.php?action=details&id=' . $song['artistId'] . '">' . $song['Artist'] . '</a> - ' . $song['SongTitle'] . ' (Seen ' . $song['NumberSeen'] . ' time)</li>';
     else
-        echo $i . ') <a href="artists.php?action=details&id=' . $song['artistId'] . '">' . $song['Artist'] . '</a> - ' . $song['SongTitle'] . ' (Seen ' . $song['NumberSeen'] . ' times)<br>';
+        echo '<li class="list-group-item">
+		<span class="badge">'.$song['NumberSeen'].'</span>'.$i.') <a href="artists.php?action=details&id=' . $song['artistId'] . '">' . $song['Artist'] . '</a> - ' . $song['SongTitle'] . ' (Seen ' . $song['NumberSeen'] . ' times) </li>';
     $i++;
 }
 ?>
+</ul>
+	</div>
+</div>
 <br>
