@@ -28,11 +28,31 @@ session_start();
 </STYLE>
 	
 <?php if(isset($_SESSION['username'])) { ?>
-Welcome, <?=$_SESSION['firstname']?> <?=$_SESSION['lastname']?> (<a href="profile.php"><?=$_SESSION['username']?></a>)!<br>
-<a href="register.php?action=update?>">Edit Profile</a> | <a href="profile.php?action=delete">Delete Account</a> | <a href="login.php?action=logout">Logout</a><br><br>
-
-<a href="profile.php">Home</a> | <a href="artists.php?action=list">View Artists</a> | <a href="album.php?action=list">View Albums</a> | <a href="performance.php?action=list">View Performances</a> | <a href="performance.php?action=listvenues">View Venues</a><br>
-<br>
+<div class="page-header">
+  <h1>Welcome, <?=$_SESSION['firstname']?> <?=$_SESSION['lastname']?> (<a href="profile.php"><?=$_SESSION['username']?></a>)!</h1>
+  <ul class="nav nav-pills nav-justified">
+  <li>
+    <a href="register.php?action=update?>">Edit Profile</a> 
+  </li>
+  <li class="active">
+    <a href="profile.php?action=delete">Delete Account</a>
+  </li>
+  <li>
+	<a href="login.php?action=logout">Logout</a>
+  </li>
+</ul>
+</div>
+<nav class="navbar navbar-inverse">
+	<div class="container-fluid">
+		<ul class="nav navbar-nav navbar-left">
+        <li><a href="profile.php">My Profile</a></li>
+		<li><a href="artists.php?action=list">View Artists</a></li>
+		<li><a href="album.php?action=list">View Albums</a></li>
+		<li><a href="performance.php?action=list">View Performances</a></li>
+		<li><a href="performance.php?action=listvenues">View Venues</a></li>
+      </ul>
+	</div>
+</nav>
 <?php } elseif("$_SERVER[REQUEST_URI]" == "/"){?>
 <div class="page-header">
   <h1>Welcome to our Database Project</h1>
