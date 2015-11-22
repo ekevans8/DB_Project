@@ -7,6 +7,25 @@ session_start();
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 
+<STYLE type="text/css">
+	.btn-login {
+		background-color: #59B2E0;
+		outline: none;
+		color: #fff;
+		font-size: 14px;
+		height: auto;
+		font-weight: normal;
+		padding: 14px 0;
+		text-transform: uppercase;
+		border-color: #59B2E6;
+	}
+	.btn-login:hover,
+	.btn-login:focus {
+		color: #fff;
+		background-color: #53A3CD;
+		border-color: #53A3CD;
+	}
+</STYLE>
 	
 <?php if(isset($_SESSION['username'])) { ?>
 Welcome, <?=$_SESSION['firstname']?> <?=$_SESSION['lastname']?> (<a href="profile.php"><?=$_SESSION['username']?></a>)!<br>
@@ -18,7 +37,7 @@ Welcome, <?=$_SESSION['firstname']?> <?=$_SESSION['lastname']?> (<a href="profil
 <div class="page-header">
   <h1>Welcome to our Database Project</h1>
 </div>
-<ul class="nav nav-pills">
+<ul class="nav nav-pills nav-justified">
   <li class="active">
     <a href="/">Home</a>
   </li>
@@ -31,7 +50,7 @@ Welcome, <?=$_SESSION['firstname']?> <?=$_SESSION['lastname']?> (<a href="profil
 <div class="page-header">
   <h1>Login To The Site</h1>
 </div>
-<ul class="nav nav-pills">
+<ul class="nav nav-pills nav-justified">
   <li>
     <a href="/">Home</a>
   </li>
@@ -44,7 +63,7 @@ Welcome, <?=$_SESSION['firstname']?> <?=$_SESSION['lastname']?> (<a href="profil
 <div class="page-header">
   <h1>Register To The Site</h1>
 </div>
-<ul class="nav nav-pills">
+<ul class="nav nav-pills nav-justified">
   <li>
     <a href="/">Home</a>
   </li>
