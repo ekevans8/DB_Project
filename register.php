@@ -118,8 +118,74 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+<form id="login-form" action="" method="post" style="display: block;">
+	<?php
+	if(isset($_GET['action']) && $_GET['action'] == "update" && isset($_GET['id'])) {
+	?>
+		<div class="form-group">
+			<input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="<?=$username?>" disabled>
+		</div>
+		
+	<?php } else {
+	?>
+		<div class="form-group">
+			<input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="<?=$username?>">
+		</div>
+		<?php if(!empty($username_error)) { ?>
+            <span class="error"><font color="red">* <?=$username_error?></font></span>
+        <?php } ?>
+	<?php } ?>
+		<div class="form-group">
+			<input type="email" name="email" id="email" tabindex="2" class="form-control" placeholder="Email" value="<?=$email?>">
+		</div>
+		<?php if(!empty($email_error)) { ?>
+			<span class="error"><font color="red">* <?=$email_error?></font></span>
+        <?php } ?>
+		
+		<div class="form-group">
+			<input type="password" name="password" id="password" tabindex="3" class="form-control" placeholder="Password" value="<?=$password?>">
+		</div>
+		<?php if(!empty($password_error)) { ?>
+            <span class="error"><font color="red">* <?=$password_error?></font></span>
+        <?php } ?>
+		
+		<div class="form-group">
+			<input type="text" name="firstname" id="firstname" tabindex="4" class="form-control" placeholder="First Name" value="<?=$firstname?>">
+		</div>
+		<?php if(!empty($firstname_error)) { ?>
+            <span class="error"><font color="red">* <?=$firstname_error?></font></span>
+        <?php } ?>
+		
+		<div class="form-group">
+			<input type="text" name="lastname" id="lastname" tabindex="5" class="form-control" placeholder="Last Name" value="<?=$lastname?>">
+		</div>
+		<?php if(!empty($lastname_error)) { ?>
+            <span class="error"><font color="red">* <?=$lastname_error?></font></span>
+        <?php } ?>
+		
+		<div class="form-group">
+			<input type="number" name="age" id="age" min="13" tabindex="6" class="form-control" value="<?=$age?>">
+		</div>
+		<?php if(!empty($age_error)) { ?>
+            <span class="error"><font color="red">* <?=$age_error?></font></span>
+        <?php } ?>
 
-<form action="" method="POST">
+		<div class="form-group">
+			<input type="number" name="zipcode" id="zipcode" min="10000" max="99999" tabindex="7" class="form-control" value="<?=$zipcode?>">
+		</div>
+		<?php if(!empty($zipcode_error)) { ?>
+            <span class="error"><font color="red">* <?=$zipcode_error?></font></span>
+        <?php } ?>
+		
+		<div class="form-group">
+			<div class="row">
+				<div class="col-sm-6 col-sm-offset-3">
+					<input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Register">
+				</div>
+			</div>
+		</div>
+	</form>
+<!--<form action="" method="POST">
 <table>
 <?php
 if(isset($_GET['action']) && $_GET['action'] == "update" && isset($_GET['id'])) {
@@ -192,4 +258,4 @@ if(isset($_GET['action']) && $_GET['action'] == "update" && isset($_GET['id'])) 
         <td colspan="2" align="center"><input type="submit" value="Submit" style="width:100%"></input></td>
     </tr>
 </table>
-</form>
+</form>-->
