@@ -120,7 +120,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 <form id="login-form" action="" method="post" style="display: block;">
 	<?php
-	if(isset($_GET['action']) && $_GET['action'] == "update" && isset($_GET['id'])) {
+	if("$_SERVER[REQUEST_URI]" == "/register.php?action=update") {
 	?>
 		<div class="form-group">
 			<input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="<?=$username?>" disabled>
@@ -180,7 +180,13 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 		<div class="form-group">
 			<div class="row">
 				<div class="col-sm-6 col-sm-offset-3">
-					<input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Register">
+					<?php
+					if("$_SERVER[REQUEST_URI]" == "/register.php?action=update") {
+					?>
+						<input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Update">
+					<?php } else {?>
+						<input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Register">
+					<?php } ?>
 				</div>
 			</div>
 		</div>
