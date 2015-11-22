@@ -46,8 +46,29 @@ if(!isset($_GET['action']) || $_GET['action'] == "login") {
     }
     ?>
 
+	<form id="login-form" action="" method="post" style="display: block;">
+		<div class="form-group">
+			<input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="<?=$username?>">
+		</div>
+		<?php if(!empty($username_error)) { ?>
+            <span class="error"><font color="red">* <?=$username_error?></font></span>
+        <?php } ?>
+		<div class="form-group">
+			<input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password" value="<?=$password?>">
+		</div>
+		<?php if(!empty($password_error)) { ?>
+            <span class="error"><font color="red">* <?=$password_error?></font></span>
+        <?php } ?>
+		<div class="form-group">
+			<div class="row">
+				<div class="col-sm-6 col-sm-offset-3">
+					<input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Log In">
+				</div>
+			</div>
+		</div>
+	</form>
 
-    <form action="" method="POST">
+    <!--<form action="" method="POST">
     <table>
         <tr>
             <td>Username:</td>
@@ -69,7 +90,7 @@ if(!isset($_GET['action']) || $_GET['action'] == "login") {
             <td colspan="2" align="center"><input type="submit" value="Submit" style="width:100%"></input>
         </tr>
     </table>
-    </form>
+    </form>-->
 <?php
 } 
 else if($_GET['action'] == "logout") {
