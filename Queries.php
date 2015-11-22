@@ -33,6 +33,7 @@ function login_user($username, $password){
 }
 
 function register_user($username, $email, $password, $firstName, $lastName, $age, $zipcode) {
+    $password = get_password_hash($password);
     
 	$SQL = "INSERT INTO user (`username`, `firstName`, `lastName`, `age`, `email`, `password`, `zipcode`, `isModerator`) VALUES 
 	('".$username."', '".$firstName."', '".$lastName."', '".$age."', '".$email."', '".$password."', '".$zipcode."', '0');";
@@ -41,7 +42,8 @@ function register_user($username, $email, $password, $firstName, $lastName, $age
 }
 
 function update_user($username, $email, $password, $firstName, $lastName, $age, $zipcode) {
- 
+    $password = get_password_hash($password);
+    
 	$SQL = "UPDATE user SET username = '".$username."', firstName = '".$firstName."', lastName = '".$lastName."', age = '".$age."'
 	, email = '".$email."', password = '".$password."', zipcode = '".$zipcode."' where username = '".$username."';";
  
