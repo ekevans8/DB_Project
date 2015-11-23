@@ -98,13 +98,13 @@ if(is_moderator($username)) {
 </div>
 <?php } ?></div>
   <div class="panel-body">
-    Date formated: <?=$details['formDate']?><br>
+    <b>Date formated</b>: <?=$details['formDate']?><br>
 	<?php
 	if(!empty($details['breakupDate'])) {
 	?>
-	Date disbanded: <?=$details['breakupDate']?><br>
+	<b>Date disbanded</b>: <?=$details['breakupDate']?><br>
 	<?php } ?>
-	Formation Zipcode: <?=$details['formationZipCode']?><br>
+	<b>Formation Zipcode</b>: <?=$details['formationZipCode']?><br>
   </div>
 </div>
 
