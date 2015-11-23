@@ -29,16 +29,17 @@ else if($_GET['action'] == "details") {
     // Get detailed album information including tracklist
     $albumId = intval($_GET['id']);
     $songs = get_album_summary_per_albumId($albumId);
-    
+
     if($songs != null) {        
         $total_duration = 0;
         $artist_name = $songs[0]['Artist_Name'];
         $same_artist = true;
+		$all_artist = array($songs[0]['Artist_Name']);
         
         foreach($songs as $song) {
-            if($song['Artist_Name'] != $artist_name) {
+            if($song['Artist_Name'] != $artist_name && !in_array($song['Artist_Name'], $all_artist)) {
                 $same_artist = false;
-                break;
+				array_push($all_artist, $song['Artist_Name']);
             }
         }
         echo '<div class="panel panel-default">
@@ -49,6 +50,11 @@ else if($_GET['action'] == "details") {
         if($same_artist) {
             echo $artist_name.'<br>';
         }
+		else{
+			foreach($all_artist as $artist){
+				echo $artist.'<br>';
+			}
+		}
         
         echo "</ul>
 		  </div>
@@ -83,6 +89,11 @@ else if($_GET['action'] == "details") {
 		  </div>
 		</div>";
     }
+	else{
+		echo '<h4>No Songs Yet</h4><br>';
+		if(is_moderator($_SESSION['username']))
+			echo '<a class="btn btn-success btn-block" href="album.php?action=addsong&id=' . $albumId . '">Add song</a><br>';
+	}
     
     echo "<br>";
 
@@ -328,59 +339,6 @@ else if($_GET['action'] == "addsong" || $_GET['action'] == "editsong") {
 			</div>
 		</div>
 	</form>
-	
-    <form action="" method="POST">
-    <table>
-        <tr>
-            <td>Artist:</td>
-            <td>
-                <select name="artistid">
-                <?php
-                    $artists = get_all_artist_info();
-                    foreach($artists as $artist) {
-                        echo '<option value="'.$artist['artistId'].'">'.$artist['name'].'</option>';
-                    }
-                ?>
-                </select>
-            </td>
-            <?php if(!empty($track_number_error)) { ?>
-            <span class="error">* <?=$artist_error?></span>
-            <?php } ?>
-            </td>
-        </tr>
-        <tr>
-            <td>Title:</td>
-            <td><input type="text" name="title" style="width:100%" value="<?=$title?>"></input>
-            <?php if(!empty($title_error)) { ?>
-            <span class="error">* <?=$title_error?></span>
-            <?php } ?>
-            </td>
-        </tr>
-        <tr>
-            <td>Duration (minutes):</td>
-            <td><input type="number" step="any" name="duration" style="width:100%" value="<?=$duration?>"></input>
-            <?php if(!empty($duration_error)) { ?>
-            <span class="error">* <?=$duration_error?></span>
-            <?php } ?>
-            </td>
-        </tr>
-        <tr>
-            <td>Track Number:</td>
-            <td><input type="number" name="track_number" min="0" style="width:100%" value="<?=$track_number?>"></input>
-            <?php if(!empty($track_number_error)) { ?>
-            <span class="error">* <?=$track_number_error?></span>
-            <?php } ?>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center">
-                <input type="hidden" name="albumId" value="<?=$albumId?>">
-                <input type="hidden" name="songId" value="<?=$songId?>">
-                <input type="submit" value="Submit" style="width:100%"></input>
-             </td>
-        </tr>
-    </table>
-    </form>
 
 <?php
 }
