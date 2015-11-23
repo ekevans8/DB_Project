@@ -299,13 +299,19 @@ else if($_GET['action'] == "addartist" || $_GET['action'] == "editartist") {
             <span class="error"><font color="red">* <?=$name_error?></font></span>
         <?php } ?>
 		<div class="form-group">
-			<input type="date" name="formDate" id="formDate" tabindex="2" class="form-control" placeholder="Date Formed" value="<?=$formDate?>">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon3">Formation Date</span>
+				<input type="date" name="formDate" id="formDate" tabindex="2" class="form-control" placeholder="Date Formed" value="<?=$formDate?>">
+			</div>
 		</div>
 		<?php if(!empty($formDate_error)) { ?>
             <span class="error"><font color="red">* <?=$formDate_error?></font></span>
         <?php } ?>
 		<div class="form-group">
-			<input type="date" name="breakupDate" id="breakupDate" tabindex="3" class="form-control" placeholder="Date Disbanded" value="<?=$breakupDate?>">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon3">Breakup Date</span>
+				<input type="date" name="breakupDate" id="breakupDate" tabindex="3" class="form-control" placeholder="Date Disbanded" value="<?=$breakupDate?>">
+			</div>
 		</div>
 		<?php if(!empty($breakupDate_error)) { ?>
             <span class="error"><font color="red">* <?=$breakupDate_error?></font></span>
@@ -389,66 +395,72 @@ else if($_GET['action'] == "addperformance" || $_GET['action'] == "editperforman
             // Successful
             
             if($performanceId == -1) {
-                $ret = add_performance($title, $venueId, $duration, $date);
+                $ret = add_performance($venueId, $duration, $date, $title);
             } else {
                 $ret = update_performance($performanceId, $title, $duration, $venueId, $date);
             }
             
             if(!$has_error) {
-                header('Location: performance.php?action=details&id=' . $performanceId, true);
-                die();
+				if(!$performanceId == -1){
+					header('Location: performance.php?action=details&id=' . $performanceId, true);
+					die();
+				}
+				else{
+					header('Location: artists.php?action=list', true);
+					die();
+				}
             }
         }
     }
     ?>
-
-    <form action="" method="POST">
-    <table>
-        <tr>
-            <td>Title:</td>
-            <td><input type="text" name="title" style="width:100%" value="<?=$title?>"></input>
-            <?php if(!empty($title_error)) { ?>
-            <span class="error">* <?=$title_error?></span>
-            <?php } ?>
-            </td>
-        </tr>
-        <tr>
-            <td>Venue:</td>
-            <td>
-                <select name="venueId" style="width:100%">
-<?php
-$venues = get_all_venues();
-foreach($venues as $venue)
-    echo '<option value="'.$venue['venueId'].'">'.$venue['name'].'</a>';
-?>
+	
+	<form action="" method="post" style="display: block;">
+		<div class="form-group">
+			<input type="text" name="title" id="title" tabindex="1" class="form-control" placeholder="Title" value="<?=$title?>">
+		</div>
+		<?php if(!empty($title_error)) { ?>
+            <span class="error"><font color="red">* <?=$title_error?></font></span>
+        <?php } ?>
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon3">Venue</span>
+				<select class="form-control" name="venueId" id="venueId">
+					<?php
+					$venues = get_all_venues();
+					foreach($venues as $venue)
+						echo '<option value="'.$venue['venueId'].'">'.$venue['name'].'</a>';
+					?>
                 </select>
-            </td>
-        </tr>
-        <tr>
-            <td>Duration (minutes):</td>
-            <td><input type="number" name="duration" min="0" step="0.01" style="width:100%" value="<?=$duration?>"></input>
-            <?php if(!empty($duration_error)) { ?>
-            <span class="error">* <?=$duration_error?></span>
-            <?php } ?>
-            </td>
-        </tr>
-        <tr>
-            <td>Date:</td>
-            <td><input type="date" name="date" style="width:100%" value="<?=$date?>"></input>
-            <?php if(!empty($date_error)) { ?>
-            <span class="error">* <?=$date_error?></span>
-            <?php } ?>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center">
-                <input type="hidden" name="artistId" value="<?=$artistId?>">
-                <input type="hidden" name="performanceId" value="<?=$performanceId?>">
-                <input type="submit" value="Submit" style="width:100%"></input>
-             </td>
-        </tr>
-    </table>
-    </form>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon3">Duration (minutes)</span>
+				<input type="number" name="duration" id="duration" tabindex="2" class="form-control" placeholder="duration" value="<?=$duration?>">
+			</div>
+		</div>
+		<?php if(!empty($duration_error)) { ?>
+            <span class="error"><font color="red">* <?=$duration_error?></font></span>
+        <?php } ?>
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon3">Date</span>
+				<input type="date" name="date" id="date" tabindex="2" class="form-control" placeholder="Date" value="<?=$date?>">
+			</div>
+		</div>
+		<?php if(!empty($date_error)) { ?>
+            <span class="error"><font color="red">* <?=$date_error?></font></span>
+        <?php } ?>
+		<input type="hidden" name="artistId" value="<?=$artistId?>">
+		<input type="hidden" name="performanceId" value="<?=$performanceId?>">
+		<div class="form-group">
+			<div class="row">
+				<div class="col-sm-6 col-sm-offset-3">
+					<input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Save">
+				</div>
+			</div>
+		</div>
+	</form>
 
 <?php
 }

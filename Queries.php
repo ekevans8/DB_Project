@@ -289,7 +289,7 @@ function add_performance($duration, $venueId, $date, $title){
 	
 	$SQL = "INSERT INTO performance (duration, venueId, date, title) VALUES ('".$duration."', '".$venueId."', '".$date."', '".$title."');";
 	
-	return "Results: ";
+	return mysql_query($SQL) or die(mysql_error());
 	
 }
 
