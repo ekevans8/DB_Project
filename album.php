@@ -134,40 +134,37 @@ else if($_GET['action'] == "addalbum" || $_GET['action'] == "editalbum") {
     }
     ?>
 
-    <form action="" method="POST">
-    <table>
-        <tr>
-            <td>Title:</td>
-            <td><input type="text" name="title" style="width:100%" value="<?=$title?>"></input>
-            <?php if(!empty($title_error)) { ?>
-            <span class="error">* <?=$title_error?></span>
-            <?php } ?>
-            </td>
-        </tr>
-        <tr>
-            <td>Record Label:</td>
-            <td><input type="text" name="recordLabel" style="width:100%" value="<?=$recordLabel?>"></input>
-            <?php if(!empty($recordLabel_error)) { ?>
-            <span class="error">* <?=$recordLabel_error?></span>
-            <?php } ?>
-            </td>
-        </tr>
-        <tr>
-            <td>Release Date:</td>
-            <td><input type="date" name="releaseDate" style="width:100%" value="<?=$releaseDate?>"></input>
-            <?php if(!empty($releaseDate_error)) { ?>
-            <span class="error">* <?=$releaseDate_error?></span>
-            <?php } ?>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center">
-                <input type="hidden" name="albumId" value="<?=$albumId?>">
-                <input type="submit" value="Submit" style="width:100%"></input>
-             </td>
-        </tr>
-    </table>
-    </form>
+	<form action="" method="post" style="display: block;">
+		<div class="form-group">
+			<input type="text" name="title" id="title" tabindex="1" class="form-control" placeholder="Title" value="<?=$title?>">
+		</div>
+		<?php if(!empty($title_error)) { ?>
+            <span class="error"><font color="red">* <?=$title_error?></font></span>
+        <?php } ?>
+		<div class="form-group">
+			<input type="text" name="recordLabel" id="recordLabel" tabindex="2" class="form-control" placeholder="Record Label" value="<?=$recordLabel?>">
+		</div>
+		<?php if(!empty($recordLabel_error)) { ?>
+            <span class="error"><font color="red">* <?=$recordLabel_error?></font></span>
+        <?php } ?>
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon3">Release Date</span>
+				<input type="date" name="releaseDate" id="releaseDate" tabindex="3" class="form-control" placeholder="Release Date" value="<?=$releaseDate?>">
+			</div>
+		</div>
+		<?php if(!empty($releaseDate_error)) { ?>
+            <span class="error"><font color="red">* <?=$releaseDate_error?></font></span>
+        <?php } ?>
+		<input type="hidden" name="albumId" value="<?=$albumId?>">
+		<div class="form-group">
+			<div class="row">
+				<div class="col-sm-6 col-sm-offset-3">
+					<input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Save">
+				</div>
+			</div>
+		</div>
+	</form>
 
 <?php
 }
