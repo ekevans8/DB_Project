@@ -54,7 +54,7 @@ else if($_GET['action'] == "showvenue") {
     $venue = get_venue_by_id($venueId);
 ?>
 <div class="panel panel-default">
-  <div class="panel-heading"><h4><?=$venue['name']?></h4><?php
+  <div class="panel-heading"><h3><?=$venue['name']?></h3><?php
 if(is_moderator($_SESSION['username'])) {
 ?>
 <div class="btn-group">
@@ -198,7 +198,7 @@ else if($_GET['action'] == "details") {
     $summary = get_performance_summary($performanceId);
 ?>
 <div class="panel panel-default">
-  <div class="panel-heading"><h4><?=$details['title']?></h4><?php
+  <div class="panel-heading"><h3><?=$details['title']?></h3><?php
 if(is_moderator($_SESSION['username'])) {
 ?>
 <div class="btn-group">
