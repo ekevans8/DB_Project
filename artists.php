@@ -523,42 +523,42 @@ else if($_GET['action'] == "addmember" || $_GET['action'] == "editmember") {
     }
     ?>
 
-    <form action="" method="POST">
-    <table>
-        <tr>
-            <td>Name:</td>
-            <td><input type="text" name="name" style="width:100%" value="<?=$name?>"></input>
-            <?php if(!empty($name_error)) { ?>
-            <span class="error">* <?=$name_error?></span>
-            <?php } ?>
-            </td>
-        </tr>
-        <tr>
-            <td>Join Date:</td>
-            <td><input type="date" name="joinDate" style="width:100%" value="<?=$joinDate?>"></input>
-            <?php if(!empty($joinDate_error)) { ?>
-            <span class="error">* <?=$joinDate_error?></span>
-            <?php } ?>
-            </td>
-        </tr>
-        <tr>
-            <td>Leave Date:</td>
-            <td><input type="date" name="leaveDate" style="width:100%" value="<?=$leaveDate?>"></input>
-            <?php if(!empty($leaveDate_error)) { ?>
-            <span class="error">* <?=$leaveDate_error?></span>
-            <?php } ?>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center">
-                <input type="hidden" name="artistId" value="<?=$artistId?>">
-                <input type="hidden" name="memberId" value="<?=$memberId?>">
-                <input type="submit" value="Submit" style="width:100%"></input>
-             </td>
-        </tr>
-    </table>
-    </form>
-
+	<form action="" method="post" style="display: block;">
+		<div class="form-group">
+			<input type="text" name="name" id="name" tabindex="1" class="form-control" placeholder="Name" value="<?=$name?>">
+		</div>
+		<?php if(!empty($name_error)) { ?>
+            <span class="error"><font color="red">* <?=$name_error?></font></span>
+        <?php } ?>
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon3">Join Date</span>
+				<input type="date" name="joinDate" id="joinDate" tabindex="2" class="form-control" placeholder="Password" value="<?=$joinDate?>">
+			</div>
+		</div>
+		<?php if(!empty($joinDate_error)) { ?>
+            <span class="error"><font color="red">* <?=$joinDate_error?></font></span>
+        <?php } ?>
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon3">Leave Date</span>
+				<input type="date" name="leaveDate" id="leaveDate" tabindex="3" class="form-control" placeholder="leaveDate" value="<?=$leaveDate?>">
+			</div>
+		<?php if(!empty($leaveDate_error)) { ?>
+            <span class="error"><font color="red">* <?=$leaveDate_error?></font></span>
+        <?php } ?>
+		<input type="hidden" name="artistId" value="<?=$artistId?>">
+        <input type="hidden" name="memberId" value="<?=$memberId?>">
+		<br>
+		<div class="form-group">
+			<div class="row">
+				<div class="col-sm-6 col-sm-offset-3">
+					<input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Save">
+				</div>
+			</div>
+		</div>
+	</form>
+	
 <?php
 }
 else if($_GET['action'] == "deletemember") {
