@@ -9,6 +9,10 @@ if(!isset($_SESSION['username'])) {
 
 if(!isset($_GET['action']) || $_GET['action'] == "list") {
     $performances = get_all_performances();
+    
+	if(is_moderator($_SESSION['username']))
+        echo '<a class="btn btn-success btn-block" href="performance.php?action=addperformance">Add Performance</a><br>';
+	
     echo "<div class='panel panel-default'>
 	<div class='panel-heading'>Performances</div>
 		<div class='panel-body'>
@@ -23,6 +27,11 @@ if(!isset($_GET['action']) || $_GET['action'] == "list") {
 
 else if($_GET['action'] == "listvenues") {
     $venues = get_all_venues();
+	
+	if(is_moderator($_SESSION['username']))
+        echo '<a class="btn btn-success btn-block" href="performance.php?action=addvenue">Add Venue</a><br>';
+	
+	
     echo '<div class="panel panel-default">
 	  <div class="panel-heading"><h4>Venues</h4></div>
 	  <div class="panel-body">
@@ -45,19 +54,28 @@ else if($_GET['action'] == "showvenue") {
     $venue = get_venue_by_id($venueId);
 ?>
 <div class="panel panel-default">
-  <div class="panel-heading"><h4><?=$venue['name']?></h4></div>
+  <div class="panel-heading"><h4><?=$venue['name']?></h4><?php
+if(is_moderator($_SESSION['username'])) {
+?>
+<div class="btn-group">
+  <button type="button" class="btn btn-info dropdown-toggle navbar-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Edit: <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li><a href="performance.php?action=editvenue&venueId=<?=$venue['venueId']?>">Edit venue</a></li>
+    <li><a href="performance.php?action=deletevenue&id=<?=$venue['venueId']?>">Delete venue</a></li>
+  </ul>
+</div>
+<?php } ?></div>
   <div class="panel-body">
 	<ul class="list-group">
 <b>Street Address</b>: <?=$venue['streetAddress']?><br>
 <b>City</b>: <?=$venue['city']?><br>
 <b>State</b>: <?=$venue['state']?><br>
 <b>Zipcode</b>: <?=$venue['zipcode']?><br><br>
-<?php if(is_moderator($_SESSION['username'])) { ?>
-<a class="btn btn-success btn-block" href="performance.php?action=editvenue&venueId=<?=$venue['venueId']?>">Edit venue</a>
 	</ul>
   </div>
 </div>
-<?php } ?>
 <div class="panel panel-default">
   <div class="panel-heading"><h4>Performances</h4></div>
   <div class="panel-body">
@@ -193,7 +211,7 @@ else if($_GET['action'] == "details") {
 		<?php
 		if(is_moderator($_SESSION['username'])) {
 		?>
-		<a href="artists.php?action=editperformance&id=-1&performanceId=<?=$details['performanceId']?>">Edit performance</a> | <a href="artists.php?action=deleteperformance&id=<?=$details['performanceId']?>">Remove performance</a> | <a href="performance.php?action=addsong&performanceId=<?=$performanceId?>">Add song</a><br>
+		<a href="performance.php?action=editperformance&id=-1&performanceId=<?=$details['performanceId']?>">Edit performance</a> | <a href="performance.php?action=deleteperformance&id=<?=$details['performanceId']?>">Remove performance</a> | <a href="performance.php?action=addsong&performanceId=<?=$performanceId?>">Add song</a><br>
 		<br>
 		<?php
 		}
@@ -296,6 +314,8 @@ else if($_GET['action'] == "removeattended") {
 else if($_GET['action'] == "addvenue" || $_GET['action'] == "editvenue") {
     is_moderator_or_die();
 
+	$venueId = -1;
+	
     $name = "";
     $name_error = "";
     
@@ -363,7 +383,7 @@ else if($_GET['action'] == "addvenue" || $_GET['action'] == "editvenue") {
             // Successful
             
             if($venueId == -1) {
-                $ret = add_venue($name, $streetAddress, $city, $state, $zipcode);
+                $venueId = add_venue($name, $streetAddress, $city, $state, $zipcode);
             } else {
                 $ret = update_venue($venueId, $name, $streetAddress, $city, $state, $zipcode);
             }
@@ -434,7 +454,126 @@ else if($_GET['action'] == "deletevenue") {
     $ret = remove_venue($venueId);
 
     // Check error code on delete?
-    header('Location: artists.php?action=list', true);
+    header('Location: performance.php?action=listvenues', true);
     die();
+}
+
+else if($_GET['action'] == "addperformance" || $_GET['action'] == "editperformance") {
+    is_moderator_or_die();
+	
+    $performanceId = -1;
+
+    $title = "";
+    $title_error = "";
+
+    $venueId = 0;
+    $venueId_error = "";
+
+    $duration = 0;
+    $duration_error = "";
+
+    $date = "";
+    $date_error = "";
+
+    if($_GET['action'] == "editperformance" && isset($_GET['performanceId'])) {
+        $performanceId = intval($_GET['performanceId']);    
+        $details = get_performance_details($performanceId);
+        
+        $title = $details['title'];
+        $venueId = $details['venueId'];
+        $duration = $details['duration'];
+        $date = $details['date'];
+    }
+
+    if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $title = sanitize_input($_POST['title']);
+        $venueId = intval($_POST['venueId']);
+        $duration = doubleval($_POST['duration']);
+        $date = sanitize_input($_POST['date']);
+            
+        if(isset($_POST['performanceId'])) {
+            $performanceId = intval($_POST['performanceId']);
+        }
+        
+        $has_error = false;
+        
+        if(!$has_error) {
+            // Successful
+            
+            if($performanceId == -1) {
+                $performanceId = add_performance($duration, $venueId, $date, $title);
+            } else {
+                $ret = update_performance($performanceId, $title, $duration, $venueId, $date);
+            }
+            
+            if(!$has_error) {
+				header('Location: performance.php?action=details&id=' . $performanceId, true);
+				die();
+            }
+        }
+    }
+    ?>
+	
+	<form action="" method="post" style="display: block;">
+		<div class="form-group">
+			<input type="text" name="title" id="title" tabindex="1" class="form-control" placeholder="Title" value="<?=$title?>">
+		</div>
+		<?php if(!empty($title_error)) { ?>
+            <span class="error"><font color="red">* <?=$title_error?></font></span>
+        <?php } ?>
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon3">Venue</span>
+				<select class="form-control" name="venueId" id="venueId">
+					<?php
+					$venues = get_all_venues();
+					foreach($venues as $venue)
+						echo '<option value="'.$venue['venueId'].'">'.$venue['name'].'</a>';
+					?>
+                </select>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon3">Duration (minutes)</span>
+				<input type="number" name="duration" id="duration" tabindex="2" class="form-control" placeholder="duration" value="<?=$duration?>">
+			</div>
+		</div>
+		<?php if(!empty($duration_error)) { ?>
+            <span class="error"><font color="red">* <?=$duration_error?></font></span>
+        <?php } ?>
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon3">Date</span>
+				<input type="date" name="date" id="date" tabindex="2" class="form-control" placeholder="Date" value="<?=$date?>">
+			</div>
+		</div>
+		<?php if(!empty($date_error)) { ?>
+            <span class="error"><font color="red">* <?=$date_error?></font></span>
+        <?php } ?>
+		<input type="hidden" name="performanceId" value="<?=$performanceId?>">
+		<div class="form-group">
+			<div class="row">
+				<div class="col-sm-6 col-sm-offset-3">
+					<input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Save">
+				</div>
+			</div>
+		</div>
+	</form>
+
+<?php
+}
+else if($_GET['action'] == "deleteperformance") {
+    is_moderator_or_die();
+
+    if(!isset($_GET['id'])) {
+        die("Must specify id for this action");
+    }
+
+    $performanceId = intval($_GET['id']);
+    $ret = remove_performance($performanceId);
+
+    // Check error code on delete?
+    header('Location: performance.php?action=list', true);
 }
 ?>

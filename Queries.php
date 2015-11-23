@@ -102,16 +102,25 @@ function get_all_venues(){
 
 function add_venue($venueName, $address, $city, $state, $zip){
 	
-	$SQL = "INSERT INTO venue ('name', 'streetAddress', 'city', 'state', 'zipcode') VALUES 
+	$SQL = "INSERT INTO venue (`name`, `streetAddress`, `city`, `state`, `zipcode`) VALUES 
 	('".$venueName."', '".$address."', '".$city."', '".$state."', '".$zip."');";
 	
-    return mysql_query($SQL) or die(mysql_error());
+	mysql_query($SQL) or die(mysql_error());
+	
+	return mysql_insert_id();
 }
 
 function update_venue($venueId, $name, $address, $city, $state, $zip){
 	
 	$SQL = "UPDATE venue SET name = '".$name."', streetAddress = '".$address."', city = '".$city."', 
 	state = '".$state."', zipcode = '".$zip."' WHERE venueId = '".$venueId."';";
+	
+    return mysql_query($SQL) or die(mysql_error());
+}
+
+function remove_venue($venueId){
+	
+	$SQL = "DELETE FROM venue WHERE venueId = '".$venueId."';";
 	
     return mysql_query($SQL) or die(mysql_error());
 }
@@ -289,8 +298,9 @@ function add_performance($duration, $venueId, $date, $title){
 	
 	$SQL = "INSERT INTO performance (duration, venueId, date, title) VALUES ('".$duration."', '".$venueId."', '".$date."', '".$title."');";
 	
-	return mysql_query($SQL) or die(mysql_error());
+	mysql_query($SQL) or die(mysql_error());
 	
+	return mysql_insert_id();
 }
 
 function get_all_performances() {
