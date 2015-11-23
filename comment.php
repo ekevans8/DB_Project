@@ -75,23 +75,24 @@ if($_GET['action'] == "addcomment" || $_GET['action'] == "editcomment") {
         }
     }
 ?>
-
-    <form action="" method="POST">
-    <table>
-        <tr>
-            <td>Comment:</td>
-            <td><textarea name="comment"><?=$comment?></textarea></td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center">
-                <input type="hidden" name="artistId" value="<?=$artistId?>">
-                <input type="hidden" name="performanceId" value="<?=$performanceId?>">
-                <input type="hidden" name="commentId" value="<?=$commentId?>">
-                <input type="submit" value="Submit" style="width:100%"></input>
-             </td>
-        </tr>
-    </table>
-    </form>
+	<form action="" method="post" style="display: block;">
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon3">Comment</span>
+				<textarea name="comment" id="comment" tabindex="1" class="form-control" placeholder="Comment Text"><?=$comment?></textarea>
+			</div>
+		</div>
+		<input type="hidden" name="artistId" value="<?=$artistId?>">
+		<input type="hidden" name="performanceId" value="<?=$performanceId?>">
+		<input type="hidden" name="commentId" value="<?=$commentId?>">
+		<div class="form-group">
+			<div class="row">
+				<div class="col-sm-6 col-sm-offset-3">
+					<input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Save">
+				</div>
+			</div>
+		</div>
+	</form>
 
 <?php
 }
