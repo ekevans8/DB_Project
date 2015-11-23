@@ -53,7 +53,7 @@ session_start();
       </ul>
 	</div>
 </nav>
-<?php } elseif("$_SERVER[REQUEST_URI]" == "/"){?>
+<?php } else if($_SERVER[REQUEST_URI] == "/"){?>
 <div class="page-header">
   <h1>Welcome to our Database Project</h1>
 </div>
@@ -66,7 +66,7 @@ session_start();
   </li>
   <li><a href="register.php">Register</a></li>
 </ul>
-<?php } elseif("$_SERVER[REQUEST_URI]" == "/login.php?action=login" or "$_SERVER[REQUEST_URI]" == "/login.php"){ ?> 
+<?php } else if($_SERVER[REQUEST_URI] == "/login.php?action=login" || $_SERVER[REQUEST_URI] == "/login.php"){ ?> 
 <div class="page-header">
   <h1>Login To The Site</h1>
 </div>
