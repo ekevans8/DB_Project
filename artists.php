@@ -36,7 +36,7 @@ foreach($artists as $artist) {
 <?php
     if(is_moderator($username)) {
 ?>
-<a href="artists.php?action=addartist">Add new artist</a>
+<a class="btn btn-info btn-block" href="artists.php?action=addartist">Add new artist</a>
 
 <?php
     }
@@ -235,13 +235,13 @@ else if($_GET['action'] == "addartist" || $_GET['action'] == "editartist") {
     $formationZipCode_error = "";
 
     $artistId = -1;
-
-    if($_GET['action'] == "editartist" && isset($_GET['id'])) {
-        if(!isset($_GET['id'])) {
+	
+	if($_GET['action'] == "editartist" && isset($_GET['artistId'])) {
+        if(!isset($_GET['artistId'])) {
             die("Must specify id for this action");
         }
         
-        $artistId = intval($_GET['id']);
+        $artistId = intval($_GET['artistId']);
         
         // Get artist information from database and set fields above
         $details = get_artist_details($artistId, $artists);
@@ -291,48 +291,39 @@ else if($_GET['action'] == "addartist" || $_GET['action'] == "editartist") {
         
     // Display add artist page
     ?>
-    <form action="" method="POST">
-    <table>
-        <tr>
-            <td>Name:</td>
-            <td><input type="text" name="name" style="width:100%" value="<?=$name?>"></input>
-            <?php if(!empty($name_error)) { ?>
-            <span class="error">* <?=$name_error?></span>
-            <?php } ?>
-            </td>
-        </tr>
-        <tr>
-            <td>Date Formed:</td>
-            <td><input type="date" name="formDate" style="width:100%" value="<?=$formDate?>"></input>
-            <?php if(!empty($formDate_error)) { ?>
-            <span class="error">* <?=$formDate_error?></span>
-            <?php } ?>
-            </td>
-        </tr>
-        <tr>
-            <td>Date Disbanded:</td>
-            <td><input type="date" name="breakupDate" style="width:100%" value="<?=$breakupDate?>"></input>
-            <?php if(!empty($breakupDate_error)) { ?>
-            <span class="error">* <?=$breakupDate_error?></span>
-            <?php } ?>
-            </td>
-        </tr>
-        <tr>
-            <td>Formation Zipcode:</td>
-            <td><input type="number" name="formationZipCode" min="10000" max="99999" style="width:100%" value="<?=$formationZipCode?>"></input>
-            <?php if(!empty($formationZipCode_error)) { ?>
-            <span class="error">* <?=$formationZipCode_error?></span>
-            <?php } ?>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center">
-                <input type="hidden" name="artistId" value="<?=$artistId?>">
-                <input type="submit" value="Submit" style="width:100%"></input>
-             </td>
-        </tr>
-    </table>
-    </form>
+	<form action="" method="post" style="display: block;">
+		<div class="form-group">
+			<input type="text" name="name" id="name" tabindex="1" class="form-control" placeholder="Name" value="<?=$name?>">
+		</div>
+		<?php if(!empty($name_error)) { ?>
+            <span class="error"><font color="red">* <?=$name_error?></font></span>
+        <?php } ?>
+		<div class="form-group">
+			<input type="date" name="formDate" id="formDate" tabindex="2" class="form-control" placeholder="Date Formed" value="<?=$formDate?>">
+		</div>
+		<?php if(!empty($formDate_error)) { ?>
+            <span class="error"><font color="red">* <?=$formDate_error?></font></span>
+        <?php } ?>
+		<div class="form-group">
+			<input type="date" name="breakupDate" id="breakupDate" tabindex="3" class="form-control" placeholder="Date Disbanded" value="<?=$breakupDate?>">
+		</div>
+		<?php if(!empty($breakupDate_error)) { ?>
+            <span class="error"><font color="red">* <?=$breakupDate_error?></font></span>
+        <?php } ?>
+		<div class="form-group">
+			<input type="number"  min="10000" max="99999" name="formationZipCode" id="formationZipCode" tabindex="3" class="form-control" placeholder="Formation Zipcode" value="<?=$formationZipCode?>">
+		</div>
+		<?php if(!empty($formationZipCode_error)) { ?>
+            <span class="error"><font color="red">* <?=$formationZipCode_error?></font></span>
+        <?php } ?>
+		<div class="form-group">
+			<div class="row">
+				<div class="col-sm-6 col-sm-offset-3">
+					<input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Save">
+				</div>
+			</div>
+		</div>
+	</form>
 <?php
 }
 else if($_GET['action'] == "deleteartist") {
