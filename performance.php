@@ -72,7 +72,7 @@ if(is_moderator($_SESSION['username'])) {
 <b>Street Address</b>: <?=$venue['streetAddress']?><br>
 <b>City</b>: <?=$venue['city']?><br>
 <b>State</b>: <?=$venue['state']?><br>
-<b>Zipcode</b>: <?=$venue['zipcode']?><br><br>
+<b>Zipcode</b>: <?=$venue['zipcode']?>
 	</ul>
   </div>
 </div>
@@ -198,7 +198,20 @@ else if($_GET['action'] == "details") {
     $summary = get_performance_summary($performanceId);
 ?>
 <div class="panel panel-default">
-  <div class="panel-heading"><?=$details['title']?></div>
+  <div class="panel-heading"><h4><?=$details['title']?></h4><?php
+if(is_moderator($_SESSION['username'])) {
+?>
+<div class="btn-group">
+  <button type="button" class="btn btn-info dropdown-toggle navbar-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Edit: <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li><a href="performance.php?action=editperformance&id=-1&performanceId=<?=$details['performanceId']?>">Edit performance</a></li>
+    <li><a href="performance.php?action=deleteperformance&id=<?=$details['performanceId']?>">Remove performance</a> </li>
+    <li><a href="performance.php?action=addsong&performanceId=<?=$performanceId?>">Add song</a></li>
+  </ul>
+</div>
+<?php } ?></div>
   <div class="panel-body">
 		<ul class="list-group">
 			<?php 
@@ -206,21 +219,15 @@ else if($_GET['action'] == "details") {
 			?>
 				<b>Venue</b>: <a href="performance.php?action=showvenue&venueId=<?=$venue['venueId']?>"><?=$venue['name']?></a><br>
 				<b>Date</b>: <?=$details['date']?><br>
-				<b>Duration (minutes)</b>: <?=$details['duration']?><br>
+				<b>Duration (minutes)</b>: <?=$details['duration']?>
 		</ul>
-		<?php
-		if(is_moderator($_SESSION['username'])) {
-		?>
-		<a href="performance.php?action=editperformance&id=-1&performanceId=<?=$details['performanceId']?>">Edit performance</a> | <a href="performance.php?action=deleteperformance&id=<?=$details['performanceId']?>">Remove performance</a> | <a href="performance.php?action=addsong&performanceId=<?=$performanceId?>">Add song</a><br>
-		<br>
-		<?php
-		}
-		?>
 	</div>
 </div> 
-    Did you attend this performance? <a href="performance.php?action=addattended&id=<?=$performanceId?>">Yes</a> / <a href="performance.php?action=removeattended&id=<?=$performanceId?>">No</a><br>
-    Attended? <?php echo attended_concert_by_id($_SESSION['username'], $performanceId) ? "Yes" : "No"; ?>
-    <br><br>
+<?php if(attended_concert_by_id($_SESSION['username'], $performanceId)) { ?>
+<a class="btn btn-warning btn-block" href="performance.php?action=removeattended&id=<?=$performanceId?>">Remove from attended performances</a><br>
+<?php } else { ?>
+<a class="btn btn-success btn-block" href="performance.php?action=addattended&id=<?=$performanceId?>">Add to attended performances</a><br>
+<?php } ?>
 	<div class="panel panel-default">
 	  <div class="panel-heading">Setlist</div>
 	  <div class="panel-body">
@@ -263,8 +270,7 @@ foreach($summary as $songinfo) {
 	<ul class="list-group">
 <?php
 	echo '<li class="list-group-item">
-		<a href="comment.php?action=addcomment&performanceId='.$performanceId.'">Add comment</a>
-	<li>';
+		<a href="comment.php?action=addcomment&performanceId='.$performanceId.'">Add comment</a>';
     foreach($comments as $comment) {
 		echo '<li class="list-group-item">';
         if($comment['username'] == null) {
@@ -281,7 +287,6 @@ foreach($summary as $songinfo) {
 		<?php } ?>
 		</li>
 <?php } ?>
-	</ul>
   </div>
 </div>
 <?php

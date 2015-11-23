@@ -192,8 +192,7 @@ foreach($favorites as $favorite) {
 <?php
     $comments = get_comments_by_artist($details['artistId']);
 	echo '<li class="list-group-item">
-	<a href="comment.php?action=addcomment&artistId='.$details['artistId'].'">Add comment</a>
-	<li>';
+	<a href="comment.php?action=addcomment&artistId='.$details['artistId'].'">Add comment</a>';
     foreach($comments as $comment) {
 		echo '<li class="list-group-item">';
         if($comment['username'] == null) {
@@ -212,7 +211,6 @@ foreach($favorites as $favorite) {
 <?php
     }
 ?>
-	</ul>
   </div>
 </div>
 <?php
