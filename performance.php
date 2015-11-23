@@ -9,10 +9,16 @@ if(!isset($_SESSION['username'])) {
 
 if(!isset($_GET['action']) || $_GET['action'] == "list") {
     $performances = get_all_performances();
-    
+    echo "<div class='panel panel-default'>
+	<div class='panel-heading'>Performances</div>
+		<div class='panel-body'>
+		<ul class='list-group'>";
     foreach($performances as $performance) {
-        echo '<a href="performance.php?action=details&id='.$performance['performanceId'].'">'.$performance['title'].'</a> ('.$performance['date'].')<br>';
+        echo '<a class="list-group-item" href="performance.php?action=details&id='.$performance['performanceId'].'">'.$performance['title'].' ('.$performance['date'].')</a>';
     }
+	echo '</ul>
+	</div>
+</div>';
 }
 
 else if($_GET['action'] == "listvenues") {
@@ -21,6 +27,7 @@ else if($_GET['action'] == "listvenues") {
     foreach($venues as $venue) {
         echo '<a href="performance.php?action=showvenue&venueId='.$venue['venueId'].'">'.$venue['name'].'</a><br>';
     }
+	
 }
 
 else if($_GET['action'] == "showvenue") {
@@ -101,45 +108,48 @@ else if($_GET['action'] == "addsong") {
         die();
     }
 ?>
-    <form action="" method="POST">
-    <table>
-        <tr>
-            <td>Artist:</td>
-            <td>
-                <select name="artistId" style="width:100%">
-<?php
-$artists = get_all_artist_info();
 
-foreach($artists as $artist) {
-    echo '<option value="'.$artist['artistId'].'">'.$artist['name'].'</option>';
-}
-?>
+	<form action="" method="post" style="display: block;">
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon3">Artist</span>
+				<select name="artistId" class="form-control" style="width:100%">
+					<?php
+					$artists = get_all_artist_info();
+
+					foreach($artists as $artist) {
+						echo '<option value="'.$artist['artistId'].'">'.$artist['name'].'</option>';
+					}
+					?>
                 </select>
-            </td>
-        </tr>
-        <tr>
-            <td>Song:</td>
-            <td>
-                <select name="songId" style="width:100%">
+			</div>
+		</div>
 
-<?php
-$songs = get_all_songs();
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon3">Song</span>
+				<select name="songId" class="form-control" style="width:100%">
+					<?php
+					$songs = get_all_songs();
 
-foreach($songs as $song) {
-    echo '<option value="'.$song['songId'].'">'.$song['title'].'</option>';
-}
-?>
+					foreach($songs as $song) {
+						echo '<option value="'.$song['songId'].'">'.$song['title'].'</option>';
+					}
+					?>
                 </select>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center">
-                <input type="hidden" name="performanceId" value="<?=$performanceId?>">
-                <input type="submit" value="Submit" style="width:100%"></input>
-            </td>
-        </tr>
-    </table>
-    </form>
+			</div>
+		</div>
+
+		<input type="hidden" name="performanceId" value="<?=$performanceId?>">
+		<div class="form-group">
+			<div class="row">
+				<div class="col-sm-6 col-sm-offset-3">
+					<input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Save">
+				</div>
+			</div>
+		</div>
+	</form>
+
 <?php
 }
 else if($_GET['action'] == "details") {
@@ -153,54 +163,76 @@ else if($_GET['action'] == "details") {
     $comments = get_comments_by_performance($performanceId);
     $summary = get_performance_summary($performanceId);
 ?>
-
-    <b>Title</b>: <?=$details['title']?><br>
-<?php 
-$venue = get_venue_by_id($details['venueId']);
-?>
-    <b>Venue</b>: <a href="performance.php?action=showvenue&venueId=<?=$venue['venueId']?>"><?=$venue['name']?></a><br>
-    <b>Date</b>: <?=$details['date']?><br>
-    <b>Duration (minutes)</b>: <?=$details['duration']?><br>
-    <br>
-<?php
-if(is_moderator($_SESSION['username'])) {
-?>
-<a href="artists.php?action=editperformance&id=-1&performanceId=<?=$details['performanceId']?>">Edit performance</a> | <a href="artists.php?action=deleteperformance&id=<?=$details['performanceId']?>">Remove performance</a> | <a href="performance.php?action=addsong&performanceId=<?=$performanceId?>">Add song</a><br>
-<br>
-<?php
-}
-?>
+<div class="panel panel-default">
+  <div class="panel-heading"><?=$details['title']?></div>
+  <div class="panel-body">
+		<ul class="list-group">
+			<?php 
+			$venue = get_venue_by_id($details['venueId']);
+			?>
+				<b>Venue</b>: <a href="performance.php?action=showvenue&venueId=<?=$venue['venueId']?>"><?=$venue['name']?></a><br>
+				<b>Date</b>: <?=$details['date']?><br>
+				<b>Duration (minutes)</b>: <?=$details['duration']?><br>
+		</ul>
+		<?php
+		if(is_moderator($_SESSION['username'])) {
+		?>
+		<a href="artists.php?action=editperformance&id=-1&performanceId=<?=$details['performanceId']?>">Edit performance</a> | <a href="artists.php?action=deleteperformance&id=<?=$details['performanceId']?>">Remove performance</a> | <a href="performance.php?action=addsong&performanceId=<?=$performanceId?>">Add song</a><br>
+		<br>
+		<?php
+		}
+		?>
+	</div>
+</div> 
     Did you attend this performance? <a href="performance.php?action=addattended&id=<?=$performanceId?>">Yes</a> / <a href="performance.php?action=removeattended&id=<?=$performanceId?>">No</a><br>
     Attended? <?php echo attended_concert_by_id($_SESSION['username'], $performanceId) ? "Yes" : "No"; ?>
-    <br>
-    <br>
-    <b>Setlist</b>:<br>
+    <br><br>
+	<div class="panel panel-default">
+	  <div class="panel-heading">Setlist</div>
+	  <div class="panel-body">
+			<ul class="list-group">
 <?php
 $i = 1;
 foreach($summary as $songinfo) {
-    echo $i . ') <a href="artists.php?action=details&id='.$songinfo['artistId'].'">' . $songinfo['Artist'] . '</a> - ' . $songinfo['SongTitle'];
+    echo '<li class="list-group-item">'.$i . ') <a href="artists.php?action=details&id='.$songinfo['artistId'].'">' . $songinfo['Artist'] . '</a> - ' . $songinfo['SongTitle'];
     
     if(is_moderator($_SESSION['username'])) {
         echo ' (<a href="performance.php?action=removesong&performanceId='.$songinfo['performanceId'].'&songId='.$songinfo['songId'].'&artistId='.$songinfo['artistId'].'">Remove</a>)';
     }
     
-    echo '<br>';
+    echo '</li>';
     $i++;
 }
 ?>
+		</ul>
+	</div>
+</div> 
     <br>
-    <b>Users who attended this concert</b><br>
+	<div class="panel panel-default">
+	  <div class="panel-heading">Users who attended this concert</div>
+	  <div class="panel-body">
+			<ul class="list-group">
 <?php
     $users = get_users_at_performance($performanceId);
     
     foreach($users as $user) {
-        echo '<a href="profile.php?id='.$user['username'].'">'.$user['username'].'</a><br>';
+        echo '<a class="list-group-item" href="profile.php?id='.$user['username'].'">'.$user['username'].'</a>';
     }
 ?>
+		</ul>
+	</div>
+</div> 
     <br>
-    <b>Comments</b><br>
+<div class="panel panel-default">
+  <div class="panel-heading"><h4>Comments</h4></div>
+  <div class="panel-body">
+	<ul class="list-group">
 <?php
+	echo '<li class="list-group-item">
+		<a href="comment.php?action=addcomment&performanceId='.$performanceId.'">Add comment</a>
+	<li>';
     foreach($comments as $comment) {
+		echo '<li class="list-group-item">';
         if($comment['username'] == null) {
             echo 'Username: <i>Deleted user</i><br>';
         } else {
@@ -212,12 +244,12 @@ foreach($summary as $songinfo) {
         
         <?php if($comment['username'] == $_SESSION['username'] || is_moderator($_SESSION['username'])) { ?>
         (<a href="comment.php?action=editcomment&performanceId=<?=$performanceId?>&commentId=<?=$comment['commentId']?>">Edit</a> | <a href="comment.php?action=deletecomment&performanceId=<?=$performanceId?>&id=<?=$comment['commentId']?>">Delete</a>)<br>
-        <?php } ?>
-        <br>
-<?php
-    }
-?>
-    <a href="comment.php?action=addcomment&performanceId=<?=$performanceId?>">Add comment</a><br>
+		<?php } ?>
+		</li>
+<?php } ?>
+	</ul>
+  </div>
+</div>
 <?php
 }
 else if($_GET['action'] == "addattended") {    
