@@ -10,12 +10,20 @@ if(!isset($_SESSION['username'])) {
 if(!isset($_GET['action']) || $_GET['action'] == "list") {
     $albums = get_albums();
     
-    foreach($albums as $album) {
-        echo '<a href="album.php?action=details&id=' . $album['albumId'] .'">' . $album['title'] . '</a> (' . $album['releaseDate'] . ') from ' . $album['recordLabel'] . '<br>';
-    }
+	if(is_moderator($_SESSION['username']))
+        echo '<a class="btn btn-success btn-block" href="album.php?action=addalbum">Add Album</a><br>';
     
-    if(is_moderator($_SESSION['username']))
-        echo '<br><a href="album.php?action=addalbum">Add album</a><br>';
+	foreach($albums as $album) {
+		echo '<div class="panel panel-default">
+			<div class="panel-heading"><h4><a href="album.php?action=details&id=' . $album['albumId'] .'">' . $album['title'] . '</a></h4></div>
+			<div class="panel-body">
+				<ul class="list-group">';
+        echo ' Release Date: ' . $album['releaseDate'] . ' from ' . $album['recordLabel'];
+		echo '</ul>
+		  </div>
+		</div>';
+    }
+	
 }
 else if($_GET['action'] == "details") {
     // Get detailed album information including tracklist
@@ -27,43 +35,57 @@ else if($_GET['action'] == "details") {
         $artist_name = $songs[0]['Artist_Name'];
         $same_artist = true;
         
-        
         foreach($songs as $song) {
             if($song['Artist_Name'] != $artist_name) {
                 $same_artist = false;
                 break;
             }
         }
-        
-        echo '<b>' . $songs[0]['Album_Title'] . '</b><br>';
+        echo '<div class="panel panel-default">
+			  <div class="panel-heading"><h4>'.$songs[0]['Album_Title'].'</h4></div>
+			  <div class="panel-body">
+				<ul class="list-group">';
         
         if($same_artist) {
-            echo $artist_name . "<br>";
+            echo $artist_name.'<br>';
         }
         
-        echo "<br>";
-        
+        echo "</ul>
+		  </div>
+		</div>";
+		
+		if(is_moderator($_SESSION['username']))
+			echo '<a class="btn btn-success btn-block" href="album.php?action=addsong&id=' . $albumId . '">Add song</a><br>';
+		
+        echo '<div class="panel panel-default">
+			  <div class="panel-heading"><h4>Tracks</h4></div>
+			  <div class="panel-body">
+				<ul class="list-group">';
         foreach($songs as $song) {
             if(!$same_artist)
-                echo $song['track_number'] . ") " . $song['Artist_Name'] . ' - ' . $song['Song_Title'] . " (" . $song['duration'] . " min)";
+                echo '<li class="list-group-item">'.$song['track_number'] . ") " . $song['Artist_Name'] . ' - ' . $song['Song_Title'] . " (" . $song['duration'] . " min)";
             else
-                echo $song['track_number'] . ") " . $song['Song_Title'] . " (" . $song['duration'] . " min)";
+                echo '<li class="list-group-item">'.$song['track_number'] . ") " . $song['Song_Title'] . " (" . $song['duration'] . " min)";
             
-            if(is_moderator($_SESSION['username']))
-                echo ' <a href="album.php?action=editsong&id='.$song['albumId'].'&songId='.$song['songId'].'">Edit song</a> | <a href="album.php?action=removesong&id='.$song['songId'].'">Remove song</a>';
-            
-            echo "<br>";
+            if(is_moderator($_SESSION['username'])){
+                echo '&nbsp;&nbsp;&nbsp;&nbsp;<div class="btn-group" role="group" aria-label="...">
+						  <a class="btn btn-success" href="album.php?action=editsong&id='.$song['albumId'].'&songId='.$song['songId'].'">Edit song</a>
+						  <a class="btn btn-danger" href="album.php?action=removesong&id='.$song['songId'].'">Remove song</a>
+						</div>';
+            }
+            echo "</li>";
             
             $total_duration += $song['duration'];
         }
         
         echo "<br><b>Total length</b>: " . $total_duration . "<br>";
+		echo "</ul>
+		  </div>
+		</div>";
     }
     
     echo "<br>";
-    
-    if(is_moderator($_SESSION['username']))
-        echo '<a href="album.php?action=addsong&id=' . $albumId . '">Add song</a><br>';
+
 }
 else if($_GET['action'] == "addalbum" || $_GET['action'] == "editalbum") {
     is_moderator_or_die();
@@ -243,7 +265,7 @@ else if($_GET['action'] == "addsong" || $_GET['action'] == "editsong") {
             
             if($songId == -1) {
                 $songId = add_song($title, $duration, $track_number);
-                $ret = link_song_to_album_and_artist($songId, $albumId, $artistId);
+                $ret = link_song_to_album_and_artist($songId, $albumId, $artistId, $track_number);
             } else {
                 update_song($songId, $title, $duration, $track_number);
                 unlink_song_to_album_and_artist($songId, $albumId, $origArtistId);
@@ -258,6 +280,55 @@ else if($_GET['action'] == "addsong" || $_GET['action'] == "editsong") {
     }
     ?>
 
+	<form action="" method="post" style="display: block;">
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon3">Artist</span>
+				<select class="form-control" name="artistid">
+                <?php
+                    $artists = get_all_artist_info();
+                    foreach($artists as $artist) {
+                        echo '<option value="'.$artist['artistId'].'">'.$artist['name'].'</option>';
+                    }
+                ?>
+                </select>
+			</div>
+		</div>
+		<div class="form-group">
+			<input type="text" name="title" id="title" tabindex="2" class="form-control" placeholder="Title" value="<?=$title?>">
+		</div>
+		<?php if(!empty($title_error)) { ?>
+            <span class="error"><font color="red">* <?=$title_error?></font></span>
+        <?php } ?>
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon3">Duration (minutes)</span>
+				<input type="number" name="duration" step="any" id="duration" tabindex="2" class="form-control" placeholder="Duration" value="<?=$duration?>">
+			</div>
+		</div>
+		<?php if(!empty($duration_error)) { ?>
+            <span class="error"><font color="red">* <?=$duration_error?></font></span>
+        <?php } ?>
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon3">Track Number</span>
+				<input type="number" name="track_number" id="track_number" tabindex="2" class="form-control" placeholder="Track Number" value="<?=$track_number?>">
+			</div>
+		</div>
+		<?php if(!empty($track_number_error)) { ?>
+            <span class="error"><font color="red">* <?=$track_number_error?></font></span>
+        <?php } ?>
+		<input type="hidden" name="albumId" value="<?=$albumId?>">
+        <input type="hidden" name="songId" value="<?=$songId?>">
+		<div class="form-group">
+			<div class="row">
+				<div class="col-sm-6 col-sm-offset-3">
+					<input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Save">
+				</div>
+			</div>
+		</div>
+	</form>
+	
     <form action="" method="POST">
     <table>
         <tr>
