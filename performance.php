@@ -23,11 +23,16 @@ if(!isset($_GET['action']) || $_GET['action'] == "list") {
 
 else if($_GET['action'] == "listvenues") {
     $venues = get_all_venues();
-    
+    echo '<div class="panel panel-default">
+	  <div class="panel-heading"><h4>Venues</h4></div>
+	  <div class="panel-body">
+		<ul class="list-group">';
     foreach($venues as $venue) {
-        echo '<a href="performance.php?action=showvenue&venueId='.$venue['venueId'].'">'.$venue['name'].'</a><br>';
+        echo '<a class="list-group-item" href="performance.php?action=showvenue&venueId='.$venue['venueId'].'">'.$venue['name'].'</a>';
     }
-	
+	echo '</ul>
+  </div>
+</div>';
 }
 
 else if($_GET['action'] == "showvenue") {
@@ -39,22 +44,33 @@ else if($_GET['action'] == "showvenue") {
     
     $venue = get_venue_by_id($venueId);
 ?>
-<b>Venue</b>: <?=$venue['name']?><br>
+<div class="panel panel-default">
+  <div class="panel-heading"><h4><?=$venue['name']?></h4></div>
+  <div class="panel-body">
+	<ul class="list-group">
 <b>Street Address</b>: <?=$venue['streetAddress']?><br>
 <b>City</b>: <?=$venue['city']?><br>
 <b>State</b>: <?=$venue['state']?><br>
-<b>Zipcode</b>: <?=$venue['zipcode']?><br>
+<b>Zipcode</b>: <?=$venue['zipcode']?><br><br>
 <?php if(is_moderator($_SESSION['username'])) { ?>
-<a href="performance.php?action=editvenue&venueId=<?=$venue['venueId']?>">Edit venue</a><br>
+<a class="btn btn-success btn-block" href="performance.php?action=editvenue&venueId=<?=$venue['venueId']?>">Edit venue</a>
+	</ul>
+  </div>
+</div>
 <?php } ?>
-<br>
-<b>Performances</b>:<br>
+<div class="panel panel-default">
+  <div class="panel-heading"><h4>Performances</h4></div>
+  <div class="panel-body">
+	<ul class="list-group">
 <?php
     $performances = get_performances_by_venue($venueId);
     
     foreach($performances as $performance) {
-        echo '<a href="performance.php?action=details&id='.$performance['performanceId'].'">'.$performance['title'].'</a> ('.$performance['date'].')<br>';
+        echo '<li class="list-group-item"><a href="performance.php?action=details&id='.$performance['performanceId'].'">'.$performance['title'].'</a> ('.$performance['date'].')</li>';
     }
+	echo '</ul>
+  </div>
+</div>';
 }
 else if($_GET['action'] == "removesong") {
     if(!isset($_GET['performanceId'])) {
@@ -360,53 +376,50 @@ else if($_GET['action'] == "addvenue" || $_GET['action'] == "editvenue") {
     }
     ?>
 
-    <form action="" method="POST">
-    <table>
-        <tr>
-            <td>Name:</td>
-            <td><input type="text" name="name" style="width:100%" value="<?=$name?>"></input>
-            <?php if(!empty($name_error)) { ?>
-            <span class="error">* <?=$name_error?></span>
-            <?php } ?>
-            </td>
-        </tr>
-        <tr>
-            <td>Street Address:</td>
-            <td><input type="text" name="streetAddress" style="width:100%" value="<?=$streetAddress?>"></input>
-            <?php if(!empty($streetAddress_error)) { ?>
-            <span class="error">* <?=$streetAddress_error?></span>
-            <?php } ?>
-            </td>
-        </tr>
-        <tr>
-            <td>City:</td>
-            <td><input type="text" name="city" style="width:100%" value="<?=$city?>"></input>
-            <?php if(!empty($city_error)) { ?>
-            <span class="error">* <?=$city_error?></span>
-            <?php } ?>
-            </td>
-        </tr>
-        <tr>
-            <td>State:</td>
-            <td><input type="text" name="state" style="width:100%" value="<?=$state?>"></input>
-            <?php if(!empty($state_error)) { ?>
-            <span class="error">* <?=$state_error?></span>
-            <?php } ?>
-            </td>
-        </tr>
-        <tr>
-            <td>Zipcode:</td>
-            <td><input type="number" name="zipcode" min="10000" max="99999" style="width:100%" value="<?=$zipcode?>"></input>
-            <?php if(!empty($zipcode_error)) { ?>
-            <span class="error">* <?=$zipcode_error?></span>
-            <?php } ?>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center"><input type="submit" value="Submit" style="width:100%"></input></td>
-        </tr>
-    </table>
-    </form>
+	<form id="login-form" action="" method="post" style="display: block;">
+		<div class="form-group">
+			<input type="text" name="name" id="name" tabindex="1" class="form-control" placeholder="Name" value="<?=$name?>">
+		</div>
+		<?php if(!empty($name_error)) { ?>
+            <span class="error"><font color="red">* <?=$name_error?></font></span>
+        <?php } ?>
+		
+		<div class="form-group">
+			<input type="text" name="streetAddress" id="streetAddress" tabindex="1" class="form-control" placeholder="Street Address" value="<?=$streetAddress?>">
+		</div>
+		<?php if(!empty($streetAddress_error)) { ?>
+            <span class="error"><font color="red">* <?=$streetAddress_error?></font></span>
+        <?php } ?>
+		
+		<div class="form-group">
+			<input type="text" name="city" id="city" tabindex="1" class="form-control" placeholder="City" value="<?=$city?>">
+		</div>
+		<?php if(!empty($city_error)) { ?>
+            <span class="error"><font color="red">* <?=$city_error?></font></span>
+        <?php } ?>
+		
+		<div class="form-group">
+			<input type="text" name="state" id="state" tabindex="1" class="form-control" placeholder="State" value="<?=$state?>">
+		</div>
+		<?php if(!empty($state_error)) { ?>
+            <span class="error"><font color="red">* <?=$state_error?></font></span>
+        <?php } ?>
+		
+		<div class="form-group">
+			<input type="number" name="zipcode" min="10000" max="99999" id="zipcode" tabindex="1" class="form-control" placeholder="Zipcode" value="<?=$zipcode?>">
+		</div>
+		<?php if(!empty($zipcode_error)) { ?>
+            <span class="error"><font color="red">* <?=$zipcode_error?></font></span>
+        <?php } ?>
+		
+		<div class="form-group">
+			<div class="row">
+				<div class="col-sm-6 col-sm-offset-3">
+					<input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Save">
+				</div>
+			</div>
+		</div>
+	</form>
 
 <?php
 }
