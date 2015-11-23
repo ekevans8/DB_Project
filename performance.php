@@ -68,12 +68,10 @@ if(is_moderator($_SESSION['username'])) {
 </div>
 <?php } ?></div>
   <div class="panel-body">
-	<ul class="list-group">
 <b>Street Address</b>: <?=$venue['streetAddress']?><br>
 <b>City</b>: <?=$venue['city']?><br>
 <b>State</b>: <?=$venue['state']?><br>
 <b>Zipcode</b>: <?=$venue['zipcode']?>
-	</ul>
   </div>
 </div>
 <div class="panel panel-default">
@@ -213,14 +211,12 @@ if(is_moderator($_SESSION['username'])) {
 </div>
 <?php } ?></div>
   <div class="panel-body">
-		<ul class="list-group">
-			<?php 
-			$venue = get_venue_by_id($details['venueId']);
-			?>
-				<b>Venue</b>: <a href="performance.php?action=showvenue&venueId=<?=$venue['venueId']?>"><?=$venue['name']?></a><br>
-				<b>Date</b>: <?=$details['date']?><br>
-				<b>Duration (minutes)</b>: <?=$details['duration']?>
-		</ul>
+		<?php 
+		$venue = get_venue_by_id($details['venueId']);
+		?>
+			<b>Venue</b>: <a href="performance.php?action=showvenue&venueId=<?=$venue['venueId']?>"><?=$venue['name']?></a><br>
+			<b>Date</b>: <?=$details['date']?><br>
+			<b>Duration (minutes)</b>: <?=$details['duration']?>
 	</div>
 </div> 
 <?php if(attended_concert_by_id($_SESSION['username'], $performanceId)) { ?>
