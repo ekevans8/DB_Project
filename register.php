@@ -164,14 +164,20 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php } ?>
 		
 		<div class="form-group">
-			<input type="number" name="age" id="age" min="13" tabindex="6" class="form-control" value="<?=$age?>">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon3">Age</span>
+				<input type="number" name="age" id="age" min="13" tabindex="6" class="form-control" value="<?=$age?>">
+			</div>
 		</div>
 		<?php if(!empty($age_error)) { ?>
             <span class="error"><font color="red">* <?=$age_error?></font></span>
         <?php } ?>
 
 		<div class="form-group">
-			<input type="number" name="zipcode" id="zipcode" min="10000" max="99999" tabindex="7" class="form-control" value="<?=$zipcode?>">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon3">Zipcode</span>
+				<input type="number" name="zipcode" id="zipcode" min="10000" max="99999" tabindex="7" class="form-control" value="<?=$zipcode?>">
+			</div>
 		</div>
 		<?php if(!empty($zipcode_error)) { ?>
             <span class="error"><font color="red">* <?=$zipcode_error?></font></span>

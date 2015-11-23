@@ -427,7 +427,10 @@ else if($_GET['action'] == "addvenue" || $_GET['action'] == "editvenue") {
         <?php } ?>
 		
 		<div class="form-group">
-			<input type="number" name="zipcode" min="10000" max="99999" id="zipcode" tabindex="1" class="form-control" placeholder="Zipcode" value="<?=$zipcode?>">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon3">Zipcode</span>
+				<input type="number" name="zipcode" min="10000" max="99999" id="zipcode" tabindex="1" class="form-control" placeholder="Zipcode" value="<?=$zipcode?>">
+			</div>
 		</div>
 		<?php if(!empty($zipcode_error)) { ?>
             <span class="error"><font color="red">* <?=$zipcode_error?></font></span>
