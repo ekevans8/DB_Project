@@ -21,7 +21,7 @@ function get_artist_details($artist_id, $artists) {
 
 if(!isset($_GET['action']) || empty($_GET['action']) || $_GET['action'] == "list") {?>
 <div class="panel panel-default">
-  <div class="panel-heading">All artists</div>
+  <div class="panel-heading">All Artists</div>
   <div class="panel-body">
 	<ul class="list-group">
 
@@ -36,7 +36,7 @@ foreach($artists as $artist) {
 <?php
     if(is_moderator($username)) {
 ?>
-<a class="btn btn-info btn-block" href="artists.php?action=addartist">Add new artist</a>
+<a class="btn btn-info btn-block" href="artists.php?action=addartist">Add New Artist</a>
 
 <?php
     }
@@ -50,7 +50,7 @@ else if($_GET['action'] == "addfavorite") {
     
     add_favorite($_SESSION['username'], $artist_id);
     
-    echo "Artist added to favorites!";
+    echo "Artist Added to Favorites!";
     
     header('Location: artists.php?action=details&id=' . $artist_id, true);
 }
@@ -63,7 +63,7 @@ else if($_GET['action'] == "removefavorite") {
     
     remove_favorite($_SESSION['username'], $artist_id);
     
-    echo "Artist removed from favorites!";
+    echo "Artist Removed from Favorites!";
     
     header('Location: artists.php?action=details&id=' . $artist_id, true);
 }
@@ -98,13 +98,13 @@ if(is_moderator($username)) {
 </div>
 <?php } ?></div>
   <div class="panel-body">
-    <b>Date formated</b>: <?=$details['formDate']?><br>
+    <b>Date Formed</b>: <?=$details['formDate']?><br>
 	<?php
 	if(!empty($details['breakupDate'])) {
 	?>
-	<b>Date disbanded</b>: <?=$details['breakupDate']?><br>
+	<b>Date Disbanded</b>: <?=$details['breakupDate']?><br>
 	<?php } ?>
-	<b>Formation Zipcode</b>: <?=$details['formationZipCode']?><br>
+	<b>Zipcodeof Origin</b>: <?=$details['formationZipCode']?><br>
   </div>
 </div>
 
