@@ -104,7 +104,7 @@ if(is_moderator($username)) {
 	?>
 	<b>Date Disbanded</b>: <?=$details['breakupDate']?><br>
 	<?php } ?>
-	<b>Zipcodeof Origin</b>: <?=$details['formationZipCode']?><br>
+	<b>Zipcode of Origin</b>: <?=$details['formationZipCode']?><br>
   </div>
 </div>
 
