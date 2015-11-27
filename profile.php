@@ -59,7 +59,7 @@ if(is_moderator($_SESSION['username'])) {
 }
 ?>
 <div class="panel panel-default">
-  <div class="panel-heading"><?=$user_profile['username']?>'s favorite artists</div>
+  <div class="panel-heading"><?=$user_profile['username']?>'s Favorite Artists</div>
   <div class="panel-body">
 		<ul class="list-group">
 		<?php
@@ -73,7 +73,7 @@ if(is_moderator($_SESSION['username'])) {
 </div>
 <br>
 <div class="panel panel-default">
-  <div class="panel-heading">Concerts <?=$user_profile['username']?> has attended</div>
+  <div class="panel-heading">Concerts <?=$user_profile['username']?> Has Attended</div>
   <div class="panel-body">
 	<ul class="list-group">
 		<?php
@@ -108,7 +108,7 @@ if(is_moderator($_SESSION['username'])) {
 </div>
 <br>
 <div class="panel panel-default">
-  <div class="panel-heading">Top songs <?=$user_profile['username']?> saw live</div>
+  <div class="panel-heading">Top songs <?=$user_profile['username']?> Saw Live</div>
   <div class="panel-body">
 	<ul class="list-group">
 <?php
