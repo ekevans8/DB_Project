@@ -55,7 +55,7 @@ session_start();
 </nav>
 <?php } else if($_SERVER[REQUEST_URI] == "/"){?>
 <div class="page-header">
-  <h1>Welcome to our Database Project</h1>
+  <h1>Welcome to the Music Tracker!</h1>
 </div>
 <ul class="nav nav-pills nav-justified">
   <li class="active">
@@ -68,7 +68,7 @@ session_start();
 </ul>
 <?php } else if($_SERVER[REQUEST_URI] == "/login.php?action=login" || $_SERVER[REQUEST_URI] == "/login.php"){ ?> 
 <div class="page-header">
-  <h1>Login To The Site</h1>
+  <h1>Login as an Existing User</h1>
 </div>
 <ul class="nav nav-pills nav-justified">
   <li>
@@ -81,7 +81,7 @@ session_start();
 </ul>
 <?php } else { ?>
 <div class="page-header">
-  <h1>Register To The Site</h1>
+  <h1>Register as a New User</h1>
 </div>
 <ul class="nav nav-pills nav-justified">
   <li>
